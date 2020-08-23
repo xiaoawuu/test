@@ -1,0 +1,232 @@
+<!-- header('Access-Control-Allow-Origin:*');
+$data = json_encode(array("id" => "1", "name" => "tom"));
+echo $data; -->
+<html lang="en">
+
+<head>
+    <!-- <metaname=”viewport”content=”width=device-width,initial-scale=1″/> -->
+    <style>
+        /* 先给整个页面设置背景颜色还有字体 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sana-fserif;
+            /* background: #34495e; */
+            background: #191919;
+        }
+
+        .box {
+
+            height: 100%;
+
+            /* padding: 40px; */
+            position: absolute;
+            /* 绝对定位，相对于父标签来进行定位 */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #191919;
+            text-align: center;
+            /*表单中内容居中*/
+        }
+
+        /* 设置了浏览器宽度不小于1201px时  显示高度 */
+        @media screen and (min-width: 1201px) {
+            .center {
+                height: 100%;
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+            }
+        }
+
+        /* 设置了浏览器宽度不大于1200px时  显示高度 */
+        @media screen and (max-width: 1200px) {
+            .center {
+                height: 65%;
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+            }
+        }
+
+
+        /* 宽度自适应 */
+
+        @media screen and (min-width: 1201px) {
+            .box {
+                width: 50%;
+            }
+        }
+
+        @media screen and (max-width: 1200px) {
+            .box {
+                width: 100%;
+            }
+        }
+
+        /* 头部 */
+
+        .top {
+            /* border: 2px red solid; */
+            margin: 50% 0;
+
+        }
+
+        .top .select_1 {
+            /* 去掉三角 */
+            appearance: none;
+            -moz-appearance: none;
+            /* 兼容Firefox */
+            -webkit-appearance: none;
+            /* 兼容Safari 和 Chrome */
+            border-radius: 24px;
+            border: 2px solid #3498db;
+            background: none;
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+            text-align-last: center;
+            padding: 20px 10px;
+            width: 100%;
+            outline: none;
+            color: white;
+            font-size: 35px;
+        }
+
+        .top .select_1 option {
+
+            border-radius: 24px;
+            border: 2px solid #3498db;
+            font-size: 16px;
+            color: black;
+        }
+
+
+        input {
+            font-size: 35px;
+        }
+
+        /* 底部 */
+        .button {
+            position: absolute;
+            bottom: 5%;
+            right: 0;
+            left: 0;
+        }
+
+
+        /* 设置标题样式 */
+        .box h1 {
+            color: white;
+            /* 设置字体颜色 */
+            text-transform: uppercase;
+            /* 将字体全部设置成大写字母  */
+            font-weight: 500;
+            /*  设置字体粗细   */
+            font-size: 30;
+        }
+
+        /* 设置用户名输入框和密码输入框样式 */
+        .box input[type="text"],
+        .box input[type="password"] {
+            border-radius: 24px;
+            border: 2px solid #3498db;
+            background: none;
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+            padding: 20px 10px;
+            width: 100%;
+            outline: none;
+            color: white;
+            /* 设置输入框中竖线的颜色 */
+            transition: 0.25s;
+            /* 设置元素过渡效果 */
+        }
+
+        /* 设置文本框获得焦点时的样式 */
+        .box input[type="text"]:focus,
+        .box input[type="password"]:focus {
+            width: 70%;
+            border-color: #2ecc71;
+        }
+
+        /* 设置提交按钮的样式 */
+        .box input[type="button"] {
+            border-radius: 24px;
+            border: 2px solid #2ecc71;
+            background: none;
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+            padding: 20px 100px;
+            outline: none;
+            color: white;
+            /* 设置输入框中竖线的颜色 */
+            transition: 0.25s;
+            cursor: pointer;
+            width: 70%;
+            /* 设置光标的样式 */
+        }
+
+        .box input[type="reset"] {
+            border-radius: 24px;
+            border: 2px solid #2ecc71;
+            background: none;
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+            padding: 20px 100px;
+            outline: none;
+            color: white;
+            /* 设置输入框中竖线的颜色 */
+            transition: 0.25s;
+            cursor: pointer;
+            width: 70%;
+        }
+
+
+        /* 设置光标的样式 */
+        .box input[type="button"]:hover {
+            background: #2ecc71;
+        }
+        .box input[type="reset"]:hover {
+            background: #2ecc71;
+        }
+    </style>
+</head>
+
+<body>
+    <form class="box" action="Login.html" method="POST" id="myForm">
+        <div class="center">
+            <div class="top">
+                <select class="select_1">
+                    <option value="1" selected>ceccccc</option>
+                    <option value="2">aaaaaa</option>
+                    <option value="3">bbbbbb</option>
+                    <option value="4">cccccccc</option>
+                    <option value="5">ddddd</option>
+                </select>
+                <input id="account" type="text" name="" placeholder="account" autocomplete="off">
+                <input id="psw" type="text" name="" placeholder="delete" autocomplete="off">
+                <input id="sends" type="button" onclick="addMoneys()" value="sends">
+                <input id="reset" type="reset" value="reset">
+            </div>
+
+
+        </div>
+
+
+    </form>
+    <script type="text/javascript" language="javascript">
+        pass
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+asgiref==3.2.3
+cffi==1.14.0
+cli-helpers==1.2.1
+click==7.1.1
+configobj==5.0.6
+cryptography==2.9.1
+Django==3.0.4
+django-cors-headers==3.4.0
+mod-wsgi @ file:///C:/Apache/mod_wsgi-4.7.1-cp37-cp37m-win_amd64.whl
+mycli==1.21.1
+prompt-toolkit==2.0.10
+pycparser==2.20
+Pygments==2.6.1
+PyMySQL==0.9.3
+pyodbc==4.0.30
+pytz==2019.3
+six==1.14.0
+sqlparse==0.3.1
+tabulate==0.8.7
+terminaltables==3.1.0
+wcwidth==0.1.9

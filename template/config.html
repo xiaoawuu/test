@@ -1,0 +1,215 @@
+<!-- header('Access-Control-Allow-Origin:*');
+$data = json_encode(array("id" => "1", "name" => "tom"));
+echo $data; -->
+<html lang="en">
+
+<head>
+    <!-- <metaname=”viewport”content=”width=device-width,initial-scale=1″/> -->
+    <style>
+        /* 先给整个页面设置背景颜色还有字体 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sana-fserif;
+            background: #191919;
+        }
+
+        .box {
+            height: 80%;
+            padding: 40px;
+            position: absolute;
+            /* 绝对定位，相对于父标签来进行定位 */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #191919;
+            text-align: center;
+            /*表单中内容居中*/
+        }
+
+        /* 设置了浏览器宽度不小于1201px时  显示高度 */ 
+        @media screen and (min-width: 1201px) {
+            .center {
+                height: 100%;
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+            }
+        }
+        
+        /* 设置了浏览器宽度不大于1200px时  显示高度 */ 
+        @media screen and (max-width: 1200px) {
+            .center {
+                height: 65%;
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+            }
+        }
+        
+
+        /* 宽度自适应 */
+
+        @media screen and (min-width: 1201px) {
+            .box {
+                width: 50%;
+            }
+        }
+
+        @media screen and (max-width: 1200px) {
+            .box {
+                width: 100%;
+            }
+        }
+
+        /* 头部 */
+
+        .top {
+            margin-top: 5%;
+        }
+
+
+        /* 底部 */
+        .button {
+            position: absolute;
+            bottom: 5%;
+            right: 0;
+            left: 0;
+        }
+
+
+        /* 设置标题样式 */
+        .box h1 {
+            color: white;
+            /* 设置字体颜色 */
+            text-transform: uppercase;
+            /* 将字体全部设置成大写字母  */
+            font-weight: 500;
+            /*  设置字体粗细   */
+        }
+
+        /* 设置用户名输入框和密码输入框样式 */
+        .box input[type="text"],
+        .box input[type="password"] {
+            border-radius: 24px;
+            border: 2px solid #3498db;
+            background: none;
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+            padding: 30px 10px;
+            width: 1000px;
+            outline: none;
+            color: white;
+            /* 设置输入框中竖线的颜色 */
+            transition: 0.25s;
+            /* 设置元素过渡效果 */
+        }
+
+        /* 设置文本框获得焦点时的样式 */
+        .box input[type="text"]:focus,
+        .box input[type="password"]:focus {
+            width: 600px;
+            border-color: #2ecc71;
+        }
+
+        /* 设置提交按钮的样式 */
+        .box input[type="button"] {
+            border-radius: 24px;
+            border: 2px solid #2ecc71;
+            background: none;
+            display: block;
+            margin: 20px auto;
+            text-align: center;
+            padding: 30px 200px;
+            outline: none;
+            color: white;
+            /* 设置输入框中竖线的颜色 */
+            transition: 0.25s;
+            cursor: pointer;
+            /* 设置光标的样式 */
+        }
+
+        .box input[type="button"]:hover {
+            background: #2ecc71;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <form class="box" action="Login.html" method="POST" id="myForm">
+        <div class="center">
+
+            <div class="top">
+
+                <h1>addMoney</h1>
+                <input id="account" type="text" name="" placeholder="account" maxlength="11" oninput = "value=value.replace(/[^\d]/g,'')">
+                <input id="money" type="text" name="" placeholder="money">
+                <input id="send" type="button" onclick="addMoney()" value="send">
+            </div>
+
+            <div class="button">
+                <h1>removeUser</h1>
+                <input id="psw" type="text" name="" placeholder="delete">
+                <input id="sends" type="button" onclick="removeUser()" value="sends">
+            </div>
+        </div>
+    </form>
+    <script type="text/javascript" language="javascript">
+            function addMoney(){
+                var account=document.getElementById("account").value;
+                var money=document.getElementById("money").value;
+                if (account == '' || money == '' || account.length < 11) {
+                    alert('请输入金额和手正确的机号！');
+                    location.reload();
+                }else{
+                    var httpRequest = new XMLHttpRequest();
+                    httpRequest.open('POST', 'http://127.0.0.1:8800/addMoney', true);
+                    httpRequest.setRequestHeader("Content-type","application/json");
+                    var obj = {"mobile":account,"money":parseInt(money)};
+                    httpRequest.send(JSON.stringify(obj));
+                    httpRequest.onreadystatechange = function () {
+                        if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+                            var json = httpRequest.responseText;
+                            console.log(json);
+                            alert(JSON.parse(json)["msg"]);
+                            location.reload();
+                        }
+                    }
+                }
+            }
+
+            function removeUser() {
+                var account=document.getElementById("psw").value;
+                var httpRequest = new XMLHttpRequest();
+                var psw=document.getElementById("psw").value;
+                if (psw == '') {
+                    alert('请输入要删除的手机号！');
+                    location.reload();
+                }else{
+                    httpRequest.open('POST', 'http://127.0.0.1:8800/removeUser', true);
+                    // httpRequest.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                    httpRequest.setRequestHeader("Content-type","application/json");
+                    var data = {"mobile":account};
+                    httpRequest.send(JSON.stringify(data));
+                    httpRequest.onreadystatechange = function () {
+                        if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+                            var json = httpRequest.responseText;
+                            console.log(json);
+                            alert(JSON.parse(json)["msg"]);
+                            location.reload();
+                        }
+                    }
+                }
+            }
+    </script>
+
+</body>
+
+</html>
