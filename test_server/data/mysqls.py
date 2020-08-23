@@ -23,7 +23,9 @@ class Data():
             return cur.fetchall()
         finally:self.conn.close()
 
+# aa= "SELECT id,bank,number FROM `zyb_pay_bankcard` WHERE bank_authid = '132521197806153017' AND del != 1 ORDER BY id DESC LIMIT 1;"
 # sql = "SELECT freight_id FROM tms_wl_freight WHERE first_order_id ='LO-202008409243';"
 # d = Data()
-# a = d.query('tms_test',sql)
+# a = d.query('zyb_test',aa)
 # print(a)
+# [{'id': 1340, 'bank': '农业银行', 'number': '6228481749128570570'}]

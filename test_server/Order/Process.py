@@ -1,5 +1,5 @@
 from django.shortcuts import HttpResponse
-from test_server.Order import addOrder,sendOrders,freightFinality
+from test_server.Order import addOrder,sendOrders,freightFinality,applyForPayment
 from test_server.utils.selectFreight import selectFreight
 from test_server.utils.paymentAmount import paymentAmount
 from test_server.data.mysqls import Data
@@ -25,6 +25,10 @@ class Process():
 			self.status = json.loads(request.body.decode().replace("'", "\"")).get('status')
 			self.orderData = json.loads(request.body.decode().replace("'", "\"")).get('orderData')
 			self.driverData = json.loads(request.body.decode().replace("'", "\"")).get('driverData')
+			data = Data().query('zyb_test',"SELECT id,bank,number FROM `zyb_pay_bankcard` WHERE bank_authid = {} AND bank_mobile = {} AND del != 1 ORDER BY id DESC LIMIT 1;".format(
+									self.driverData['idCard'], self.driverData['driverMobile']))
+			if len(data) == 0:
+				return HttpResponse(json.dumps({"code": 0, "msg": "司机没有银行卡信息", "data": ""}))
 
 			while self.quantity:
 				self.quantity -= 1
@@ -56,7 +60,7 @@ class Process():
 				for i in self.freightList:
 					response = freightFinality.freightFinality().tmsFinality(self.orderData['wlToken'],i)
 					if response['code'] == 0:
-						return response
+						return HttpResponse(json.dumps(response))
 			if self.status > 3:
 				print('请求paymentAmount参数',self.driverData['subsistMoney'],self.driverData['tailMoney'],self.driverData['backMoney'])
 				money = paymentAmount(self.driverData['subsistMoney'],self.driverData['tailMoney'],self.driverData['backMoney'])
@@ -72,28 +76,31 @@ class Process():
 					print(3)
 					self.re_money = 'backMoney'
 				else:
-					print(False)
+					print('else')
 					return HttpResponse(json.dumps({"code":0,"msg":"没有可支付款项"}))
-				data = Data().query('zyb_test',"SELECT id,bank,number FROM `zyb_pay_bankcard` WHERE bank_authid = {} AND del != 1 ORDER BY id DESC LIMIT 1;".format(self.driverData['idCard']))
-				if len(data) == 0:
-					print('if len(data) == 0:')
-					return HttpResponse(json.dumps({"code":0,"msg":"司机没有银行卡信息","data":""}))
-				self.requestPayment = {
-					"wlToken": self.orderData['wlToken'],
-					"type": ''.format(min(money)),
-					"payObjectSum": "1",
-					"freightId": "{}",
-					"payeeName": self.driverData['driverName'],
-					"payeeMobile": self.driverData['driverMobile'],
-					"payeeId": self.driverData['idCard'],
-					"payeeBank": data[0]['bank'],
-					"payeeAccount": data[0]['number'],
-					"bankcardId": str(data[0]['id']),
-					"isEntrust": "0",
-					"finalPrice": self.driverData[self.re_money]
-				}
-				print(self.requestPayment)
+				for i in self.freightList:
+					print('for i in self.freightList:')
+					self.requestPayment = {
+						"wlToken": self.orderData['wlToken'],
+						"type": '{}'.format(min(money)),
+						"payObjectSum": "1",
+						"freightId": "{}".format(i),
+						"payeeName": self.driverData['driverName'],
+						"payeeMobile": self.driverData['driverMobile'],
+						"payeeId": self.driverData['idCard'],
+						"payeeBank": data[0]['bank'],
+						"payeeAccount": data[0]['number'],
+						"bankcardId": str(data[0]['id']),
+						"isEntrust": "0",
+						"advancePrice": self.driverData[self.re_money]
+					}
+					print(self.requestPayment)
+					re_data = applyForPayment.applyForPayment().applyForPaymentDriver(self.requestPayment)
+
+					# if re_data['code'] == 0:
+					return HttpResponse(json.dumps(re_data))
 				money.remove(min(money))
+				print(money)
 			return HttpResponse(json.dumps({"code":233,"msg":"批量创建:成功{}单"}))
 			# return HttpResponse(json.dumps({"code":233,"msg":"批量创建:成功{}单,".format(self.succeed)+"失败{}单,".format(self.fail),"data":"{}".format(self.orderDict)}))
 

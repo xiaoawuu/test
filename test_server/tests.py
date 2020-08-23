@@ -30,5 +30,6 @@ def tests():
 # if len(a) != 0:
 # 	print(a)
 # else:print(0)
-
+a = [{'id': 1340, 'bank': '农业银行', 'number': '6228481749128570570'}]
+print(len(a))
 
