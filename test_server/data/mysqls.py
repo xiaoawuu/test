@@ -24,8 +24,7 @@ class Data():
         finally:self.conn.close()
 
 # aa= "SELECT id,bank,number FROM `zyb_pay_bankcard` WHERE bank_authid = '132521197806153017' AND del != 1 ORDER BY id DESC LIMIT 1;"
-# sql = "SELECT freight_id FROM tms_wl_freight WHERE first_order_id ='LO-202008409243';"
+# sql = "SELECT id FROM `zyb_db`.`zyb_customer` WHERE `mobile` = '18866478743';"
 # d = Data()
-# a = d.query('zyb_test',aa)
+# a = d.query('zyb_live_r',sql)
 # print(a)
-# [{'id': 1340, 'bank': '农业银行', 'number': '6228481749128570570'}]

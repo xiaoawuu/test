@@ -34,7 +34,6 @@ class ODBC:
 
 def sql_select(data):
     ms = ODBC(server='rm-wz9n758n5p822h1g4bo.sqlserver.rds.aliyuncs.com', uid='juyuanpark', pwd='!@#QWEASDZXC', db="cms")
-    print(ms)
     sql = ms.ExecQuery(data)
     return sql
 

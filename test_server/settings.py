@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',
+    'django_crontab',
     'test_server',
 
 ]
@@ -53,7 +53,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-
+# 最简单配置
+CRONJOBS = [
+    # 表示每天2：01执行
+    ('01 2 * * *', 'test_server.tests.read')
+]
 
 ROOT_URLCONF = 'test_server.urls'
 
@@ -160,17 +164,4 @@ CORS_ALL_HEADERS = (
 'x-requested-with',
 'Pragma',
 )
-# CORS_ALLOW_HEADERS = (
-# 	'XMLHttpRequest',
-# 	'X_FILENAME',
-# 	'accept-encoding',
-# 	'authorization',
-# 	'content-type',
-# 	'dnt',
-# 	'origin',
-# 	'user-agent',
-# 	'x-csrftoken',
-# 	'x-requested-with',
-# 	'Pragma',
-# )
 
