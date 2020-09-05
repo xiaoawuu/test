@@ -9,7 +9,7 @@ sys.path.append(r'C:\test_server\bin')
 
 from django.shortcuts import render, HttpResponse
 import json
-from test_server.data import sql
+from test_server.data import sql,mysqls
 from  test_server.utils import is_int
 
 def addMoneys(request):
@@ -52,6 +52,38 @@ def removeUser(request):
     else:
         return HttpResponse(json.dumps({"code":0,"msg":"请使用POST请求！","data":""}))
 
+import time
+def testPortInsert(request):
+    if request.method == "POST":
+        try:
+            mobile = json.loads(request.body.decode().replace("'", "\"")).get('mobile')
+            money = json.loads(request.body.decode().replace("'", "\"")).get('money')
+            print('mobile:', mobile)
+            print('money:', money)
+            sql = "INSERT INTO freight_id_payment (freight_id,id_s,`status`) VALUES ('DO-20200585685','{}',1)".format(time.time())
+            mysqls.Data().query('localhost',sql)
+            return HttpResponse(json.dumps({"code": 1, "msg": "请求成功！", "data": ""}))
+        except Exception as err:
+            return HttpResponse(json.dumps({"code":0,"msg":"请求失败！","data":"{}".format(err)}))
+    else:
+        return HttpResponse(json.dumps({"code": 0, "msg": "请使用POST请求！", "data": ""}))
 
+def testPortSelect(request):
+    if request.method == "POST":
+        try:
+            mobile = json.loads(request.body.decode().replace("'", "\"")).get('mobile')
+            money = json.loads(request.body.decode().replace("'", "\"")).get('money')
+            print('mobile:',mobile)
+            print('money:',money)
+            sql = "INSERT INTO freight_id_payment (freight_id,id_s,`status`) VALUES ('DO-20200585685','{}',1)".format(
+                time.time())
+            mysqls.Data().query('localhost', sql)
+            return HttpResponse(json.dumps({"code": 1, "msg": "请求成功！", "data": ""}))
+        except Exception as err:
+            return HttpResponse(json.dumps({"code": 0, "msg": "请求失败！", "data": "{}".format(err)}))
+    else:
+        return HttpResponse(json.dumps({"code": 0, "msg": "请使用POST请求！", "data": ""}))
+def testPort():
+    pass
 
-
+# testPortInsert()

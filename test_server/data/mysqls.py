@@ -21,6 +21,9 @@ class Data():
             cur = self.conn.cursor(cursor=pymysql.cursors.DictCursor)
             cur.execute(sql)
             return cur.fetchall()
+        except:
+            return False
+
         finally:self.conn.close()
 
 # aa= "SELECT id,bank,number FROM `zyb_pay_bankcard` WHERE bank_authid = '132521197806153017' AND del != 1 ORDER BY id DESC LIMIT 1;"
@@ -28,3 +31,7 @@ class Data():
 # d = Data()
 # a = d.query('zyb_live_r',sql)
 # print(a)
+# import time
+# print(time.time())
+# sql = "INSERT INTO freight_id_payment (freight_id,id_s,`status`) VALUES ('DO-20200585685','1599204315.5284896',1)"
+# print(d.query('localhost',sql))

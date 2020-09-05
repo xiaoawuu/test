@@ -22,17 +22,9 @@ from test_server.Order import Process
 urlpatterns = [
     url(r'^addMoney', views.addMoney),
     url(r'^removeUser', views.removeUser),
+    url(r'^testPortInsert', views.testPortInsert),
     url(r'^$', views.addMoneys),
     url(r'^addOrder', Process.Process().orderProcess),
 
 ]
-from apscheduler.schedulers.background import BackgroundScheduler
-from datetime import datetime
 
-
-def tick():
-    print('Tick! The time is: %s' % datetime.now())
-#
-# scheduler = BackgroundScheduler()
-# scheduler.add_job(tick, 'interval', seconds=0.5)# 每隔多少秒执行
-# scheduler.start()

@@ -307,7 +307,6 @@ class ImageDetection():
 
 
 
-# sql = "SELECT id,'http://app.juyuanpark.com' + picture  FROM biz_user where id in(74, 136, 141, 696, 862, 2014, 2447, 2468, 2472, 2473, 2474, 2481, 2482, 2483, 2485, 2488, 4130, 6611, 8362, 8373, 8385, 8390, 8507, 8863, 8873, 10923);"
 
 # i = ImageDetection()
 # i.a(sql)
@@ -361,3 +360,16 @@ shutil.rmtree( src ) 递归删除一个目录以及目录内的所有内容
 
 # print('SELECT id,img_url FROM biz_album')
 # print(153+149+96+77)
+
+
+
+# sql = "INSERT INTO freight_id_payment (freight_id,id_s,`status`) VALUES ('DO-20200585685','{}',1)".format(time.time())
+# print(mysqls.Data().query('localhost',sql))
+
+
+
+
+
+
+
+
