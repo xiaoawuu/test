@@ -59,15 +59,18 @@ class VerifySigningContract():
 		try:
 			signFreightIdSQL = "SELECT C.waybill_sn,D.phone,D.card_name FROM zyb_pay_order A JOIN zyb_tms_wallet_out B " \
 							   "ON A.pay_out_id =  B.id JOIN zyb_tms_wallet_log C ON A.pay_log_id = C.id JOIN zyb_tms_wallet_bankcard " \
-							   "D on B.bankcard_id = D.id WHERE add_time BETWEEN '{}' AND '{}'".format(self.startTimestamp, self.endTimestamp)
+							   "D on B.bankcard_id = D.id WHERE add_time BETWEEN '{}' AND '{}'".format(
+				self.startTimestamp, self.endTimestamp)
 			responseData = self.data.query('zyb_live_r', signFreightIdSQL)
 			print(signFreightIdSQL)
 			for i in responseData:
 
-				sql = "SELECT driver_name,driver_mobile FROM tms_wl_freight WHERE freight_id ='{}';".format(i['waybill_sn'])
-				response = self.data.query('tms_live_r',sql)
+				sql = "SELECT driver_name,driver_mobile FROM tms_wl_freight WHERE freight_id ='{}';".format(
+					i['waybill_sn'])
+				response = self.data.query('tms_live_r', sql)
 				if i['phone'] != response[0]['driver_mobile']:
-					comm_sql = "SELECT count(*) A FROM tms_commission_contract WHERE contract_type = 1 AND freight_id = '{}'".format(i['waybill_sn'])
+					comm_sql = "SELECT count(*) A FROM tms_commission_contract WHERE contract_type = 1 AND freight_id = '{}'".format(
+						i['waybill_sn'])
 					response_comm = self.data.query('tms_live_r', comm_sql)
 					if response_comm[0]['A'] == 0:
 						list_s.append(i['waybill_sn'])
@@ -76,9 +79,11 @@ class VerifySigningContract():
 		except Exception as err:
 			writeLog('letterOfEntrustment>>>error:', err)
 
+
 # v = VerifySigningContract()
 # print(v.contractOfAffreightment())
 # v.letterOfEntrustment()
+
 
 '''
 司机

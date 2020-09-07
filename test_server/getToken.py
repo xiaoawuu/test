@@ -12,3 +12,5 @@ def getToken(user,pwd):
 	}
 	return requestsPort('/api/login/wllogin',wlLogin)
 # print(getToken('HGW0010','123456'))
+
+print('/Resources/Social/75/ba52c816c9854698840bf0cffee2021a_d_water.png'[:-10] + "_zoom.png")

@@ -201,7 +201,12 @@ class ImageDetection():
 		self.errList = []
 		self.noneList = []
 		for i in dataSQL:
-			url = 'http://app.juyuanpark.com' + i[1]
+			# print(i)
+			if i[1][-9:] == "_zoom.png":
+				url = 'http://app.juyuanpark.com' + i[1]
+			else:
+				url = 'http://app.juyuanpark.com' + i[1][:-10] + "_zoom.png"
+			# print(url)
 			try:
 				request = urllib.request.Request(url)
 				response = urllib.request.urlopen(request)
@@ -216,8 +221,8 @@ class ImageDetection():
 					self.errList.append(i[0])
 					shutil.move(path, self.path2 + str(i[0]) + '.jpg')
 				# shutil.copy2(path,self.path2 + str(i[0]) + '.jpg')
-				else:
-					os.remove(path)
+				# else:
+				# 	os.remove(path)
 			except:
 				self.noneList.append(i[0])
 				print('访问为空:{}'.format(i[0]))
@@ -308,13 +313,18 @@ class ImageDetection():
 
 
 
-# i = ImageDetection()
+i = ImageDetection()
 # i.a(sql)
+# sql = "SELECT id,img FROM biz_social_img;"
 # sql = "SELECT id,img_url FROM biz_album"
 # sql = "SELECT id,water_img_url  FROM biz_album"
 # sql = "SELECT id,picture  FROM biz_user"
 # sql = "SELECT id,img FROM biz_social_img"
 # i.downloadImage(sql)
+# print("/Resources/UserPicture/19152/10d8c7ec23ac4704a84c1ebacc554c99.png")
+# print("/Resources/UserPicture/19152/10d8c7ec23ac4704a84c1ebacc554c99.png"[-9:] )
+
+
 '''
 # os 模块
 os.sep 可以取代操作系统特定的路径分隔符。windows下为 '\\'
