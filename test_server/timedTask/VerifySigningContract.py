@@ -23,7 +23,7 @@ class VerifySigningContract():
 				  " '{}' AND '{}' ) AND fre1.`status` IN ( 12, 14, 15, 16, 17 )) B WHERE (SELECT count(1) num FROM (SELECT com1.freight_id FROM tms_commission_contract" \
 				  " com1 WHERE com1.contract_type = 2 ) A WHERE A.freight_id = B.freight_id ) = 0 ;".format(
 				self.startTime, self.endTime)
-			print(sql)
+			print("检验承运合同")
 			isTrue = self.data.query('tms_live_r', sql)
 			writeLog('未签署承运合同的运单', isTrue)
 			return isTrue
@@ -44,7 +44,7 @@ class VerifySigningContract():
 				  "A WHERE	A.order_id = B.first_order_id) = 0;".format(self.startTime, self.endTime, )
 			isTrue = self.data.query('tms_live_r', sql)
 			writeLog('未签署托运合同的订单', isTrue)
-			print(sql)
+			print("检验托运合同")
 			return isTrue
 		except Exception as err:
 			writeLog('checkTheContract>>>error:', err)
@@ -62,7 +62,7 @@ class VerifySigningContract():
 							   "D on B.bankcard_id = D.id WHERE add_time BETWEEN '{}' AND '{}'".format(
 				self.startTimestamp, self.endTimestamp)
 			responseData = self.data.query('zyb_live_r', signFreightIdSQL)
-			print(signFreightIdSQL)
+			print("检测委托函")
 			for i in responseData:
 
 				sql = "SELECT driver_name,driver_mobile FROM tms_wl_freight WHERE freight_id ='{}';".format(

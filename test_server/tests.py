@@ -39,18 +39,18 @@ def tests():
 
 
 # 为了方便，避免忘记close掉这个文件对象，可以用下面这种方式替代
-def read():
-	print(123456789)
-	data = '123456789asdf'
-	try:
-
-		with open('data.txt', "a", encoding="utf-8") as f:  # 设置文件对象
-			f.write(str(data) + "\n")  # 可以是随便对文件的操作
-			return True
-	except Exception as e:
-		return '异常：{}'.format(e)
-	finally:
-		f.close()
+# def read():
+# 	print(123456789)
+# 	data = '123456789asdf'
+# 	try:
+#
+# 		with open('data.txt', "a", encoding="utf-8") as f:  # 设置文件对象
+# 			f.write(str(data) + "\n")  # 可以是随便对文件的操作
+# 			return True
+# 	except Exception as e:
+# 		return '异常：{}'.format(e)
+# 	finally:
+# 		f.close()
 
 
 # read()
@@ -68,8 +68,10 @@ result = base64.b64encode(str1.encode())
 # print('转换后的结果 -->  ',result)
 
 # 再把加密后的结果解码7483
-temp = base64.b64decode('6Zq+6YGT5Yeg54K557uT5p2f')
+temp = base64.b64decode('MTE=')
 
+
+# print(temp)
 
 # 同样的，解码后的结0果是二进制，我们再转换一下
 # print(temp.decode())
@@ -84,12 +86,9 @@ def is_num_by_except(num):
 		return False
 
 
-from test_server.data.sql import sql_select, sql_exec
-
-
 def update_base64():
 	# data = sql_select("SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile LIKE 'MT%';")
-	data = sql_select("SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile != ''")
+	data = sql_select("SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile != '' AND id > 7500;")
 	for i in data:
 		if not is_num_by_except(i[1]):
 			try:
@@ -117,7 +116,7 @@ def requestsPort(user_id, new_mobile):
 	# url=None
 	url = "https://myadmin-api.zyb56.com/customer/changeUserMobile"
 	re_data = {
-		"token": "6f21fc4284910fdd8336b9841bf2aeca",
+		"token": "c1c95d62b91af8d7bb8e03a38e6b5215",
 		"id": str(user_id),
 		"mobile": new_mobile
 	}
@@ -144,6 +143,7 @@ def updateMobile():
 		print('user_id：', user_id[0]["id"], '旧手机号：', index, '新手机号：', i)
 		print(requestsPort(user_id[0]["id"], i))
 
+
 # updateMobile()
 import datetime
 
@@ -161,7 +161,7 @@ import urllib, shutil
 import glob, os
 from PIL import Image
 import urllib.request
-from test_server.data.sql import sql_select,sql_exec
+from test_server.data.sql import sql_select, sql_exec
 
 
 class ImageDetection():
@@ -215,14 +215,13 @@ class ImageDetection():
 				path = self.path + str(i[0]) + '.jpg'
 				with open(path, 'wb') as fp:
 					fp.write(get_img)
-				# print('图片下载完成：{}'.format(i[0]))
 				is_true = self.isValid(path)
 				if is_true == False:
 					self.errList.append(i[0])
 					shutil.move(path, self.path2 + str(i[0]) + '.jpg')
-				# shutil.copy2(path,self.path2 + str(i[0]) + '.jpg')
-				# else:
-				# 	os.remove(path)
+			# shutil.copy2(path,self.path2 + str(i[0]) + '.jpg')
+			# else:
+			# 	os.remove(path)
 			except:
 				self.noneList.append(i[0])
 				print('访问为空:{}'.format(i[0]))
@@ -231,12 +230,13 @@ class ImageDetection():
 		print(self.errList)
 		print('为空的图片:')
 		print(self.noneList)
-	def headPortrait(self,sql):
+
+	def headPortrait(self, sql):
 		# list_a = []
 		dataSQL = sql_select(sql)
 		# print(dataSQL)
 		for i in dataSQL:
-			urls = i[1][:-4]+"_zoom.png"
+			urls = i[1][:-4] + "_zoom.png"
 			# print(urls)
 			try:
 				request = urllib.request.Request(urls)
@@ -259,15 +259,16 @@ class ImageDetection():
 			except:
 				print('访问为空:{}'.format(i[0]))
 				continue
-	def photoAlbum(self,sql):
-		list1 = [] # 都没有
-		list2 = [] # 小图有
-		list3 = [] # 大图有
-		list4 = [] # 都图有
+
+	def photoAlbum(self, sql):
+		list1 = []  # 都没有
+		list2 = []  # 小图有
+		list3 = []  # 大图有
+		list4 = []  # 都图有
 		dataSQL = sql_select(sql)
 		for i in dataSQL:
-			minUrl = 'http://app.juyuanpark.com'+i[1]
-			maxUrl = 'http://app.juyuanpark.com'+i[2]
+			minUrl = 'http://app.juyuanpark.com' + i[1]
+			maxUrl = 'http://app.juyuanpark.com' + i[2]
 			try:
 
 				request = urllib.request.Request(minUrl)
@@ -287,13 +288,13 @@ class ImageDetection():
 				with open(path2, 'wb') as fp:
 					fp.write(get_img)
 				is_true2 = self.isValid(path2)
-				if is_true1 == True and	is_true2 == True:
+				if is_true1 == True and is_true2 == True:
 					os.remove(path1)
 					os.remove(path2)
 				elif is_true1 == True and is_true2 == False:
 					os.remove(path1)
 					list2.append(i[0])
-					# sql_exec("UPDATE biz_album SET water_img_url = '{}' WHERE id = {};".format(i[1],i[0]))
+				# sql_exec("UPDATE biz_album SET water_img_url = '{}' WHERE id = {};".format(i[1],i[0]))
 				elif is_true1 == False and is_true2 == True:
 					os.remove(path2)
 					# sql_exec("UPDATE biz_album SET img_url = '{}' WHERE id = {};".format(i[2],i[0]))
@@ -304,16 +305,13 @@ class ImageDetection():
 			except:
 				print('访问为空:{}'.format(i[0]))
 				continue
-		print('list1',list1)
-		print('list2',list2)
-		print('list3',list3)
-		print('list4',list4)
+		print('list1', list1)
+		print('list2', list2)
+		print('list3', list3)
+		print('list4', list4)
 
 
-
-
-
-i = ImageDetection()
+# i = ImageDetection()
 # i.a(sql)
 # sql = "SELECT id,img FROM biz_social_img;"
 # sql = "SELECT id,img_url FROM biz_album"
@@ -368,18 +366,28 @@ shutil.rmtree( src ) 递归删除一个目录以及目录内的所有内容
 
 '''
 
-# print('SELECT id,img_url FROM biz_album')
-# print(153+149+96+77)
+import json
+import pickle
 
+info = {
+	"name": "hua",
+	"age": 18
+}
 
+with open("hua.txt", "r") as f:
+	data = json.loads(f.read())
+print(data["age"])
+# data=eval(f.read())#将字符串转为字典；
+# print(data["age"])
 
-# sql = "INSERT INTO freight_id_payment (freight_id,id_s,`status`) VALUES ('DO-20200585685','{}',1)".format(time.time())
-# print(mysqls.Data().query('localhost',sql))
+f = open("hua.txt", "rb")
+data = pickle.loads(f.read())  # 同等于：data=pickle.load(f)
+print(data["name"])
+print(__file__)  # :返回当前文件的相对路径
+print(os.path.abspath(__file__))  # :返回当前文件的绝对路径
+f = open("hua.txt", "r")
+data = json.load(f)
 
+import os
 
-
-
-
-
-
-
+print(os.path.abspath(__file__))
