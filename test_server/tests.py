@@ -159,7 +159,7 @@ import time
 
 import urllib, shutil
 import glob, os
-from PIL import Image
+# from PIL import Image
 import urllib.request
 from test_server.data.sql import sql_select, sql_exec
 
@@ -366,28 +366,63 @@ shutil.rmtree( src ) 递归删除一个目录以及目录内的所有内容
 
 '''
 
-import json
-import pickle
+import selenium
+import time
+from appium import webdriver
 
-info = {
-	"name": "hua",
-	"age": 18
+adevice = {
+	"platformName": "Android",
+	"platformVersion": "8.1.0",  # adb shell getprop ro.build.version.release
+	"deviceName": "b649c4d",  # adb devices
+	"appPackage": "com.fcx.jy",
+	'newCommandTimeout': "3000",
+	"automationName":"uiautomator2",
+	"appActivity": "com.fcx.jy.ui.activity.LoginActivity"
 }
 
-with open("hua.txt", "r") as f:
-	data = json.loads(f.read())
-print(data["age"])
-# data=eval(f.read())#将字符串转为字典；
-# print(data["age"])
+'''
+Find By	Selector
+id	com.fcx.jy:id/tv_login
+xpath	/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout[3]/android.widget.TextView[1]
 
-f = open("hua.txt", "rb")
-data = pickle.loads(f.read())  # 同等于：data=pickle.load(f)
-print(data["name"])
-print(__file__)  # :返回当前文件的相对路径
-print(os.path.abspath(__file__))  # :返回当前文件的绝对路径
-f = open("hua.txt", "r")
-data = json.load(f)
+Attribute	Value
+index	0
+text	登录
+class	android.widget.TextView
+package	com.fcx.jy
+content-desc	
+checkable	false
+checked	false
+clickable	true
+enabled	true
+focusable	true
+focused	false
+scrollable	false
+long-clickable	true
+password	false
+selected	false
+bounds	[45,1334][1035,1484]
+resource-id	com.fcx.jy:id/tv_login
+instance	0
+'''
 
-import os
+print('selenium version = ', selenium.__version__)
+# print('webdriver version = ', appium.__version__)
+driver = webdriver.Remote('http://localhost:4723/wd/hub', adevice)
+print(1)
+time.sleep(5)
 
-print(os.path.abspath(__file__))
+driver.find_element_by_id("com.fcx.jy:id/tv_login").click()
+
+time.sleep(1)
+driver.find_element_by_id("com.fcx.jy:id/edt_mobile").send_keys("18007530111")
+time.sleep(1)
+driver.find_element_by_id("com.fcx.jy:id/edt_code").send_keys("00000000")
+driver.find_element_by_id("com.fcx.jy:id/tv_login").click()
+
+time.sleep(1)
+driver.find_element_by_id("com.fcx.jy:id/rb_bt3").click()
+
+# driver.find_element_by_class_name("涵涵").click()
+
+
