@@ -80,10 +80,9 @@ class VerifySigningContract():
 			writeLog('letterOfEntrustment>>>error:', err)
 
 
-# v = VerifySigningContract()
-# print(v.contractOfAffreightment())
-# v.letterOfEntrustment()
-
+v = VerifySigningContract()
+v.checkTheContract()
+v.letterOfEntrustment()
 
 '''
 司机

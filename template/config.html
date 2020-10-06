@@ -149,7 +149,7 @@ echo $data; -->
             <div class="top">
 
                 <h1>addMoney</h1>
-                <input id="account" type="text" name="" placeholder="account" maxlength="11" oninput = "value=value.replace(/[^\d]/g,'')">
+                <input id="account" type="text" name="" placeholder="account">
                 <input id="money" type="text" name="" placeholder="money">
                 <input id="send" type="button" onclick="addMoney()" value="send">
             </div>
@@ -172,7 +172,7 @@ echo $data; -->
                     var httpRequest = new XMLHttpRequest();
                     httpRequest.open('POST', 'http://127.0.0.1:8800/addMoney', true);
                     httpRequest.setRequestHeader("Content-type","application/json");
-                    var obj = {"mobile":account,"money":parseInt(money)};
+                    var obj = {"mobile":account,"money":money};
                     httpRequest.send(JSON.stringify(obj));
                     httpRequest.onreadystatechange = function () {
                         if (httpRequest.readyState == 4 && httpRequest.status == 200) {

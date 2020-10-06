@@ -40,3 +40,4 @@ def Complain():
 		writeLog("Complain:异常", Err)
 
 # Complain()
+IOSRechargeRecord()

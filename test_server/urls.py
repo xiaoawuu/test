@@ -21,6 +21,7 @@ from test_server.Order import Process
 
 urlpatterns = [
     url(r'^addMoney', views.addMoney),
+    url(r'^addMembers', views.addMembers),
     url(r'^removeUser', views.removeUser),
     url(r'^testPortInsert', views.testPortInsert),
     url(r'^$', views.addMoneys),

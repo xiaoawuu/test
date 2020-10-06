@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hierarchy rotation="0">
+    <android.widget.FrameLayout index="0" text="" class="android.widget.FrameLayout" package="com.fcx.jy"
+                                content-desc="" checkable="false" checked="false" clickable="false" enabled="true"
+                                focusable="false" focused="false" scrollable="false" long-clickable="false"
+                                password="false" selected="false" bounds="[0,0][1080,2034]" resource-id="" instance="0">
+        <android.widget.LinearLayout index="0" text="" class="android.widget.LinearLayout" package="com.fcx.jy"
+                                     content-desc="" checkable="false" checked="false" clickable="false" enabled="true"
+                                     focusable="false" focused="false" scrollable="false" long-clickable="false"
+                                     password="false" selected="false" bounds="[0,0][1080,2034]" resource-id=""
+                                     instance="0">
+            <android.widget.FrameLayout index="0" text="" class="android.widget.FrameLayout" package="com.fcx.jy"
+                                        content-desc="" checkable="false" checked="false" clickable="false"
+                                        enabled="true" focusable="false" focused="false" scrollable="false"
+                                        long-clickable="false" password="false" selected="false"
+                                        bounds="[0,0][1080,2034]" resource-id="" instance="1">
+                <android.widget.LinearLayout index="0" text="" class="android.widget.LinearLayout" package="com.fcx.jy"
+                                             content-desc="" checkable="false" checked="false" clickable="false"
+                                             enabled="true" focusable="false" focused="false" scrollable="false"
+                                             long-clickable="false" password="false" selected="false"
+                                             bounds="[0,0][1080,2034]" resource-id="com.fcx.jy:id/action_bar_root"
+                                             instance="1">
+                    <android.widget.FrameLayout index="0" text="" class="android.widget.FrameLayout"
+                                                package="com.fcx.jy" content-desc="" checkable="false" checked="false"
+                                                clickable="false" enabled="true" focusable="false" focused="false"
+                                                scrollable="false" long-clickable="false" password="false"
+                                                selected="false" bounds="[0,0][1080,2034]"
+                                                resource-id="android:id/content" instance="2">
+                        <android.widget.LinearLayout index="0" text="" class="android.widget.LinearLayout"
+                                                     package="com.fcx.jy" content-desc="" checkable="false"
+                                                     checked="false" clickable="false" enabled="true" focusable="false"
+                                                     focused="false" scrollable="false" long-clickable="false"
+                                                     password="false" selected="false" bounds="[0,0][1080,2034]"
+                                                     resource-id="com.fcx.jy:id/baseroot_view" instance="2">
+                            <android.widget.FrameLayout index="0" text="" class="android.widget.FrameLayout"
+                                                        package="com.fcx.jy" content-desc="" checkable="false"
+                                                        checked="false" clickable="false" enabled="true"
+                                                        focusable="false" focused="false" scrollable="false"
+                                                        long-clickable="false" password="false" selected="false"
+                                                        bounds="[0,72][1080,2034]"
+                                                        resource-id="com.fcx.jy:id/rootcontent_view" instance="3">
+                                <android.widget.LinearLayout index="0" text="" class="android.widget.LinearLayout"
+                                                             package="com.fcx.jy" content-desc="" checkable="false"
+                                                             checked="false" clickable="false" enabled="true"
+                                                             focusable="false" focused="false" scrollable="false"
+                                                             long-clickable="false" password="false" selected="false"
+                                                             bounds="[0,72][1080,2034]" resource-id="" instance="3">
+                                    <android.widget.RelativeLayout index="0" text=""
+                                                                   class="android.widget.RelativeLayout"
+                                                                   package="com.fcx.jy" content-desc=""
+                                                                   checkable="false" checked="false" clickable="false"
+                                                                   enabled="true" focusable="false" focused="false"
+                                                                   scrollable="false" long-clickable="false"
+                                                                   password="false" selected="false"
+                                                                   bounds="[0,72][1080,213]"
+                                                                   resource-id="com.fcx.jy:id/top_view" instance="0">
+                                        <android.widget.LinearLayout NAF="true" index="0" text=""
+                                                                     class="android.widget.LinearLayout"
+                                                                     package="com.fcx.jy" content-desc=""
+                                                                     checkable="false" checked="false" clickable="true"
+                                                                     enabled="true" focusable="true" focused="false"
+                                                                     scrollable="false" long-clickable="false"
+                                                                     password="false" selected="false"
+                                                                     bounds="[0,72][138,213]"
+                                                                     resource-id="com.fcx.jy:id/back_img" instance="4">
+                                            <android.widget.ImageView index="0" text="" class="android.widget.ImageView"
+                                                                      package="com.fcx.jy" content-desc=""
+                                                                      checkable="false" checked="false"
+                                                                      clickable="false" enabled="true" focusable="false"
+                                                                      focused="false" scrollable="false"
+                                                                      long-clickable="false" password="false"
+                                                                      selected="false" bounds="[45,118][93,166]"
+                                                                      resource-id="" instance="0"/>
+                                        </android.widget.LinearLayout>
+                                        <android.widget.TextView index="1" text="登录" class="android.widget.TextView"
+                                                                 package="com.fcx.jy" content-desc="" checkable="false"
+                                                                 checked="false" clickable="false" enabled="true"
+                                                                 focusable="false" focused="false" scrollable="false"
+                                                                 long-clickable="false" password="false"
+                                                                 selected="false" bounds="[495,113][585,171]"
+                                                                 resource-id="com.fcx.jy:id/title_text" instance="0"/>
+                                    </android.widget.RelativeLayout>
+                                    <android.view.View index="1" text="" class="android.view.View" package="com.fcx.jy"
+                                                       content-desc="" checkable="false" checked="false"
+                                                       clickable="false" enabled="true" focusable="false"
+                                                       focused="false" scrollable="false" long-clickable="false"
+                                                       password="false" selected="false" bounds="[0,213][1080,258]"
+                                                       resource-id="" instance="0"/>
+                                    <android.widget.LinearLayout index="2" text="" class="android.widget.LinearLayout"
+                                                                 package="com.fcx.jy" content-desc="" checkable="false"
+                                                                 checked="false" clickable="false" enabled="true"
+                                                                 focusable="false" focused="false" scrollable="false"
+                                                                 long-clickable="false" password="false"
+                                                                 selected="false" bounds="[0,258][1080,531]"
+                                                                 resource-id="com.fcx.jy:id/linear_root" instance="5">
+                                        <android.widget.LinearLayout index="0" text=""
+                                                                     class="android.widget.LinearLayout"
+                                                                     package="com.fcx.jy" content-desc=""
+                                                                     checkable="false" checked="false" clickable="false"
+                                                                     enabled="true" focusable="false" focused="false"
+                                                                     scrollable="false" long-clickable="false"
+                                                                     password="false" selected="false"
+                                                                     bounds="[0,258][1080,393]" resource-id=""
+                                                                     instance="6">
+                                            <android.widget.TextView index="0" text="登录账号"
+                                                                     class="android.widget.TextView"
+                                                                     package="com.fcx.jy" content-desc=""
+                                                                     checkable="false" checked="false" clickable="false"
+                                                                     enabled="true" focusable="false" focused="false"
+                                                                     scrollable="false" long-clickable="false"
+                                                                     password="false" selected="false"
+                                                                     bounds="[45,300][201,350]" resource-id=""
+                                                                     instance="1"/>
+                                            <android.widget.EditText index="1" text="请输入手机号/账号"
+                                                                     class="android.widget.EditText"
+                                                                     package="com.fcx.jy" content-desc=""
+                                                                     checkable="false" checked="false" clickable="true"
+                                                                     enabled="true" focusable="true" focused="true"
+                                                                     scrollable="false" long-clickable="true"
+                                                                     password="false" selected="false"
+                                                                     bounds="[231,258][1050,393]"
+                                                                     resource-id="com.fcx.jy:id/edt_mobile"
+                                                                     instance="0"/>
+                                        </android.widget.LinearLayout>
+                                        <android.view.View index="1" text="" class="android.view.View"
+                                                           package="com.fcx.jy" content-desc="" checkable="false"
+                                                           checked="false" clickable="false" enabled="true"
+                                                           focusable="false" focused="false" scrollable="false"
+                                                           long-clickable="false" password="false" selected="false"
+                                                           bounds="[0,393][1080,396]" resource-id="" instance="1"/>
+                                        <android.widget.LinearLayout index="2" text=""
+                                                                     class="android.widget.LinearLayout"
+                                                                     package="com.fcx.jy" content-desc=""
+                                                                     checkable="false" checked="false" clickable="false"
+                                                                     enabled="true" focusable="false" focused="false"
+                                                                     scrollable="false" long-clickable="false"
+                                                                     password="false" selected="false"
+                                                                     bounds="[0,396][1080,531]"
+                                                                     resource-id="com.fcx.jy:id/linear_verify"
+                                                                     instance="7">
+                                            <android.widget.TextView index="0" text="登录密码"
+                                                                     class="android.widget.TextView"
+                                                                     package="com.fcx.jy" content-desc=""
+                                                                     checkable="false" checked="false" clickable="false"
+                                                                     enabled="true" focusable="false" focused="false"
+                                                                     scrollable="false" long-clickable="false"
+                                                                     password="false" selected="false"
+                                                                     bounds="[45,439][201,489]" resource-id=""
+                                                                     instance="2"/>
+                                            <android.widget.EditText index="1" text="请输入密码"
+                                                                     class="android.widget.EditText"
+                                                                     package="com.fcx.jy" content-desc=""
+                                                                     checkable="false" checked="false" clickable="true"
+                                                                     enabled="true" focusable="true" focused="false"
+                                                                     scrollable="false" long-clickable="true"
+                                                                     password="true" selected="false"
+                                                                     bounds="[231,396][846,531]"
+                                                                     resource-id="com.fcx.jy:id/edt_code" instance="1"/>
+                                            <android.widget.TextView index="2" text="忘记密码"
+                                                                     class="android.widget.TextView"
+                                                                     package="com.fcx.jy" content-desc=""
+                                                                     checkable="false" checked="false" clickable="true"
+                                                                     enabled="true" focusable="true" focused="false"
+                                                                     scrollable="false" long-clickable="false"
+                                                                     password="false" selected="false"
+                                                                     bounds="[846,396][1050,531]"
+                                                                     resource-id="com.fcx.jy:id/tv_code" instance="3"/>
+                                        </android.widget.LinearLayout>
+                                    </android.widget.LinearLayout>
+                                    <android.widget.TextView index="3" text="登录" class="android.widget.TextView"
+                                                             package="com.fcx.jy" content-desc="" checkable="false"
+                                                             checked="false" clickable="true" enabled="true"
+                                                             focusable="true" focused="false" scrollable="false"
+                                                             long-clickable="false" password="false" selected="false"
+                                                             bounds="[60,576][1020,711]"
+                                                             resource-id="com.fcx.jy:id/tv_login" instance="4"/>
+                                </android.widget.LinearLayout>
+                            </android.widget.FrameLayout>
+                        </android.widget.LinearLayout>
+                    </android.widget.FrameLayout>
+                </android.widget.LinearLayout>
+            </android.widget.FrameLayout>
+        </android.widget.LinearLayout>
+        <android.view.View index="1" text="" class="android.view.View" package="com.fcx.jy" content-desc=""
+                           checkable="false" checked="false" clickable="false" enabled="true" focusable="false"
+                           focused="false" scrollable="false" long-clickable="false" password="false" selected="false"
+                           bounds="[0,0][1080,72]" resource-id="android:id/statusBarBackground" instance="2"/>
+        <android.view.View index="2" text="" class="android.view.View" package="com.fcx.jy" content-desc=""
+                           checkable="false" checked="false" clickable="false" enabled="true" focusable="false"
+                           focused="false" scrollable="false" long-clickable="false" password="false" selected="false"
+                           bounds="[0,2034][1080,2160]" resource-id="android:id/navigationBarBackground" instance="3"/>
+    </android.widget.FrameLayout>
+</hierarchy>
