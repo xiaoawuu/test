@@ -102,25 +102,7 @@ def update_base64():
 
 # update_base64()
 
-mobile = {
-	"17043763141": "15893616950",
-	"17043763143": "15703877501",
-	"17043763144": "18786262305",
-	"17043763145": "15919957852",
-	"17043763146": "15976219293",
-	"17043763147": "13927329487",
-	"17043763148": "13525728356",
-	"17043763149": "13927377568",
-	"16530800915": "13471231501",
-	"16530800943": "15986572950",
-	"16530800942": "15243961259",
-	"16530801180": "13531655646",
-	"16530800914": "18319338773",
-	"16530800620": "13802359890",
-	"15263819410": "18638085967",
-	"16530800619": "13824225523",
-	"16530800912": "13580777723",
-	"16530800913": "18937523542"}
+mobile = {}
 import requests, json
 
 
@@ -134,7 +116,7 @@ def requestsPort(user_id, new_mobile):
 	# url=None
 	url = "https://myadmin-api.zyb56.com/customer/changeUserMobile"
 	re_data = {
-		"token": "6794428c975c49e1d8891c4f900261df",
+		"token": "c1c95d62b91af8d7bb8e03a38e6b5215",
 		"id": str(user_id),
 		"mobile": new_mobile
 	}
@@ -384,180 +366,28 @@ shutil.rmtree( src ) 递归删除一个目录以及目录内的所有内容
 
 '''
 
-# import json
-# import pickle
-#
-# info = {
-# 	"name": "hua",
-# 	"age": 18
-# }
-#
-# with open("hua.txt", "r") as f:
-# 	data = json.loads(f.read())
+import json
+import pickle
+
+info = {
+	"name": "hua",
+	"age": 18
+}
+
+with open("hua.txt", "r") as f:
+	data = json.loads(f.read())
+print(data["age"])
+# data=eval(f.read())#将字符串转为字典；
 # print(data["age"])
-# # data=eval(f.read())#将字符串转为字典；
-# # print(data["age"])
-#
-# f = open("hua.txt", "rb")
-# data = pickle.loads(f.read())  # 同等于：data=pickle.load(f)
-# print(data["name"])
-# print(__file__)  # :返回当前文件的相对路径
-# print(os.path.abspath(__file__))  # :返回当前文件的绝对路径
-# f = open("hua.txt", "r")
-# data = json.load(f)
-#
-# import os
-#
-# print(os.path.abspath(__file__))
 
-import unittest
-import selenium
-import time
-from appium import webdriver
+f = open("hua.txt", "rb")
+data = pickle.loads(f.read())  # 同等于：data=pickle.load(f)
+print(data["name"])
+print(__file__)  # :返回当前文件的相对路径
+print(os.path.abspath(__file__))  # :返回当前文件的绝对路径
+f = open("hua.txt", "r")
+data = json.load(f)
 
-adevice = {
-	"platformName": "Android",
-	"platformVersion": "8.1.0",  # adb shell getprop ro.build.version.release
-	"deviceName": "b649c4d",  # adb devices
-	"appPackage": "com.fcx.jy",
-	'newCommandTimeout': "3000",
-	# "automationName":"uiautomator2",
-	"appActivity": "com.fcx.jy.ui.activity.LoginActivity"
-}
+import os
 
-'''
-Find By	Selector
-id	com.fcx.jy:id/tv_login
-xpath	/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout[3]/android.widget.TextView[1]
-
-Attribute	Value
-index	0
-text	登录
-class	android.widget.TextView
-package	com.fcx.jy
-content-desc	
-checkable	false
-checked	false
-clickable	true
-enabled	true
-focusable	true
-focused	false
-scrollable	false
-long-clickable	true
-password	false
-selected	false
-bounds	[45,1334][1035,1484]
-resource-id	com.fcx.jy:id/tv_login
-instance	0
-'''
-
-print('selenium version = ', selenium.__version__)
-# print('webdriver version = ', appium.__version__)
-driver = webdriver.Remote('http://localhost:4723/wd/hub', adevice)
-print(1)
-time.sleep(20)
-# driver.tap()
-# driver.find_element_by_xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout[3]").click()# print(driver.page_source)
-# driver.refresh()
-time.sleep(10)
-# driver.find_element_by_id("com.fcx.jy:id/edt_mobile").send_keys("18007530111")
-try:
-	driver.find_element_by_xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout[3]/android.widget.TextView[1]").click(1)
-except Exception as err:
-	print('ERR:',err)
-# print(driver.page_source)
-# print(1.5)
-# driver.find_element_by_xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout[3]/android.widget.TextView[1]").click()
-# print(2)
-
-
-# device = {}
-# device['platformName'] = 'Android'
-# device['platformVersion'] = "8.1.0"
-# device['deviceName'] = 'b649c4d'
-# device['appPackage'] = 'com.fcx.jy'
-# device['appActivity'] = 'com.fcx.jy.ui.activity.LoginActivity'
-
-
-requestData = {
-	"notCanPayListsSize": 0,
-	"notCanPayMoney": 0,
-	"canRebateServiceMoney": 0,
-	"canPayListsSize": 2,
-	"canPayMoney": 17,  # 支付总运费
-	"notCanPayServiceMoney": 0,
-	"notCanPayTotalMoney": 0,
-	"notCanPayList": [],
-	"canPayServiceMoney": 1.05,  # 总服务费
-	"notCanPayFreightIds": "",
-	"canPayList": [
-		{
-			"invoiceCompanyId": 1,  # 开票公司id
-			"payObjectType": 2,  # 支付对象（1司机，2车队长）
-			"payMoney": 17,  # 支付总运费
-			"rebateSericeMoney": 0,
-			"money": 18.05,  # 总额
-			"userMobile": "15152222222",  # 车队手机号
-			"lists": [],
-			"sericeMoney": 0.00,  # 总服务费
-			"userName": "得嘞-爷",
-			"bankCardId": None
-		}
-	],
-	"canPayTotalMoney": 18.05  # 总额
-}
-
-'''
-车队模式
-'''
-# 单笔费用
-singleFee = 17
-singlePriceService = 1.05
-driverName = '中午呢'
-driverMobile = '13651770956'
-payeeName = '中午呢'
-payeeMobile = '13651770956'
-
-
-def addData(counts):
-	i, sun = 0, counts
-	while 1 <= counts:
-		counts -= 1
-		i += 1
-		sData = {
-			"payType": 2,
-			"paymentAmount": singleFee,
-			"priceService": singlePriceService,
-			"rebatePriceService": 0,
-			"freightId": '${' + "freightId_{}".format(i) + "}",
-			"payObjectNumber": 2,
-			"companyName": None,
-			"bankcardId": None,
-			"invoiceCompanyId": None,
-			"channelCode": 9,
-			"entrustType": 1,
-			"captchaCode": None,
-			"loanAmount": None,
-			"interestReceived": None,
-			"lendingRate": None,
-			"lendingDays": 0,
-			"driverName": driverName,
-			"driverMobile": driverMobile,
-			"payeeAccount": "",
-			"payeeName": payeeName,  # 收款人姓名
-			"payeeMobile": payeeMobile,  # 收款人手机号码
-			"rate": 0.058,
-			"payInfo": '${' + "freightId_{}".format(i) + "}|2"
-		}
-		requestData["canPayList"][0]['lists'].append(sData)
-	requestData['canPayMoney'] = singleFee * sun
-	requestData['canPayServiceMoney'] = round(singlePriceService * sun, 2)
-	requestData['canPayList'][0]["payMoney"] = singleFee * sun
-	requestData['canPayList'][0]["sericeMoney"] = round(singlePriceService * sun, 2)
-	requestData['canPayList'][0]["money"] = round((singlePriceService + singleFee) * sun, 2)
-	requestData['canPayTotalMoney'] = round((singlePriceService + singleFee) * sun, 2)
-	requestData['canPayList'][0]['userMobile'] = driverMobile
-	requestData['canPayList'][0]['userName'] = driverName
-	print(json.dumps(requestData))
-
-# addData(100)
+print(os.path.abspath(__file__))
