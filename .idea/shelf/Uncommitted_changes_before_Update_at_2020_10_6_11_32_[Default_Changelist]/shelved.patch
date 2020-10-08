@@ -1,0 +1,840 @@
+Index: test_server/tests.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># print(sys.path)\r\nfrom test_server.data import mysqls\r\n\r\n'''\r\n['C:\\\\test_server\\\\test_server',\r\n 'C:\\\\test_server',\r\n  'C:\\\\test_server\\\\bin\\\\test_port\\\\venv\\\\Scripts\\\\python37.zip',\r\n   'C:\\\\install_file\\\\python3\\\\DLLs', 'C:\\\\install_file\\\\python3\\\\lib',\r\n    'C:\\\\install_file\\\\python3', 'C:\\\\test_server\\\\bin\\\\test_port\\\\venv', \r\n    'C:\\\\test_server\\\\bin\\\\test_port\\\\venv\\\\lib\\\\site-packages', \r\n    'C:\\\\test_server\\\\bin\\\\test_port\\\\venv\\\\lib\\\\site-packages\\\\setuptools-40.8.0-py3.7.egg',\r\n     'C:\\\\test_server\\\\bin\\\\test_port\\\\venv\\\\lib\\\\site-packages\\\\pip-19.0.3-py3.7.egg']\r\n'''\r\n\r\n\r\ndef tests():\r\n\tprint('------------')\r\n\treturn True\r\n\r\n\r\n# def test():\r\n# \tlist = ['LO-202008009374', 'LO-202008009375', 'LO-202008009376', 'LO-202008009377', 'LO-202008009378']\r\n# \tdict = {}\r\n# \tfor i in list:\r\n# \t\tprint('循环：',i)\r\n# \t\tsql = \"SELECT freight_id FROM tms_wl_freight WHERE first_order_id ='{}';\".format(i)\r\n# \t\tdata = mysqls.Data().query('tms_test', sql)\r\n# \t\tdict[i] = data[0]['freight_id']\r\n# \treturn dict\r\n# # print(max('4','0','1'))\r\n#\r\n# a= mysqls.Data().query('tms_test',\"SELECT driver_day_count FROM tms_sys_order_limit WHERE c_id = (SELECT c_id FROM tms_wl_user WHERE user_name = 'AHD0285');\")\r\n#\r\n# print(a)\r\n\r\n\r\n# f = open(\"data1.txt\",\"r\")   #设置文件对象\r\n# f.close() #关闭文件\r\n\r\n\r\n# 为了方便，避免忘记close掉这个文件对象，可以用下面这种方式替代\r\ndef read():\r\n\tprint(123456789)\r\n\tdata = '123456789asdf'\r\n\ttry:\r\n\r\n\t\twith open('data.txt', \"a\", encoding=\"utf-8\") as f:  # 设置文件对象\r\n\t\t\tf.write(str(data) + \"\\n\")  # 可以是随便对文件的操作\r\n\t\t\treturn True\r\n\texcept Exception as e:\r\n\t\treturn '异常：{}'.format(e)\r\n\tfinally:\r\n\t\tf.close()\r\n\r\n\r\n# read()\r\n\r\n# 导入 base64模块\r\nimport base64\r\n\r\n# 给定需要转换的字符串\r\nstr1 = \"18007530111\"\r\n\r\n# 需要转成2进制格式才可以转换，所以我们这里再手动转换一下\r\nresult = base64.b64encode(str1.encode())\r\n\r\n# 打印转换后的结果\r\n# print('转换后的结果 -->  ',result)\r\n\r\n# 再把加密后的结果解码7483\r\ntemp = base64.b64decode('6Zq+6YGT5Yeg54K557uT5p2f')\r\n\r\n\r\n# 同样的，解码后的结0果是二进制，我们再转换一下\r\n# print(temp.decode())\r\n# A = base64.b64encode(temp.encode(encoding='utf8'))\r\n# print(str(A, 'utf8'))\r\n# read('ahuau')\r\ndef is_num_by_except(num):\r\n\ttry:\r\n\t\tint(num)\r\n\t\treturn True\r\n\texcept ValueError:\r\n\t\treturn False\r\n\r\n\r\nfrom test_server.data.sql import sql_select, sql_exec\r\n\r\n\r\ndef update_base64():\r\n\t# data = sql_select(\"SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile LIKE 'MT%';\")\r\n\tdata = sql_select(\"SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile != ''\")\r\n\tfor i in data:\r\n\t\tif not is_num_by_except(i[1]):\r\n\t\t\ttry:\r\n\t\t\t\ttemp = base64.b64decode(i[1].replace('\\n', '').replace('\\r', ''))\r\n\t\t\t\tsql_exec(\r\n\t\t\t\t\t\"UPDATE biz_invite_code SET recommend_mobile = '{}' WHERE id = {};\".format(temp.decode(), i[0]))\r\n\t\t\t\tprint(i[1], '转换为：', temp.decode())\r\n\t\t\texcept:\r\n\t\t\t\tcontinue\r\n\r\n\r\n# update_base64()\r\n\r\nmobile = {}\r\nimport requests, json\r\n\r\n\r\ndef requestsPort(user_id, new_mobile):\r\n\t'''\r\n\tTP5修改手机号\r\n\t:param user_id:\r\n\t:param new_mobile:\r\n\t:return:\r\n\t'''\r\n\t# url=None\r\n\turl = \"https://myadmin-api.zyb56.com/customer/changeUserMobile\"\r\n\tre_data = {\r\n\t\t\"token\": \"6f21fc4284910fdd8336b9841bf2aeca\",\r\n\t\t\"id\": str(user_id),\r\n\t\t\"mobile\": new_mobile\r\n\t}\r\n\ttry:\r\n\t\theaders = {\r\n\t\t\t\"Content-Type\": \"application/json; charset=UTF-8\"\r\n\t\t}\r\n\t\tresponse = requests.post(url, data=json.dumps(re_data), headers=headers)\r\n\t\treturn response.json()\r\n\texcept:\r\n\t\treturn '异常'\r\n\r\n\r\nfrom test_server.data.mysqls import Data\r\n\r\n\r\ndef updateMobile():\r\n\tfor index, i in mobile.items():\r\n\t\tprint('index:', index, \"i\", i)\r\n\t\tuser_id = Data().query('zyb_live_r',\r\n\t\t\t\t\t\t\t   \"SELECT id FROM `zyb_db`.`zyb_customer` WHERE `mobile` = '{}';\".format(index))\r\n\t\tif user_id == ():\r\n\t\t\tcontinue\r\n\t\tprint('user_id：', user_id[0][\"id\"], '旧手机号：', index, '新手机号：', i)\r\n\t\tprint(requestsPort(user_id[0][\"id\"], i))\r\n\r\n# updateMobile()\r\nimport datetime\r\n\r\n# def getYesterday():\r\n# \tyesterday = datetime.date.today() + datetime.timedelta(-1)\r\n# \treturn yesterday\r\n# 输出\r\n# print(getYesterday())\r\n\r\nimport time\r\n# print()\r\n\r\n\r\nimport urllib, shutil\r\nimport glob, os\r\nfrom PIL import Image\r\nimport urllib.request\r\nfrom test_server.data.sql import sql_select,sql_exec\r\n\r\n\r\nclass ImageDetection():\r\n\tdef __init__(self):\r\n\t\tself.path = \"C:\\picture\\\\\"\r\n\t\tself.path2 = \"C:\\picture\\error\\\\\"\r\n\r\n\tdef isValid(self, file):\r\n\t\t'''\r\n\t\t工具：校验图片是否正常打开\r\n\t\t:param file:\r\n\t\t:return:\r\n\t\t'''\r\n\t\ttry:\r\n\t\t\tImage.open(file).load()\r\n\t\texcept OSError:\r\n\t\t\treturn False\r\n\t\treturn True\r\n\r\n\tdef detectionPicture(self):\r\n\t\tpaths = glob.glob(os.path.join(self.path, '*.jpg'))\r\n\t\tpaths.sort()\r\n\t\tfor path in paths:\r\n\t\t\ta = path[11:][:-4]\r\n\t\t\tis_true = self.isValid(path)\r\n\t\t\tif is_true == False:\r\n\t\t\t\tprint(a)\r\n\t\t\telse:\r\n\t\t\t\tos.remove(path)\r\n\r\n\tdef downloadImage(self, sql):\r\n\t\t'''\r\n\t\t下载图片\r\n\t\t:return:\r\n\t\t'''\r\n\t\tdataSQL = sql_select(sql)\r\n\t\tself.errList = []\r\n\t\tself.noneList = []\r\n\t\tfor i in dataSQL:\r\n\t\t\turl = 'http://app.juyuanpark.com' + i[1]\r\n\t\t\ttry:\r\n\t\t\t\trequest = urllib.request.Request(url)\r\n\t\t\t\tresponse = urllib.request.urlopen(request)\r\n\t\t\t\tget_img = response.read()\r\n\t\t\t\t# 图片下载至 C:\\picture\r\n\t\t\t\tpath = self.path + str(i[0]) + '.jpg'\r\n\t\t\t\twith open(path, 'wb') as fp:\r\n\t\t\t\t\tfp.write(get_img)\r\n\t\t\t\t# print('图片下载完成：{}'.format(i[0]))\r\n\t\t\t\tis_true = self.isValid(path)\r\n\t\t\t\tif is_true == False:\r\n\t\t\t\t\tself.errList.append(i[0])\r\n\t\t\t\t\tshutil.move(path, self.path2 + str(i[0]) + '.jpg')\r\n\t\t\t\t# shutil.copy2(path,self.path2 + str(i[0]) + '.jpg')\r\n\t\t\t\telse:\r\n\t\t\t\t\tos.remove(path)\r\n\t\t\texcept:\r\n\t\t\t\tself.noneList.append(i[0])\r\n\t\t\t\tprint('访问为空:{}'.format(i[0]))\r\n\t\t\t\tcontinue\r\n\t\tprint('损坏的图片:')\r\n\t\tprint(self.errList)\r\n\t\tprint('为空的图片:')\r\n\t\tprint(self.noneList)\r\n\tdef headPortrait(self,sql):\r\n\t\t# list_a = []\r\n\t\tdataSQL = sql_select(sql)\r\n\t\t# print(dataSQL)\r\n\t\tfor i in dataSQL:\r\n\t\t\turls = i[1][:-4]+\"_zoom.png\"\r\n\t\t\t# print(urls)\r\n\t\t\ttry:\r\n\t\t\t\trequest = urllib.request.Request(urls)\r\n\t\t\t\tresponse = urllib.request.urlopen(request)\r\n\t\t\t\tget_img = response.read()\r\n\t\t\t\t# 图片下载至 C:\\picture\r\n\t\t\t\tpath = self.path + str(i[0]) + '.jpg'\r\n\t\t\t\twith open(path, 'wb') as fp:\r\n\t\t\t\t\tfp.write(get_img)\r\n\t\t\t\t# print('图片下载完成：{}'.format(i[0]))\r\n\t\t\t\tis_true = self.isValid(path)\r\n\t\t\t\t# print('is_true',is_true)\r\n\t\t\t\tif is_true == False:\r\n\t\t\t\t\tos.remove(path)\r\n\t\t\t\telse:\r\n\t\t\t\t\t# updateSQL = \"UPDATE biz_user SET picture = '{}' WHERE id = {};\".format(urls[25:],i[0])\r\n\t\t\t\t\t# sql_exec(updateSQL)\r\n\t\t\t\t\tprint(i[0])\r\n\t\t\t\t\tprint(urls)\r\n\t\t\texcept:\r\n\t\t\t\tprint('访问为空:{}'.format(i[0]))\r\n\t\t\t\tcontinue\r\n\tdef photoAlbum(self,sql):\r\n\t\tlist1 = [] # 都没有\r\n\t\tlist2 = [] # 小图有\r\n\t\tlist3 = [] # 大图有\r\n\t\tlist4 = [] # 都图有\r\n\t\tdataSQL = sql_select(sql)\r\n\t\tfor i in dataSQL:\r\n\t\t\tminUrl = 'http://app.juyuanpark.com'+i[1]\r\n\t\t\tmaxUrl = 'http://app.juyuanpark.com'+i[2]\r\n\t\t\ttry:\r\n\r\n\t\t\t\trequest = urllib.request.Request(minUrl)\r\n\t\t\t\tresponse = urllib.request.urlopen(request)\r\n\t\t\t\tget_img = response.read()\r\n\t\t\t\t# 图片下载至 C:\\picture\r\n\t\t\t\tpath1 = self.path + 'min' + str(i[0]) + '.jpg'\r\n\t\t\t\twith open(path1, 'wb') as fp:\r\n\t\t\t\t\tfp.write(get_img)\r\n\t\t\t\tis_true1 = self.isValid(path1)\r\n\r\n\t\t\t\trequest = urllib.request.Request(maxUrl)\r\n\t\t\t\tresponse = urllib.request.urlopen(request)\r\n\t\t\t\tget_img = response.read()\r\n\t\t\t\t# 图片下载至 C:\\picture\r\n\t\t\t\tpath2 = self.path + 'max' + str(i[0]) + '.jpg'\r\n\t\t\t\twith open(path2, 'wb') as fp:\r\n\t\t\t\t\tfp.write(get_img)\r\n\t\t\t\tis_true2 = self.isValid(path2)\r\n\t\t\t\tif is_true1 == True and\tis_true2 == True:\r\n\t\t\t\t\tos.remove(path1)\r\n\t\t\t\t\tos.remove(path2)\r\n\t\t\t\telif is_true1 == True and is_true2 == False:\r\n\t\t\t\t\tos.remove(path1)\r\n\t\t\t\t\tlist2.append(i[0])\r\n\t\t\t\t\t# sql_exec(\"UPDATE biz_album SET water_img_url = '{}' WHERE id = {};\".format(i[1],i[0]))\r\n\t\t\t\telif is_true1 == False and is_true2 == True:\r\n\t\t\t\t\tos.remove(path2)\r\n\t\t\t\t\t# sql_exec(\"UPDATE biz_album SET img_url = '{}' WHERE id = {};\".format(i[2],i[0]))\r\n\t\t\t\t\tlist3.append(i[0])\r\n\t\t\t\telif is_true1 == False and is_true2 == False:\r\n\t\t\t\t\t# sql_exec('DELETE FROM biz_album WHERE id = {}'.format(i[0]))\r\n\t\t\t\t\tlist1.append(i[0])\r\n\t\t\texcept:\r\n\t\t\t\tprint('访问为空:{}'.format(i[0]))\r\n\t\t\t\tcontinue\r\n\t\tprint('list1',list1)\r\n\t\tprint('list2',list2)\r\n\t\tprint('list3',list3)\r\n\t\tprint('list4',list4)\r\n\r\n\r\n\r\n\r\n\r\n# i = ImageDetection()\r\n# i.a(sql)\r\n# sql = \"SELECT id,img_url FROM biz_album\"\r\n# sql = \"SELECT id,water_img_url  FROM biz_album\"\r\n# sql = \"SELECT id,picture  FROM biz_user\"\r\n# sql = \"SELECT id,img FROM biz_social_img\"\r\n# i.downloadImage(sql)\r\n'''\r\n# os 模块\r\nos.sep 可以取代操作系统特定的路径分隔符。windows下为 '\\\\'\r\nos.name 字符串指示你正在使用的平台。比如对于Windows，它是'nt'，而对于Linux/Unix用户，它是 'posix'\r\nos.getcwd() 函数得到当前工作目录，即当前Python脚本工作的目录路径\r\nos.getenv() 获取一个环境变量，如果没有返回none\r\nos.putenv(key, value) 设置一个环境变量值\r\nos.listdir(path) 返回指定目录下的所有文件和目录名\r\nos.remove(path) 函数用来删除一个文件\r\nos.system(command) 函数用来运行shell命令\r\nos.linesep 字符串给出当前平台使用的行终止符。例如，Windows使用 '\\r\\n'，Linux使用 '\\n' 而Mac使用 '\\r'\r\nos.path.split(path)  函数返回一个路径的目录名和文件名\r\nos.path.isfile() 和os.path.isdir()函数分别检验给出的路径是一个文件还是目录\r\nos.path.exists() 函数用来检验给出的路径是否真地存在\r\nos.curdir  返回当前目录 ('.')\r\nos.mkdir(path) 创建一个目录\r\nos.makedirs(path) 递归的创建目录\r\nos.chdir(dirname) 改变工作目录到dirname    \r\nos.path.getsize(name) 获得文件大小，如果name是目录返回0L\r\nos.path.abspath(name) 获得绝对路径\r\nos.path.normpath(path) 规范path字符串形式\r\nos.path.splitext()  分离文件名与扩展名\r\nos.path.join(path,name) 连接目录与文件名或目录\r\nos.path.basename(path) 返回文件名\r\nos.path.dirname(path) 返回文件路径\r\nos.walk(top,topdown=True,onerror=None)  遍历迭代目录\r\nos.rename(src, dst)  重命名file或者directory src到dst 如果dst是一个存在的directory, 将抛出OSError. 在Unix, 如果dst在存且是一个file, 如果用户有权限的话，它将被安静的替换. 操作将会失败在某些Unix 中如果src和dst在不同的文件系统中. 如果成功, 这命名操作将会是一个原子操作 (这是POSIX 需要). 在 Windows上, 如果dst已经存在, 将抛出OSError，即使它是一个文件. 在unix，Windows中有效。\r\nos.renames(old, new) 递归重命名文件夹或者文件。像rename()\r\n\r\n# shutil 模块\r\nshutil.copyfile( src, dst) 从源src复制到dst中去。当然前提是目标地址是具备可写权限。抛出的异常信息为IOException. 如果当前的dst已存在的话就会被覆盖掉\r\nshutil.move( src, dst)  移动文件或重命名\r\nshutil.copymode( src, dst) 只是会复制其权限其他的东西是不会被复制的\r\nshutil.copystat( src, dst) 复制权限、最后访问时间、最后修改时间\r\nshutil.copy( src, dst)  复制一个文件到一个文件或一个目录\r\nshutil.copy2( src, dst)  在copy上的基础上再复制文件最后访问时间与修改时间也复制过来了，类似于cp –p的东西\r\nshutil.copy2( src, dst)  如果两个位置的文件系统是一样的话相当于是rename操作，只是改名；如果是不在相同的文件系统的话就是做move操作\r\nshutil.copytree( olddir, newdir, True/Flase)\r\n把olddir拷贝一份newdir，如果第3个参数是True，则复制目录时将保持文件夹下的符号连接，如果第3个参数是False，则将在复制的目录下生成物理副本来替代符号连接\r\nshutil.rmtree( src ) 递归删除一个目录以及目录内的所有内容\r\n\r\n'''\r\n\r\n# print('SELECT id,img_url FROM biz_album')\r\n# print(153+149+96+77)\r\n\r\n\r\n\r\n# sql = \"INSERT INTO freight_id_payment (freight_id,id_s,`status`) VALUES ('DO-20200585685','{}',1)\".format(time.time())\r\n# print(mysqls.Data().query('localhost',sql))\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/tests.py	(revision b7d9a75e9e3d41ec0ada2e26139c0a753f11b2c0)
++++ test_server/tests.py	(date 1599315216162)
+@@ -14,8 +14,8 @@
+ 
+ 
+ def tests():
+-	print('------------')
+-	return True
++    print('------------')
++    return True
+ 
+ 
+ # def test():
+@@ -40,17 +40,17 @@
+ 
+ # 为了方便，避免忘记close掉这个文件对象，可以用下面这种方式替代
+ def read():
+-	print(123456789)
+-	data = '123456789asdf'
+-	try:
++    print(123456789)
++    data = '123456789asdf'
++    try:
+ 
+-		with open('data.txt', "a", encoding="utf-8") as f:  # 设置文件对象
+-			f.write(str(data) + "\n")  # 可以是随便对文件的操作
+-			return True
+-	except Exception as e:
+-		return '异常：{}'.format(e)
+-	finally:
+-		f.close()
++        with open('data.txt', "a", encoding="utf-8") as f:  # 设置文件对象
++            f.write(str(data) + "\n")  # 可以是随便对文件的操作
++            return True
++    except Exception as e:
++        return '异常：{}'.format(e)
++    finally:
++        f.close()
+ 
+ 
+ # read()
+@@ -77,28 +77,28 @@
+ # print(str(A, 'utf8'))
+ # read('ahuau')
+ def is_num_by_except(num):
+-	try:
+-		int(num)
+-		return True
+-	except ValueError:
+-		return False
++    try:
++        int(num)
++        return True
++    except ValueError:
++        return False
+ 
+ 
+ from test_server.data.sql import sql_select, sql_exec
+ 
+ 
+ def update_base64():
+-	# data = sql_select("SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile LIKE 'MT%';")
+-	data = sql_select("SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile != ''")
+-	for i in data:
+-		if not is_num_by_except(i[1]):
+-			try:
+-				temp = base64.b64decode(i[1].replace('\n', '').replace('\r', ''))
+-				sql_exec(
+-					"UPDATE biz_invite_code SET recommend_mobile = '{}' WHERE id = {};".format(temp.decode(), i[0]))
+-				print(i[1], '转换为：', temp.decode())
+-			except:
+-				continue
++    # data = sql_select("SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile LIKE 'MT%';")
++    data = sql_select("SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile != ''")
++    for i in data:
++        if not is_num_by_except(i[1]):
++            try:
++                temp = base64.b64decode(i[1].replace('\n', '').replace('\r', ''))
++                sql_exec(
++                    "UPDATE biz_invite_code SET recommend_mobile = '{}' WHERE id = {};".format(temp.decode(), i[0]))
++                print(i[1], '转换为：', temp.decode())
++            except:
++                continue
+ 
+ 
+ # update_base64()
+@@ -108,42 +108,43 @@
+ 
+ 
+ def requestsPort(user_id, new_mobile):
+-	'''
+-	TP5修改手机号
+-	:param user_id:
+-	:param new_mobile:
+-	:return:
+-	'''
+-	# url=None
+-	url = "https://myadmin-api.zyb56.com/customer/changeUserMobile"
+-	re_data = {
+-		"token": "6f21fc4284910fdd8336b9841bf2aeca",
+-		"id": str(user_id),
+-		"mobile": new_mobile
+-	}
+-	try:
+-		headers = {
+-			"Content-Type": "application/json; charset=UTF-8"
+-		}
+-		response = requests.post(url, data=json.dumps(re_data), headers=headers)
+-		return response.json()
+-	except:
+-		return '异常'
++    '''
++    TP5修改手机号
++    :param user_id:
++    :param new_mobile:
++    :return:
++    '''
++    # url=None
++    url = "https://myadmin-api.zyb56.com/customer/changeUserMobile"
++    re_data = {
++        "token": "6f21fc4284910fdd8336b9841bf2aeca",
++        "id": str(user_id),
++        "mobile": new_mobile
++    }
++    try:
++        headers = {
++            "Content-Type": "application/json; charset=UTF-8"
++        }
++        response = requests.post(url, data=json.dumps(re_data), headers=headers)
++        return response.json()
++    except:
++        return '异常'
+ 
+ 
+ from test_server.data.mysqls import Data
+ 
+ 
+ def updateMobile():
+-	for index, i in mobile.items():
+-		print('index:', index, "i", i)
+-		user_id = Data().query('zyb_live_r',
+-							   "SELECT id FROM `zyb_db`.`zyb_customer` WHERE `mobile` = '{}';".format(index))
+-		if user_id == ():
+-			continue
+-		print('user_id：', user_id[0]["id"], '旧手机号：', index, '新手机号：', i)
+-		print(requestsPort(user_id[0]["id"], i))
++    for index, i in mobile.items():
++        print('index:', index, "i", i)
++        user_id = Data().query('zyb_live_r',
++                               "SELECT id FROM `zyb_db`.`zyb_customer` WHERE `mobile` = '{}';".format(index))
++        if user_id == ():
++            continue
++        print('user_id：', user_id[0]["id"], '旧手机号：', index, '新手机号：', i)
++        print(requestsPort(user_id[0]["id"], i))
+ 
++
+ # updateMobile()
+ import datetime
+ 
+@@ -159,155 +160,154 @@
+ 
+ import urllib, shutil
+ import glob, os
+-from PIL import Image
++# from PIL import Image
+ import urllib.request
+-from test_server.data.sql import sql_select,sql_exec
++from test_server.data.sql import sql_select, sql_exec
+ 
+ 
+ class ImageDetection():
+-	def __init__(self):
+-		self.path = "C:\picture\\"
+-		self.path2 = "C:\picture\error\\"
++    def __init__(self):
++        self.path = "C:\picture\\"
++        self.path2 = "C:\picture\error\\"
+ 
+-	def isValid(self, file):
+-		'''
+-		工具：校验图片是否正常打开
+-		:param file:
+-		:return:
+-		'''
+-		try:
+-			Image.open(file).load()
+-		except OSError:
+-			return False
+-		return True
++    def isValid(self, file):
++        '''
++        工具：校验图片是否正常打开
++        :param file:
++        :return:
++        '''
++        try:
++            Image.open(file).load()
++        except OSError:
++            return False
++        return True
+ 
+-	def detectionPicture(self):
+-		paths = glob.glob(os.path.join(self.path, '*.jpg'))
+-		paths.sort()
+-		for path in paths:
+-			a = path[11:][:-4]
+-			is_true = self.isValid(path)
+-			if is_true == False:
+-				print(a)
+-			else:
+-				os.remove(path)
++    def detectionPicture(self):
++        paths = glob.glob(os.path.join(self.path, '*.jpg'))
++        paths.sort()
++        for path in paths:
++            a = path[11:][:-4]
++            is_true = self.isValid(path)
++            if is_true == False:
++                print(a)
++            else:
++                os.remove(path)
+ 
+-	def downloadImage(self, sql):
+-		'''
+-		下载图片
+-		:return:
+-		'''
+-		dataSQL = sql_select(sql)
+-		self.errList = []
+-		self.noneList = []
+-		for i in dataSQL:
+-			url = 'http://app.juyuanpark.com' + i[1]
+-			try:
+-				request = urllib.request.Request(url)
+-				response = urllib.request.urlopen(request)
+-				get_img = response.read()
+-				# 图片下载至 C:\picture
+-				path = self.path + str(i[0]) + '.jpg'
+-				with open(path, 'wb') as fp:
+-					fp.write(get_img)
+-				# print('图片下载完成：{}'.format(i[0]))
+-				is_true = self.isValid(path)
+-				if is_true == False:
+-					self.errList.append(i[0])
+-					shutil.move(path, self.path2 + str(i[0]) + '.jpg')
+-				# shutil.copy2(path,self.path2 + str(i[0]) + '.jpg')
+-				else:
+-					os.remove(path)
+-			except:
+-				self.noneList.append(i[0])
+-				print('访问为空:{}'.format(i[0]))
+-				continue
+-		print('损坏的图片:')
+-		print(self.errList)
+-		print('为空的图片:')
+-		print(self.noneList)
+-	def headPortrait(self,sql):
+-		# list_a = []
+-		dataSQL = sql_select(sql)
+-		# print(dataSQL)
+-		for i in dataSQL:
+-			urls = i[1][:-4]+"_zoom.png"
+-			# print(urls)
+-			try:
+-				request = urllib.request.Request(urls)
+-				response = urllib.request.urlopen(request)
+-				get_img = response.read()
+-				# 图片下载至 C:\picture
+-				path = self.path + str(i[0]) + '.jpg'
+-				with open(path, 'wb') as fp:
+-					fp.write(get_img)
+-				# print('图片下载完成：{}'.format(i[0]))
+-				is_true = self.isValid(path)
+-				# print('is_true',is_true)
+-				if is_true == False:
+-					os.remove(path)
+-				else:
+-					# updateSQL = "UPDATE biz_user SET picture = '{}' WHERE id = {};".format(urls[25:],i[0])
+-					# sql_exec(updateSQL)
+-					print(i[0])
+-					print(urls)
+-			except:
+-				print('访问为空:{}'.format(i[0]))
+-				continue
+-	def photoAlbum(self,sql):
+-		list1 = [] # 都没有
+-		list2 = [] # 小图有
+-		list3 = [] # 大图有
+-		list4 = [] # 都图有
+-		dataSQL = sql_select(sql)
+-		for i in dataSQL:
+-			minUrl = 'http://app.juyuanpark.com'+i[1]
+-			maxUrl = 'http://app.juyuanpark.com'+i[2]
+-			try:
++    def downloadImage(self, sql):
++        '''
++        下载图片
++        :return:
++        '''
++        dataSQL = sql_select(sql)
++        self.errList = []
++        self.noneList = []
++        for i in dataSQL:
++            url = 'http://app.juyuanpark.com' + i[1]
++            try:
++                request = urllib.request.Request(url)
++                response = urllib.request.urlopen(request)
++                get_img = response.read()
++                # 图片下载至 C:\picture
++                path = self.path + str(i[0]) + '.jpg'
++                with open(path, 'wb') as fp:
++                    fp.write(get_img)
++                # print('图片下载完成：{}'.format(i[0]))
++                is_true = self.isValid(path)
++                if is_true == False:
++                    self.errList.append(i[0])
++                    shutil.move(path, self.path2 + str(i[0]) + '.jpg')
++                # shutil.copy2(path,self.path2 + str(i[0]) + '.jpg')
++                else:
++                    os.remove(path)
++            except:
++                self.noneList.append(i[0])
++                print('访问为空:{}'.format(i[0]))
++                continue
++        print('损坏的图片:')
++        print(self.errList)
++        print('为空的图片:')
++        print(self.noneList)
++
++    def headPortrait(self, sql):
++        # list_a = []
++        dataSQL = sql_select(sql)
++        # print(dataSQL)
++        for i in dataSQL:
++            urls = i[1][:-4] + "_zoom.png"
++            # print(urls)
++            try:
++                request = urllib.request.Request(urls)
++                response = urllib.request.urlopen(request)
++                get_img = response.read()
++                # 图片下载至 C:\picture
++                path = self.path + str(i[0]) + '.jpg'
++                with open(path, 'wb') as fp:
++                    fp.write(get_img)
++                # print('图片下载完成：{}'.format(i[0]))
++                is_true = self.isValid(path)
++                # print('is_true',is_true)
++                if is_true == False:
++                    os.remove(path)
++                else:
++                    # updateSQL = "UPDATE biz_user SET picture = '{}' WHERE id = {};".format(urls[25:],i[0])
++                    # sql_exec(updateSQL)
++                    print(i[0])
++                    print(urls)
++            except:
++                print('访问为空:{}'.format(i[0]))
++                continue
++
++    def photoAlbum(self, sql):
++        list1 = []  # 都没有
++        list2 = []  # 小图有
++        list3 = []  # 大图有
++        list4 = []  # 都图有
++        dataSQL = sql_select(sql)
++        for i in dataSQL:
++            minUrl = 'http://app.juyuanpark.com' + i[1]
++            maxUrl = 'http://app.juyuanpark.com' + i[2]
++            try:
+ 
+-				request = urllib.request.Request(minUrl)
+-				response = urllib.request.urlopen(request)
+-				get_img = response.read()
+-				# 图片下载至 C:\picture
+-				path1 = self.path + 'min' + str(i[0]) + '.jpg'
+-				with open(path1, 'wb') as fp:
+-					fp.write(get_img)
+-				is_true1 = self.isValid(path1)
++                request = urllib.request.Request(minUrl)
++                response = urllib.request.urlopen(request)
++                get_img = response.read()
++                # 图片下载至 C:\picture
++                path1 = self.path + 'min' + str(i[0]) + '.jpg'
++                with open(path1, 'wb') as fp:
++                    fp.write(get_img)
++                is_true1 = self.isValid(path1)
+ 
+-				request = urllib.request.Request(maxUrl)
+-				response = urllib.request.urlopen(request)
+-				get_img = response.read()
+-				# 图片下载至 C:\picture
+-				path2 = self.path + 'max' + str(i[0]) + '.jpg'
+-				with open(path2, 'wb') as fp:
+-					fp.write(get_img)
+-				is_true2 = self.isValid(path2)
+-				if is_true1 == True and	is_true2 == True:
+-					os.remove(path1)
+-					os.remove(path2)
+-				elif is_true1 == True and is_true2 == False:
+-					os.remove(path1)
+-					list2.append(i[0])
+-					# sql_exec("UPDATE biz_album SET water_img_url = '{}' WHERE id = {};".format(i[1],i[0]))
+-				elif is_true1 == False and is_true2 == True:
+-					os.remove(path2)
+-					# sql_exec("UPDATE biz_album SET img_url = '{}' WHERE id = {};".format(i[2],i[0]))
+-					list3.append(i[0])
+-				elif is_true1 == False and is_true2 == False:
+-					# sql_exec('DELETE FROM biz_album WHERE id = {}'.format(i[0]))
+-					list1.append(i[0])
+-			except:
+-				print('访问为空:{}'.format(i[0]))
+-				continue
+-		print('list1',list1)
+-		print('list2',list2)
+-		print('list3',list3)
+-		print('list4',list4)
++                request = urllib.request.Request(maxUrl)
++                response = urllib.request.urlopen(request)
++                get_img = response.read()
++                # 图片下载至 C:\picture
++                path2 = self.path + 'max' + str(i[0]) + '.jpg'
++                with open(path2, 'wb') as fp:
++                    fp.write(get_img)
++                is_true2 = self.isValid(path2)
++                if is_true1 == True and is_true2 == True:
++                    os.remove(path1)
++                    os.remove(path2)
++                elif is_true1 == True and is_true2 == False:
++                    os.remove(path1)
++                    list2.append(i[0])
++                # sql_exec("UPDATE biz_album SET water_img_url = '{}' WHERE id = {};".format(i[1],i[0]))
++                elif is_true1 == False and is_true2 == True:
++                    os.remove(path2)
++                    # sql_exec("UPDATE biz_album SET img_url = '{}' WHERE id = {};".format(i[2],i[0]))
++                    list3.append(i[0])
++                elif is_true1 == False and is_true2 == False:
++                    # sql_exec('DELETE FROM biz_album WHERE id = {}'.format(i[0]))
++                    list1.append(i[0])
++            except:
++                print('访问为空:{}'.format(i[0]))
++                continue
++        print('list1', list1)
++        print('list2', list2)
++        print('list3', list3)
++        print('list4', list4)
+ 
+ 
+-
+-
+-
+ # i = ImageDetection()
+ # i.a(sql)
+ # sql = "SELECT id,img_url FROM biz_album"
+@@ -358,18 +358,364 @@
+ 
+ '''
+ 
++
+ # print('SELECT id,img_url FROM biz_album')
+ # print(153+149+96+77)
+ 
+ 
+-
+ # sql = "INSERT INTO freight_id_payment (freight_id,id_s,`status`) VALUES ('DO-20200585685','{}',1)".format(time.time())
+ # print(mysqls.Data().query('localhost',sql))
+ 
+ 
++# -*- coding:utf-8 -*-
++
++def test():
++    time.sleep(2)
++    return 3 * 3
++
++def test2(a):
++    start_time = time.time()
++    # test()
++    print(a())
++    stop_time = time.time()
++    print(stop_time - start_time)
++
++
++# test2(test)
++
++
++x = 0
++
++
++def grandpa():
++    x = 1
++    print(x)
++
++    def dad():
++        x = 2
++        print(x)
++
++        def son():
++            x = 3
++            print(x)
++
++        son()
++
++    dad()
++
++
++# grandpa()
++
++
++# 装饰器：
+ 
+ 
+ 
++def decorators(run_test):
++    def deco(*args, **kwargs):
++        start_time = time.time()
++        print(123456)
++        run_test(*args, **kwargs)
++        stop_time = time.time()
++        print(stop_time - start_time)
+ 
++    return deco
+ 
+ 
++# @decorators  # test = decorators(test)
++# def test(t, g):
++#     time.sleep(2)
++#     print("in the test", t, g)
++
++
++@decorators
++# @test_decorators
++def test1():
++    time.sleep(2)
++    print("in the test1")
++
++
++# test("huanghua", 21)
++# test1()
++
++# def bar():
++#     time.sleep(2)
++#     print("in the bar")
++# def test2(func):
++#     print(func)
++#     return func
++# ty=test2(bar)
++# # ty()
++# user,password = "admin","123456"
++# def auth(auth_type):
++#     def outer_wrappre(func):
++#         def warpper(*args, **kwargs):
++#             print(*args,**kwargs)
++#             if auth_type == "local":
++#                 Username = input("Username:").strip()#去空格
++#                 Password = input("Password:").strip()
++#                 if Username == user and Password == password:
++#                     print("\033[0;32;0m登录成功\033[0m")
++#                     res = func(*args, **kwargs)
++#                     return res
++#                 else:
++#                     print("\033[0;31;0m账户或密码错误\033[0m")
++#             elif auth_type == "ldap":
++#                 print("搞毛线，daip。。。。")
++#         return warpper
++#     return outer_wrappre
++# def index():
++#     print("welcome to index page")
++#
++# @auth(auth_type="local") # home = warpper()
++# def home():
++#     print("welcome to home page")
++#     return "hua"
++# @auth(auth_type="ldap")
++# def bbs():
++#     print("welcome to bbs page")
++# index()
++# home()
++
++
++"""
++def decorators(decorators_type):
++    def dc(func):
++        def deco(*args,**kwargs):
++            start_time = time.time()
++            if decorators_type == "indexs":
++                func(*args,**kwargs)
++            elif decorators_type == "registers":
++                username = input("请输入您的用户名：").strip()
++                password = input("请输入您的账户密码：").strip()
++                with open("storage_rooms","w",encoding="utf-8") as f:
++                    f.write(username+"—>"+password)
++            elif decorators_type == "homes":
++                username = input("登录名：").strip()
++                password = input("密码：").strip()
++                with open("storage_rooms","r",encoding="utf-8") as f2:
++                    for i in f2:
++                        (user,pwd) =i.split("—>",1)
++                        if username == user and password == pwd:
++                            s=func(*args,**kwargs)
++                            stop_time = time.time()
++                            print("使用时间:",stop_time-start_time)
++                            return s
++                        else:
++                            exit("用户名或密码错误！")
++        return deco
++    return dc
++@decorators(decorators_type="indexs")# index=decorators(index)
++def index():
++    time.sleep(2)
++    print("进入首页")
++@decorators(decorators_type="homes")
++def home():
++    time.sleep(2)
++    print("登录成功")
++    return "home"
++@decorators(decorators_type="registers")
++def register():
++    time.sleep(2)
++    print("注册成功！")
++
++index()
++home()
++register()
++"""
++# def deco(func):
++#     start_time = time.time()
++#     func()
++#     stop_time = time.time()
++#     print("使用时间:%s"%(stop_time-start_time))
++# def say_hello():
++#     print("hello!")
++#
++# def say_goodbye():
++#     print("hello!")
++#
++# if __name__ == '__main__':
++#     say_hello()
++#     say_goodbye()
++#
++# """******************************"""
++# def say_hello():
++#     print("[DEBUG]:enter say_hello")
++#     print("Hello")
++#
++# def say_goodbye():
++#     print("[DEBUG]:enter say_goodbye")
++#     print("Hello")
++#
++# if __name__ == '__main__':
++#     say_hello()
++#     say_goodbye()
++
++
++# def debug():
++#     import inspect
++#     caller_name = inspect.stack()[1][3]
++#     print(inspect.stack()[1])
++#     print(inspect.stack()[1][2])
++#     print("[DEBUG]:enter {}()".format(caller_name))
++"""
++def debug(debug_type):
++    def wrapper(func):
++        def inner_wrapper(*args, **kwargs):
++            start_time = time.time()
++            # print("[DEBUG]:enter {}()".format(func.__name__))
++            print("[{debug_type}]:enter function {func}()".format(
++                debug_type = debug_type,
++                func = func.__name__
++            ))
++            s = func(*args, **kwargs)
++            stop_time = time.time()
++            print("运行时间：%s" % str(stop_time - start_time))
++            return s
++        return inner_wrapper
++    return wrapper
++@debug(debug_type="INFO") # say_hello = debug(say_hello)
++def say_hello(a):
++    time.sleep(2)
++    print("Hello",a)
++
++if __name__ == '__main__':
++    say_hello(a="hua")
++
++"""
++
++# class Test():
++#     def __call__(self, *args, **kwargs):
++#         print("call me")
++# t = Test()
++# t() # call me
++"""
++class Logging(object):
++    def __init__(self,level):
++        self.level = level
++
++    def __call__(self,func):
++        def wrapper(*args,**kwargs):
++            print("[{level}]:enter function {func}()".format(
++                level = self.level,func = func.__name__))
++            func(*args,**kwargs)
++        return wrapper
++@Logging(level="INFO")
++def say(something):
++    print("say:",something)
++"""
++# if __name__ == "__main__":
++#     say(something=True)
++
++import sys
++
++# def debug(func):
++#     def wrapper(*args,**kwargs):
++#         print("[DEBUG]: enter {}()".format(func.__name__))
++#         return func(*args,**kwargs)
++#     return wrapper
++# @debug # say_hello = debug(say_hello)
++# def say_hello(something):
++#     print("hello!{}".format(something))
++
++# if __name__=="__main__":
++# say_hello(something="hua")
++# 至此，你已完全掌握初级的装饰器写法。
++
++# def Logins(logging_type):
++#     def wrapper(func):
++#         def inner_wrapper(*args,**kwargs):
++#             print("[DEBUG]: enter {}()".format(func.__name__))
++#             f=func(*args,**kwargs)
++#             for i in range(25):
++#                 sys.stdout.write("\033[1;32;m{}\033[0m".format(logging_type))
++#                 sys.stdout.flush()
++#                 time.sleep(0.3)
++#             return f
++#         return inner_wrapper
++#     return wrapper
++# @wrapper # say_hello = debug(say_hello)
++
++
++# class logging(object):
++#     def __init__(self,DEBUG="hua"):
++#         self.gg = DEBUG
++#     def __call__(self,hunc):#接受函数
++#         def wrapper( *args, **kwargs):
++#             start_time = time.time()
++#             hunc(*args,**kwargs)
++#             stop_time = time.time()
++#             print("[{}]运行时间：{}".format(self.gg,stop_time-start_time))
++#         return wrapper
++# # 没使用语法糖，同等与
++# # say_hello = logging(gg="HH")(say_hello)
++# @logging(DEBUG="HH")
++# def say_hello(something):
++#     time.sleep(2)
++#     print("hello!{}".format(something))
++# if __name__=="__main__":
++#     # say_hello = logging(gg="HH")(say_hello)
++#     say_hello(something="hua")
++
++"""
++# from functools import wraps
++# import inspect
++# def html_tags(tag_name):
++#     print('html_tags:{}'.format(tag_name))
++#     def wrapper_(func):
++#         print("wrapper_:%s"%(func))
++#         @wraps(func)
++#         def wrapper(*args,**kwargs):
++#             content = func(*args,**kwargs)
++#             print("<{tag}>{content}</{tag}>".format(tag=tag_name, content=content))
++#         return wrapper
++#     return wrapper_
++# @html_tags(tag_name='b')
++# def hello(name='Toby'):
++#     return 'Hello {}'.format(name)
++# hello("Word")
++# print(hello.__name__)
++# print(hello.__doc__)
++"""
++"""
++import time
++def consumer(name):
++    print("%s准备吃包子啦！"%name)
++    while True:
++        baozi = yield
++        print("包[%s]子来了，被[%s]吃了!"%(baozi,name))
++
++def producer(name1,name2):
++    c=consumer(name1)
++    c2 = consumer(name2)
++    c.__next__()
++    c2.__next__()
++    print("劳资开始吃包子啦！")
++    for i in range(10):
++        time.sleep(1)
++        print("做了2个包子！")
++        c.send(i)
++        c2.send(i)
++#携程
++producer("admin1","admin2")
++
++import time
++gen = (x**2 for x in range(4))
++print(gen)
++for i in gen:
++    print(i,end="  ")
++def count(n):
++    x=0
++    while x<n:
++        value = yield x
++        if value is not None:
++            print("Received value:%s"%value)
++        x+=1
++#send()就是next()的功能，加上传值给yield。
++x=count(5)
++print(next(x))
++print(next(x))
++print(x.send("hello"))
++print(next(x))
++print(next(x))
++"""
+Index: test_server/catalog.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/catalog.py	(date 1599312850414)
++++ test_server/catalog.py	(date 1599312850414)
+@@ -0,0 +1,7 @@
++
++'''
++目录
++
++'''
++
++
