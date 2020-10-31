@@ -1,6 +1,7 @@
 """登录注册"""
-
+# 安卓左上角返回按钮
 left_back_button = 'com.fcx.jy:id/back_img'
+# 页面标题
 title = 'com.fcx.jy:id/title_text'
 
 

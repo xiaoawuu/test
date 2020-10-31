@@ -28,11 +28,11 @@ enroll_button = 'com.fcx.jy:id/tv_login'
 # 左上角：返回按钮
 back_button = 'com.fcx.jy:id/back_img'
 
-gender = 'com.fcx.jy:id/img_nan'
+gender_man = 'com.fcx.jy:id/img_nan'
 
-genders = 'com.fcx.jy:id/img_nv'
+gender_girl = 'com.fcx.jy:id/img_nv'
 
-xuanzexingbiehouqueren = 'com.fcx.jy:id/tv_login'
+gender_send = 'com.fcx.jy:id/tv_login'
 
 # 昵称输入框：com.fcx.jy:id/edt_mobile
 # 成长城市选择：com.fcx.jy:id/tv_chengshi
