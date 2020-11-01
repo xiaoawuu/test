@@ -91,6 +91,10 @@ import os
 # 		print(a)
 # 	except Exception as ERR:
 # 		print("不存在！")
+def ride_file(text):
+	with open(r'C:\test_s\test_server\appium_android\utils\is_true', "a") as file:  # ”w"代表着每次运行都覆盖内容
+		file.write(text + "\n")
+
 
 
 class WeChatIDCheck(object):
@@ -109,9 +113,7 @@ class WeChatIDCheck(object):
 		print('selenium version = ', selenium.__version__)
 		time.sleep(2)
 		self.driver = webdriver.Remote('http://localhost:4723/wd/hub', config)
-		# self.driver.press_keycode(26)
-		# time.sleep(1)
-		# self.driver.press_keycode(3)
+
 		time.sleep(1)
 
 	def is_true(self):
@@ -120,30 +122,32 @@ class WeChatIDCheck(object):
 		time.sleep(0.5)
 		self.driver.tap([(810, 444), (1050, 2160)], 500)
 		time.sleep(0.5)
-		data = sql_select("SELECT TOP 200 id ,wechat FROM biz_user WHERE sex = 2 AND wechat != '' and	len(wechat) BETWEEN 6 and	20 AND is_valid != 0;")
+		data = sql_select("SELECT TOP 3 id ,wechat FROM biz_user WHERE sex = 2 AND wechat != '' and	len(wechat) BETWEEN 6 and	20 AND is_valid != 0;")
 		for i in data:
 			wx = i[1]
 			self.driver.find_element_by_id("com.tencent.mm:id/fcn").click()
-			time.sleep(0.5)
+			time.sleep(0.3)
 			self.driver.find_element_by_id("com.tencent.mm:id/bhn").send_keys(wx)
-			time.sleep(0.5)
+			time.sleep(0.3)
 			self.driver.find_element_by_id("com.tencent.mm:id/bhn").click()
-			time.sleep(0.5)
+			time.sleep(0.3)
 			self.driver.press_keycode(66)
-			time.sleep(0.5)
+			time.sleep(0.3)
 			try:
 				text = self.driver.find_element_by_id("com.tencent.mm:id/g6f").text
 				if text == '添加到通讯录':
+					ride_file('{}:{}'.format(i[0],wx))
+
 					print('真实的',wx)
 				self.driver.press_keycode(4)
-				time.sleep(0.5)
+				time.sleep(0.3)
 				self.driver.press_keycode(4)
-				time.sleep(0.5)
+				time.sleep(0.3)
 
 			except Exception as ERR:
-				time.sleep(0.5)
+				time.sleep(0.3)
 				self.driver.find_element_by_id("com.tencent.mm:id/aay").click()
-				time.sleep(1)
+
 
 
 

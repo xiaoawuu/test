@@ -20,13 +20,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a9de5cc0-0f1b-4004-a870-0b88027a6076" name="Default Changelist" comment="1.1">
+      <change afterPath="$PROJECT_DIR$/test_server/appium_android/utils/is_true" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_server/appium_android/TestModules/Login.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/appium_android/TestModules/Login.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test_server/appium_android/test_weixin.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/appium_android/test_weixin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_server/data/mysqls.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/data/mysqls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_server/data/sql.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/data/sql.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_server/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/tests.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_server/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -208,7 +204,14 @@
       <option name="project" value="LOCAL" />
       <updated>1602083445627</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="1.1">
+      <created>1604241523732</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1604241523732</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -235,10 +238,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="586" y="198" key="#Inspections/0.0.1920.1040@0.0.1920.1040" timestamp="1602063862207" />
-    <state x="655" y="320" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1604220141775">
+    <state x="655" y="320" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1604241985908">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="655" y="320" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1604220141775" />
+    <state x="655" y="320" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1604241985908" />
     <state x="640" y="255" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1601955171273">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -251,22 +254,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1601956206332" />
-    <state width="1899" height="257" key="GridCell.Tab.0.bottom" timestamp="1604241212342">
+    <state width="1899" height="321" key="GridCell.Tab.0.bottom" timestamp="1604242229805">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="257" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1604241212342" />
-    <state width="1899" height="257" key="GridCell.Tab.0.center" timestamp="1604241212342">
+    <state width="1899" height="321" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1604242229805" />
+    <state width="1899" height="321" key="GridCell.Tab.0.center" timestamp="1604242229804">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="257" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1604241212342" />
-    <state width="1899" height="257" key="GridCell.Tab.0.left" timestamp="1604241212341">
+    <state width="1899" height="321" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1604242229804" />
+    <state width="1899" height="321" key="GridCell.Tab.0.left" timestamp="1604242229804">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="257" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1604241212341" />
-    <state width="1899" height="257" key="GridCell.Tab.0.right" timestamp="1604241212342">
+    <state width="1899" height="321" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1604242229804" />
+    <state width="1899" height="321" key="GridCell.Tab.0.right" timestamp="1604242229805">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="257" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1604241212342" />
+    <state width="1899" height="321" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1604242229805" />
     <state width="1899" height="192" key="GridCell.Tab.1.bottom" timestamp="1604240784293">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -295,10 +298,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="806" y="432" key="VCS.ChangelistChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1601955397798" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1602083095387">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1604241529743">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1602083095387" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1604241529743" />
     <state x="771" y="167" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1602048509243">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
