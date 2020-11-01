@@ -14,8 +14,8 @@ from test_server.data import mysqls
 
 
 def tests():
-	print('------------')
-	return True
+    print('------------')
+    return True
 
 
 # def test():
@@ -79,25 +79,25 @@ temp = base64.b64decode('MTE=')
 # print(str(A, 'utf8'))
 # read('ahuau')
 def is_num_by_except(num):
-	try:
-		int(num)
-		return True
-	except ValueError:
-		return False
+    try:
+        int(num)
+        return True
+    except ValueError:
+        return False
 
 
 def update_base64():
-	# data = sql_select("SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile LIKE 'MT%';")
-	data = sql_select("SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile != '' AND id > 7500;")
-	for i in data:
-		if not is_num_by_except(i[1]):
-			try:
-				temp = base64.b64decode(i[1].replace('\n', '').replace('\r', ''))
-				sql_exec(
-					"UPDATE biz_invite_code SET recommend_mobile = '{}' WHERE id = {};".format(temp.decode(), i[0]))
-				print(i[1], '转换为：', temp.decode())
-			except:
-				continue
+    # data = sql_select("SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile LIKE 'MT%';")
+    data = sql_select("SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile != '' AND id > 7500;")
+    for i in data:
+        if not is_num_by_except(i[1]):
+            try:
+                temp = base64.b64decode(i[1].replace('\n', '').replace('\r', ''))
+                sql_exec(
+                    "UPDATE biz_invite_code SET recommend_mobile = '{}' WHERE id = {};".format(temp.decode(), i[0]))
+                print(i[1], '转换为：', temp.decode())
+            except:
+                continue
 
 
 # update_base64()
@@ -107,41 +107,41 @@ import requests, json
 
 
 def requestsPort(user_id, new_mobile):
-	'''
-	TP5修改手机号
-	:param user_id:
-	:param new_mobile:
-	:return:
-	'''
-	# url=None
-	url = "https://myadmin-api.zyb56.com/customer/changeUserMobile"
-	re_data = {
-		"token": "c1c95d62b91af8d7bb8e03a38e6b5215",
-		"id": str(user_id),
-		"mobile": new_mobile
-	}
-	try:
-		headers = {
-			"Content-Type": "application/json; charset=UTF-8"
-		}
-		response = requests.post(url, data=json.dumps(re_data), headers=headers)
-		return response.json()
-	except:
-		return '异常'
+    '''
+    TP5修改手机号
+    :param user_id:
+    :param new_mobile:
+    :return:
+    '''
+    # url=None
+    url = "https://myadmin-api.zyb56.com/customer/changeUserMobile"
+    re_data = {
+        "token": "c1c95d62b91af8d7bb8e03a38e6b5215",
+        "id": str(user_id),
+        "mobile": new_mobile
+    }
+    try:
+        headers = {
+            "Content-Type": "application/json; charset=UTF-8"
+        }
+        response = requests.post(url, data=json.dumps(re_data), headers=headers)
+        return response.json()
+    except:
+        return '异常'
 
 
 from test_server.data.mysqls import Data
 
 
 def updateMobile():
-	for index, i in mobile.items():
-		print('index:', index, "i", i)
-		user_id = Data().query('zyb_live_r',
-							   "SELECT id FROM `zyb_db`.`zyb_customer` WHERE `mobile` = '{}';".format(index))
-		if user_id == ():
-			continue
-		print('user_id：', user_id[0]["id"], '旧手机号：', index, '新手机号：', i)
-		print(requestsPort(user_id[0]["id"], i))
+    for index, i in mobile.items():
+        print('index:', index, "i", i)
+        user_id = Data().query('zyb_live_r',
+                               "SELECT id FROM `zyb_db`.`zyb_customer` WHERE `mobile` = '{}';".format(index))
+        if user_id == ():
+            continue
+        print('user_id：', user_id[0]["id"], '旧手机号：', index, '新手机号：', i)
+        print(requestsPort(user_id[0]["id"], i))
 
 
 # updateMobile()
@@ -165,150 +165,150 @@ from test_server.data.sql import sql_select, sql_exec
 
 
 class ImageDetection():
-	def __init__(self):
-		self.path = "C:\picture\\"
-		self.path2 = "C:\picture\error\\"
+    def __init__(self):
+        self.path = "C:\picture\\"
+        self.path2 = "C:\picture\error\\"
 
-	def isValid(self, file):
-		'''
-		工具：校验图片是否正常打开
-		:param file:
-		:return:
-		'''
-		try:
-			Image.open(file).load()
-		except OSError:
-			return False
-		return True
+    def isValid(self, file):
+        '''
+        工具：校验图片是否正常打开
+        :param file:
+        :return:
+        '''
+        try:
+            Image.open(file).load()
+        except OSError:
+            return False
+        return True
 
-	def detectionPicture(self):
-		paths = glob.glob(os.path.join(self.path, '*.jpg'))
-		paths.sort()
-		for path in paths:
-			a = path[11:][:-4]
-			is_true = self.isValid(path)
-			if is_true == False:
-				print(a)
-			else:
-				os.remove(path)
+    def detectionPicture(self):
+        paths = glob.glob(os.path.join(self.path, '*.jpg'))
+        paths.sort()
+        for path in paths:
+            a = path[11:][:-4]
+            is_true = self.isValid(path)
+            if is_true == False:
+                print(a)
+            else:
+                os.remove(path)
 
-	def downloadImage(self, sql):
-		'''
-		下载图片
-		:return:
-		'''
-		dataSQL = sql_select(sql)
-		self.errList = []
-		self.noneList = []
-		for i in dataSQL:
-			# print(i)
-			if i[1][-9:] == "_zoom.png":
-				url = 'http://app.juyuanpark.com' + i[1]
-			else:
-				url = 'http://app.juyuanpark.com' + i[1][:-10] + "_zoom.png"
-			# print(url)
-			try:
-				request = urllib.request.Request(url)
-				response = urllib.request.urlopen(request)
-				get_img = response.read()
-				# 图片下载至 C:\picture
-				path = self.path + str(i[0]) + '.jpg'
-				with open(path, 'wb') as fp:
-					fp.write(get_img)
-				is_true = self.isValid(path)
-				if is_true == False:
-					self.errList.append(i[0])
-					shutil.move(path, self.path2 + str(i[0]) + '.jpg')
-			# shutil.copy2(path,self.path2 + str(i[0]) + '.jpg')
-			# else:
-			# 	os.remove(path)
-			except:
-				self.noneList.append(i[0])
-				print('访问为空:{}'.format(i[0]))
-				continue
-		print('损坏的图片:')
-		print(self.errList)
-		print('为空的图片:')
-		print(self.noneList)
+    def downloadImage(self, sql):
+        '''
+        下载图片
+        :return:
+        '''
+        dataSQL = sql_select(sql)
+        self.errList = []
+        self.noneList = []
+        for i in dataSQL:
+            # print(i)
+            if i[1][-9:] == "_zoom.png":
+                url = 'http://app.juyuanpark.com' + i[1]
+            else:
+                url = 'http://app.juyuanpark.com' + i[1][:-10] + "_zoom.png"
+            # print(url)
+            try:
+                request = urllib.request.Request(url)
+                response = urllib.request.urlopen(request)
+                get_img = response.read()
+                # 图片下载至 C:\picture
+                path = self.path + str(i[0]) + '.jpg'
+                with open(path, 'wb') as fp:
+                    fp.write(get_img)
+                is_true = self.isValid(path)
+                if is_true == False:
+                    self.errList.append(i[0])
+                    shutil.move(path, self.path2 + str(i[0]) + '.jpg')
+            # shutil.copy2(path,self.path2 + str(i[0]) + '.jpg')
+            # else:
+            # 	os.remove(path)
+            except:
+                self.noneList.append(i[0])
+                print('访问为空:{}'.format(i[0]))
+                continue
+        print('损坏的图片:')
+        print(self.errList)
+        print('为空的图片:')
+        print(self.noneList)
 
-	def headPortrait(self, sql):
-		# list_a = []
-		dataSQL = sql_select(sql)
-		# print(dataSQL)
-		for i in dataSQL:
-			urls = i[1][:-4] + "_zoom.png"
-			# print(urls)
-			try:
-				request = urllib.request.Request(urls)
-				response = urllib.request.urlopen(request)
-				get_img = response.read()
-				# 图片下载至 C:\picture
-				path = self.path + str(i[0]) + '.jpg'
-				with open(path, 'wb') as fp:
-					fp.write(get_img)
-				# print('图片下载完成：{}'.format(i[0]))
-				is_true = self.isValid(path)
-				# print('is_true',is_true)
-				if is_true == False:
-					os.remove(path)
-				else:
-					# updateSQL = "UPDATE biz_user SET picture = '{}' WHERE id = {};".format(urls[25:],i[0])
-					# sql_exec(updateSQL)
-					print(i[0])
-					print(urls)
-			except:
-				print('访问为空:{}'.format(i[0]))
-				continue
+    def headPortrait(self, sql):
+        # list_a = []
+        dataSQL = sql_select(sql)
+        # print(dataSQL)
+        for i in dataSQL:
+            urls = i[1][:-4] + "_zoom.png"
+            # print(urls)
+            try:
+                request = urllib.request.Request(urls)
+                response = urllib.request.urlopen(request)
+                get_img = response.read()
+                # 图片下载至 C:\picture
+                path = self.path + str(i[0]) + '.jpg'
+                with open(path, 'wb') as fp:
+                    fp.write(get_img)
+                # print('图片下载完成：{}'.format(i[0]))
+                is_true = self.isValid(path)
+                # print('is_true',is_true)
+                if is_true == False:
+                    os.remove(path)
+                else:
+                    # updateSQL = "UPDATE biz_user SET picture = '{}' WHERE id = {};".format(urls[25:],i[0])
+                    # sql_exec(updateSQL)
+                    print(i[0])
+                    print(urls)
+            except:
+                print('访问为空:{}'.format(i[0]))
+                continue
 
-	def photoAlbum(self, sql):
-		list1 = []  # 都没有
-		list2 = []  # 小图有
-		list3 = []  # 大图有
-		list4 = []  # 都图有
-		dataSQL = sql_select(sql)
-		for i in dataSQL:
-			minUrl = 'http://app.juyuanpark.com' + i[1]
-			maxUrl = 'http://app.juyuanpark.com' + i[2]
-			try:
+    def photoAlbum(self, sql):
+        list1 = []  # 都没有
+        list2 = []  # 小图有
+        list3 = []  # 大图有
+        list4 = []  # 都图有
+        dataSQL = sql_select(sql)
+        for i in dataSQL:
+            minUrl = 'http://app.juyuanpark.com' + i[1]
+            maxUrl = 'http://app.juyuanpark.com' + i[2]
+            try:
 
-				request = urllib.request.Request(minUrl)
-				response = urllib.request.urlopen(request)
-				get_img = response.read()
-				# 图片下载至 C:\picture
-				path1 = self.path + 'min' + str(i[0]) + '.jpg'
-				with open(path1, 'wb') as fp:
-					fp.write(get_img)
-				is_true1 = self.isValid(path1)
+                request = urllib.request.Request(minUrl)
+                response = urllib.request.urlopen(request)
+                get_img = response.read()
+                # 图片下载至 C:\picture
+                path1 = self.path + 'min' + str(i[0]) + '.jpg'
+                with open(path1, 'wb') as fp:
+                    fp.write(get_img)
+                is_true1 = self.isValid(path1)
 
-				request = urllib.request.Request(maxUrl)
-				response = urllib.request.urlopen(request)
-				get_img = response.read()
-				# 图片下载至 C:\picture
-				path2 = self.path + 'max' + str(i[0]) + '.jpg'
-				with open(path2, 'wb') as fp:
-					fp.write(get_img)
-				is_true2 = self.isValid(path2)
-				if is_true1 == True and is_true2 == True:
-					os.remove(path1)
-					os.remove(path2)
-				elif is_true1 == True and is_true2 == False:
-					os.remove(path1)
-					list2.append(i[0])
-				# sql_exec("UPDATE biz_album SET water_img_url = '{}' WHERE id = {};".format(i[1],i[0]))
-				elif is_true1 == False and is_true2 == True:
-					os.remove(path2)
-					# sql_exec("UPDATE biz_album SET img_url = '{}' WHERE id = {};".format(i[2],i[0]))
-					list3.append(i[0])
-				elif is_true1 == False and is_true2 == False:
-					# sql_exec('DELETE FROM biz_album WHERE id = {}'.format(i[0]))
-					list1.append(i[0])
-			except:
-				print('访问为空:{}'.format(i[0]))
-				continue
-		print('list1', list1)
-		print('list2', list2)
-		print('list3', list3)
-		print('list4', list4)
+                request = urllib.request.Request(maxUrl)
+                response = urllib.request.urlopen(request)
+                get_img = response.read()
+                # 图片下载至 C:\picture
+                path2 = self.path + 'max' + str(i[0]) + '.jpg'
+                with open(path2, 'wb') as fp:
+                    fp.write(get_img)
+                is_true2 = self.isValid(path2)
+                if is_true1 == True and is_true2 == True:
+                    os.remove(path1)
+                    os.remove(path2)
+                elif is_true1 == True and is_true2 == False:
+                    os.remove(path1)
+                    list2.append(i[0])
+                # sql_exec("UPDATE biz_album SET water_img_url = '{}' WHERE id = {};".format(i[1],i[0]))
+                elif is_true1 == False and is_true2 == True:
+                    os.remove(path2)
+                    # sql_exec("UPDATE biz_album SET img_url = '{}' WHERE id = {};".format(i[2],i[0]))
+                    list3.append(i[0])
+                elif is_true1 == False and is_true2 == False:
+                    # sql_exec('DELETE FROM biz_album WHERE id = {}'.format(i[0]))
+                    list1.append(i[0])
+            except:
+                print('访问为空:{}'.format(i[0]))
+                continue
+        print('list1', list1)
+        print('list2', list2)
+        print('list3', list3)
+        print('list4', list4)
 
 
 # i = ImageDetection()
@@ -370,56 +370,95 @@ import selenium
 import time
 from appium import webdriver
 
-# adevice = {
-#     "platformName": "Android",
-#     "platformVersion": "8.1.0",  # adb shell getprop ro.build.version.release
-#     "deviceName": "b649c4d",  # adb devices
-#     "appPackage": "com.fcx.jy",
-#     'newCommandTimeout': "3000",
-#     "automationName": "uiautomator2",
-#     "appActivity": "com.fcx.jy.ui.activity.LoginActivity"
-# }
-# adevice = {
-# 	"platformName": "Android",
-# 	"platformVersion": "8.1.0",
-# 	"deviceName": "b649c4d",
-# 	"appPackage": "com.tencent.mm",
-# 	'newCommandTimeout': "3000",
-# 	"automationName": "uiautomator2",
-# 	"appActivity": ".ui.LauncherUI"
-# }
-# import os
-#
-# print('selenium version = ', selenium.__version__)
-# driver = webdriver.Remote('http://localhost:4723/wd/hub', adevice)
-#
-# time.sleep(1)
+adevice = {
+    "platformName": "Android",
+    "platformVersion": "8.1.0",  # adb shell getprop ro.build.version.release
+    "deviceName": "b649c4d",  # adb devices
+    "appPackage": "com.fcx.jy",
+    'newCommandTimeout': "3000",
+    "automationName": "uiautomator2",
+    "appActivity": "com.fcx.jy.ui.activity.LoginActivity"
+}
 
-# print('exit!')
-# driver.find_element_by_id("com.fcx.jy:id/tv_login").click()
-# time.sleep(1)
-# driver.find_element_by_id("com.fcx.jy:id/edt_mobile").send_keys("18007530111")
-# time.sleep(1)
-# driver.find_element_by_id("com.fcx.jy:id/edt_code").send_keys("00000000")
-# driver.find_element_by_id("com.fcx.jy:id/tv_login").click()
-# time.sleep(1)
-# driver.find_element_by_id("com.fcx.jy:id/sousuo_view").click()
-# time.sleep(1)
-# driver.find_element_by_id('com.fcx.jy:id/sousuo_edt').send_keys('涵涵')
-# time.sleep(1)
-# time.sleep(1)
-# driver.find_element_by_id('com.fcx.jy:id/sousuo_edt').click()
-# time.sleep(1)
-# driver.press_keycode(66)
+'''
+Find By	Selector
+id	com.fcx.jy:id/tv_login
+xpath	/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout[3]/android.widget.TextView[1]
+
+Attribute	Value
+index	0
+text	登录
+class	android.widget.TextView
+package	com.fcx.jy
+content-desc	
+checkable	false
+checked	false
+clickable	true
+enabled	true
+focusable	true
+focused	false
+scrollable	false
+long-clickable	true
+password	false
+selected	false
+bounds	[45,1334][1035,1484]
+resource-id	com.fcx.jy:id/tv_login
+instance	0
+'''
+
+import os
+
+print('selenium version = ', selenium.__version__)
+# print('webdriver version = ', appium.__version__)
+driver = webdriver.Remote('http://localhost:4723/wd/hub', adevice)
+print(1)
 time.sleep(1)
+
+# time.sleep(1)
+# driver.keyevent(4).
+
+driver.find_element_by_id("com.fcx.jy:id/tv_login").click()
+
+time.sleep(1)
+driver.find_element_by_id("com.fcx.jy:id/edt_mobile").send_keys("18007530111")
+time.sleep(1)
+driver.find_element_by_id("com.fcx.jy:id/edt_code").send_keys("00000000")
+
+driver.find_element_by_id("com.fcx.jy:id/tv_login").click()
+
+time.sleep(1)
+driver.find_element_by_id("com.fcx.jy:id/sousuo_view").click()
+time.sleep(1)
+driver.find_element_by_id('com.fcx.jy:id/sousuo_edt').send_keys('涵涵')
+time.sleep(1)
+
+time.sleep(1)
+driver.find_element_by_id('com.fcx.jy:id/sousuo_edt').click()
+time.sleep(1)
+driver.press_keycode(66)
+time.sleep(1)
+# driver.press_keycode(66)
+# driver.find_element_by_xpath(
+#     '/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.view.ViewGroup/androidx.recyclerview.widget.RecyclerView/android.widget.RelativeLayout[1]').click()
+# 坐标定位
+a1 = 540 / 1944
+b1 = 1080 / 2160
+# 获取当前手机屏幕大小X,Y
+X = driver.get_window_size()['width']
+Y = driver.get_window_size()['height']
+# 屏幕坐标乘以系数即为用户要点击位置的具体坐标	[45,1801][1035,1936]
+
 driver.tap([(270, 255), (1050, 312)], 500)
+
 time.sleep(1)
 driver.tap([(540, 1943), (1080, 2160)], 500)
-# driver.find_element_by_id('com.fcx.jy:id/chat_message_input').send_keys('阿华')
-# time.sleep(1)
-# driver.find_element_by_id('com.fcx.jy:id/send_btn').click()
+driver.find_element_by_id('com.fcx.jy:id/chat_message_input').send_keys('阿华')
+time.sleep(1)
+driver.find_element_by_id('com.fcx.jy:id/send_btn').click()
+
 # driver.tap([(宽, 高), (分辨率)], 500)
 
+print('exit!')
 
 # driver.find_element_by_id("com.fcx.jy:id/rb_bt3").click()
 
@@ -497,89 +536,5 @@ api代替
 
 方式5：android特有的定位方式，通过ui - automator - selector
 element = driver.find_elements_by_android_uiautomator('new UiSelector().text("登 录")')
-com.fcx.jy:id/tv_ok
-	com.fcx.jy:id/tv_no
+
 '''
-
-aa = {
-	"notCanPayListsSize": 0,
-	"notCanPayMoney": 0,
-	"canRebateServiceMoney": 0,
-	"canPayListsSize": 2,
-	"canPayMoney": 34,
-	"notCanPayServiceMoney": 0,
-	"notCanPayTotalMoney": 0,
-	"notCanPayList": [],
-	"canPayServiceMoney": 2.1,
-	"canPayTotalMoney": 36.1,
-	"notCanPayFreightIds": "",
-	"canPayList": [{
-		"invoiceCompanyId": 2,
-		"payObjectType": 2,
-		"payMoney": 34,
-		"rebateSericeMoney": 0,
-		"money": 36.1,
-		"userMobile": "13651770956",
-		"sericeMoney": 2.1,
-		"userName": "中午呢",
-		"bankCardId": None
-	}]
-}
-
-
-def add(count):
-	aa = {
-		"notCanPayListsSize": 0,
-		"notCanPayMoney": 0,
-		"canRebateServiceMoney": 0,
-		"canPayListsSize": 2,
-		"canPayMoney": 34,
-		"notCanPayServiceMoney": 0,
-		"notCanPayTotalMoney": 0,
-		"notCanPayList": [],
-		"canPayServiceMoney": 2.1,
-		"canPayTotalMoney": 36.1,
-		"notCanPayFreightIds": "",
-		"canPayList": [{
-			"invoiceCompanyId": 2,
-			"payObjectType": 2,
-			"payMoney": 34,
-			"rebateSericeMoney": 0,
-			"money": 36.1,
-			"userMobile": "13651770956",
-			"sericeMoney": 2.1,
-			"userName": "中午呢",
-			"bankCardId": None,
-			"lists":[]
-		}]
-	}
-
-	s = {
-		"payType": 2,
-		"paymentAmount": 17,
-		"priceService": 1.05,
-		"rebatePriceService": 0,
-		"freightId": "DO-202009156633",
-		"payObjectNumber": 2,
-		"companyName": None,
-		"bankcardId": None,
-		"invoiceCompanyId": None,
-		"channelCode": 9,
-		"entrustType": 1,
-		"captchaCode": None,
-		"loanAmount": None,
-		"interestReceived": None,
-		"lendingRate": None,
-		"lendingDays": 0,
-		"driverName": "中午呢",
-		"driverMobile": "13651770956",
-		"payeeAccount": "",
-		"payeeName": "中午呢",
-		"payeeMobile": "13651770956",
-		"rate": 0.058,
-		"payInfo": "DO-202009156633|2"
-	}
-
-
-
-add(10)

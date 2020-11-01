@@ -6,7 +6,7 @@ class Data():
         pass
     def config(self,environment):
         conf = configparser.ConfigParser()
-        conf.read('C:\\test_server\\test_server\data\sql_configuration_file.ini')
+        conf.read(r'C:\test_s\test_server\data\sql_configuration_file.ini')
         host = conf.get(str(environment), 'host')
         account = conf.get(str(environment), 'account')
         pwd=conf.get(str(environment),'pwd')
@@ -35,3 +35,4 @@ class Data():
 # print(time.time())
 # sql = "INSERT INTO freight_id_payment (freight_id,id_s,`status`) VALUES ('DO-20200585685','1599204315.5284896',1)"
 # print(d.query('localhost',sql))
+

@@ -1,7 +1,9 @@
 import pyodbc
 from test_server.data.mysqls import Data
+
+
 class ODBC:
-    def __init__(self,type, DRIVER='{SQL Server}'):
+    def __init__(self, type, DRIVER='{SQL Server}'):
         self.data = Data().config(type)
         self.server = self.data['host']
         self.uid = self.data['account']
@@ -28,18 +30,23 @@ class ODBC:
         self.conn.close()
         return resList
 
-    def ExecNonQuery(self,  sql):
+    def ExecNonQuery(self, sql):
         cur = self.GetConnect()
         cur.execute(sql)
         self.conn.commit()
         self.conn.close()
 
-def sql_select(data,type='jy_live_r'):
+
+def sql_select(data, type='jy_live_r'):
     ms = ODBC(type)
     sql = ms.ExecQuery(data)
     return sql
 
-def sql_exec(data,type='jy_live_r'):
+
+def sql_exec(data, type='jy_live_r'):
     ms = ODBC(type)
     sql = ms.ExecNonQuery(data)
     return sql
+
+
+

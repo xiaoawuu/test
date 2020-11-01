@@ -26,6 +26,5 @@ urlpatterns = [
     url(r'^testPortInsert', views.testPortInsert),
     url(r'^$', views.addMoneys),
     url(r'^addOrder', Process.Process().orderProcess),
-
 ]
 

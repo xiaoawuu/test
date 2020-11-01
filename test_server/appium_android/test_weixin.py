@@ -11,6 +11,8 @@ from appium import webdriver
 #     "automationName": "uiautomator2",
 #     "appActivity": "com.fcx.jy.ui.activity.LoginActivity"
 # }
+from test_server.data.sql import sql_select
+
 adevice = {
 	"platformName": "Android",
 	"platformVersion": "8.1.0",
@@ -118,30 +120,31 @@ class WeChatIDCheck(object):
 		time.sleep(0.5)
 		self.driver.tap([(810, 444), (1050, 2160)], 500)
 		time.sleep(0.5)
-		self.driver.find_element_by_id("com.tencent.mm:id/fcn").click()
-		time.sleep(0.5)
-		self.driver.find_element_by_id("com.tencent.mm:id/bhn").send_keys('256686')
-		time.sleep(0.5)
-		self.driver.find_element_by_id("com.tencent.mm:id/bhn").click()
-		time.sleep(0.5)
-		self.driver.press_keycode(66)
-		time.sleep(0.5)
-		try:
-			text = self.driver.find_element_by_id("com.tencent.mm:id/g6f").text
-			print(text)
-			self.driver.press_keycode(4)
+		data = sql_select("SELECT TOP 200 id ,wechat FROM biz_user WHERE sex = 2 AND wechat != '' and	len(wechat) BETWEEN 6 and	20 AND is_valid != 0;")
+		for i in data:
+			wx = i[1]
+			self.driver.find_element_by_id("com.tencent.mm:id/fcn").click()
 			time.sleep(0.5)
-			self.driver.press_keycode(4)
+			self.driver.find_element_by_id("com.tencent.mm:id/bhn").send_keys(wx)
 			time.sleep(0.5)
-			self.driver.quit()
-		except Exception as ERR:
-			print("不存在！")
+			self.driver.find_element_by_id("com.tencent.mm:id/bhn").click()
 			time.sleep(0.5)
-			self.driver.find_element_by_id("com.tencent.mm:id/aay").click()
-			time.sleep(1)
-			self.driver.press_keycode(4)
-			time.sleep(1)
-			print(True)
+			self.driver.press_keycode(66)
+			time.sleep(0.5)
+			try:
+				text = self.driver.find_element_by_id("com.tencent.mm:id/g6f").text
+				if text == '添加到通讯录':
+					print('真实的',wx)
+				self.driver.press_keycode(4)
+				time.sleep(0.5)
+				self.driver.press_keycode(4)
+				time.sleep(0.5)
+
+			except Exception as ERR:
+				time.sleep(0.5)
+				self.driver.find_element_by_id("com.tencent.mm:id/aay").click()
+				time.sleep(1)
+
 
 
 a = WeChatIDCheck()
@@ -159,8 +162,11 @@ config = {
 	"noReset": "True"
 }
 
-
-
+# def test():
+# 	a = sql_select(
+# 		"SELECT TOP 200 id ,wechat FROM biz_user WHERE sex = 2 AND wechat != '' and	len(wechat) BETWEEN 6 and	20 AND is_valid != 0;")
+# 	for i in a:
+# 		a = i[1]
 
 
 
