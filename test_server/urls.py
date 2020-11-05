@@ -21,6 +21,7 @@ from test_server.Order import Process
 
 urlpatterns = [
     url(r'^addMoney', views.addMoney),
+    url(r'^weixin_main', views.weixin_main),
     url(r'^addMembers', views.addMembers),
     url(r'^removeUser', views.removeUser),
     url(r'^testPortInsert', views.testPortInsert),

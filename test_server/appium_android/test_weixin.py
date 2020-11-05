@@ -96,7 +96,6 @@ def ride_file(text):
 		file.write(text + "\n")
 
 
-
 class WeChatIDCheck(object):
 	def __init__(self):
 		config = {
@@ -122,7 +121,8 @@ class WeChatIDCheck(object):
 		time.sleep(0.5)
 		self.driver.tap([(810, 444), (1050, 2160)], 500)
 		time.sleep(0.5)
-		data = sql_select("SELECT TOP 3 id ,wechat FROM biz_user WHERE sex = 2 AND wechat != '' and	len(wechat) BETWEEN 6 and	20 AND is_valid != 0;")
+		data = sql_select(
+			"SELECT TOP 3 id ,wechat FROM biz_user WHERE sex = 2 AND wechat != '' and	len(wechat) BETWEEN 6 and	20 AND is_valid != 0;")
 		for i in data:
 			wx = i[1]
 			self.driver.find_element_by_id("com.tencent.mm:id/fcn").click()
@@ -136,9 +136,9 @@ class WeChatIDCheck(object):
 			try:
 				text = self.driver.find_element_by_id("com.tencent.mm:id/g6f").text
 				if text == '添加到通讯录':
-					ride_file('{}:{}'.format(i[0],wx))
+					ride_file('{}:{}'.format(i[0], wx))
 
-					print('真实的',wx)
+					print('真实的', wx)
 				self.driver.press_keycode(4)
 				time.sleep(0.3)
 				self.driver.press_keycode(4)
@@ -149,49 +149,17 @@ class WeChatIDCheck(object):
 				self.driver.find_element_by_id("com.tencent.mm:id/aay").click()
 
 
+# a = WeChatIDCheck()
+# a.is_true()
+import werobot
+
+robot = werobot.WeRoBot(token='123456')
 
 
-a = WeChatIDCheck()
-a.is_true()
-
-config = {
-	"platformName": "Android",
-	"platformVersion": "8.1.0",
-	"deviceName": "b649c4d",
-	"appPackage": "com.tencent.mm",
-	'newCommandTimeout': "3000",
-	"automationName": "uiautomator2",
-	"appActivity": ".ui.LauncherUI",
-	"dontStopAppOnReset": "True",
-	"noReset": "True"
-}
-
-# def test():
-# 	a = sql_select(
-# 		"SELECT TOP 200 id ,wechat FROM biz_user WHERE sex = 2 AND wechat != '' and	len(wechat) BETWEEN 6 and	20 AND is_valid != 0;")
-# 	for i in a:
-# 		a = i[1]
+@robot.handler
+def hello(messages):
+	return 'hello!'
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+robot.config['HOST'] = '0.0.0.0'
+robot.config['PORT'] = 8080

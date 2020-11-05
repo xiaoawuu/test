@@ -1,38 +1,53 @@
 import pymysql
 import pymysql.cursors
 import configparser
+
+
 class Data():
     def __init__(self):
         pass
-    def config(self,environment):
+
+    def config(self, environment):
         conf = configparser.ConfigParser()
-        conf.read(r'C:\test_s\test_server\data\sql_configuration_file.ini')
+        conf.read(r'C:\test_server\test\test_server\data\sql_configuration_file.ini')
         host = conf.get(str(environment), 'host')
         account = conf.get(str(environment), 'account')
-        pwd=conf.get(str(environment),'pwd')
-        library_name=conf.get(str(environment),'library_name')
-        return {"host":host,"account":account,"pwd":pwd,"library_name":library_name}
+        pwd = conf.get(str(environment), 'pwd')
+        library_name = conf.get(str(environment), 'library_name')
+        return {"host": host, "account": account, "pwd": pwd, "library_name": library_name}
 
-    def query(self,types,sql):
+    def query(self, types, sql):
         data = Data().config(types)
         try:
-            self.conn = pymysql.connect(host=data["host"],user=data["account"],
-                                   passwd=data["pwd"], db=data["library_name"], charset='utf8')
+            self.conn = pymysql.connect(host=data["host"], user=data["account"],
+                                        passwd=data["pwd"], db=data["library_name"], charset='utf8')
             cur = self.conn.cursor(cursor=pymysql.cursors.DictCursor)
             cur.execute(sql)
+            self.conn.commit()
             return cur.fetchall()
         except:
             return False
 
-        finally:self.conn.close()
+        finally:
+            self.conn.close()
 
-# aa= "SELECT id,bank,number FROM `zyb_pay_bankcard` WHERE bank_authid = '132521197806153017' AND del != 1 ORDER BY id DESC LIMIT 1;"
-# sql = "SELECT id FROM `zyb_db`.`zyb_customer` WHERE `mobile` = '18866478743';"
-# d = Data()
-# a = d.query('zyb_live_r',sql)
-# print(a)
-# import time
-# print(time.time())
-# sql = "INSERT INTO freight_id_payment (freight_id,id_s,`status`) VALUES ('DO-20200585685','1599204315.5284896',1)"
-# print(d.query('localhost',sql))
+    def insert(self, types, sql, *args):
+        data = Data().config(types)
+        try:
+            self.conn = pymysql.connect(host=data["host"], user=data["account"],
+                                        passwd=data["pwd"], db=data["library_name"], charset='utf8')
+            cur = self.conn.cursor(cursor=pymysql.cursors.DictCursor)
+            cur.execute(sql)
+            self.conn.commit()
+        except Exception as err:
+            return err
 
+        finally:
+            self.conn.close()
+
+
+# c = Data()
+# re = c.query('localhost',
+#               "INSERT INTO tms_initialize (c_id, ws_wallet, wl_wallet, pay_order_count ) VALUES (22,22,22,21);")
+#
+# print(re)

@@ -38,16 +38,14 @@ import re
 所有：search
 所有：(返回多个)findall
 """
-a= 'L_-47jjj--_adsgfssdfgdsgjhjj7'
+a = 'L_-47jjj--_adsgfssdfgdsgjhjj7'
 
 # print(re.match(r"^[a-z]|[A-Z]|_", a))
 # print(len(re.findall(r"[a-z]|[A-Z]|_|-|[0-9]", a)))
 
 print(re.match(r"(^[a-zA-Z_])([a-zA-Z0-9_-]{5,19})+$", a))
 
-
 # print(len(a))
-
 
 
 # print(re.search(r'^a~z|A-Z|_\d+','_123'))
@@ -130,3 +128,46 @@ print(re.match(r"(^[a-zA-Z_])([a-zA-Z0-9_-]{5,19})+$", a))
     等类似公式后，必须自己解析里面的(),+,-,*,/符号和公式（不能调用eval等类似功能偷懒实现）
     运行得出结果必须正确
 """
+
+a = '''SELECT SUM
+	( money ) sum_money,
+	COUNT ( money ) [order],
+	(
+	SELECT COUNT
+		( * ) + (
+		SELECT COUNT
+			( * ) 
+		FROM
+			biz_wallet_record 
+		WHERE
+			pay_time >= ( SELECT CONVERT ( VARCHAR, GETDATE( ), 23 ) + ' 00:00:00' ) 
+			AND buy_type = 11 
+		) 
+	FROM
+		biz_order 
+	WHERE
+		create_time >= ( SELECT CONVERT ( VARCHAR, GETDATE( ), 23 ) + ' 00:00:00' ) 
+		AND status = 1 
+		AND currency = 0 
+	) vip,
+	(
+	SELECT COUNT
+		( sex ) 
+	FROM
+		biz_user 
+	WHERE
+		create_time >= ( SELECT CONVERT ( VARCHAR, GETDATE( ), 23 ) + ' 00:00:00' ) 
+		AND status = 4 
+	) count_user 
+FROM
+	biz_order 
+WHERE
+	create_time >= ( SELECT CONVERT ( VARCHAR, GETDATE( ), 23 ) + ' 00:00:00' ) 
+	AND status = 1;'''
+
+from test_server.data.sql import sql_select
+
+a = sql_select(a)
+
+data = {'money':a[0][0],'order':a[0][1],'vip':a[0][2],'user':a[0][3]}
+print(data)

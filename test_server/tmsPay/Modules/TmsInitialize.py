@@ -1,16 +1,13 @@
-from test_server.tmsPay.Modules.GetWlWallet import sql_
-
-
-def insert(c_id, ws_wallet,wl_wallet,pay_order_count):
+from test_server.data.mysqls import Data
+sql_ = Data().query
+def insert(c_id, ws_wallet,wl_wallet,pay_order_count,invoice_wallet):
+	print('{}'.format(float(invoice_wallet)))
 	try:
 		sql = """
-			INSERT INTO tms_initialize ( c_id, ws_wallet, wl_wallet, pay_order_count ) VALUES ( %s, %e, %e, %s );
-			""" % (c_id, float(ws_wallet),float(wl_wallet),int(pay_order_count))
+			INSERT INTO tms_initialize ( c_id, ws_wallet, wl_wallet, pay_order_count,invoice_wallet ) VALUES ( %s, %e, %e, %s ,%s);
+			""" % (c_id, float(ws_wallet),float(wl_wallet),int(pay_order_count),str(invoice_wallet))
+		print(sql)
 		data = sql_('localhost', sql)
-		print('insert',data)
 		return data
 	except TypeError as err:
 		return err
-
-# print(insert(1,1,"1",1))
-
