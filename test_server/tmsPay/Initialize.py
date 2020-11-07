@@ -6,8 +6,9 @@ from test_server.utils.jsonRequestAPI import jsonAPI
 from test_server.data.mysqls import Data
 from test_server.tmsPay.Modules.TmsInitialize import insert
 sql_ = Data().query
-
-def WLinitialize(c_id):
+import time
+#
+def WLinitialize(c_id,execute_time):
 
 	ws2_balance = getWsBalance(c_id)
 	invoiceCompanyId = gerInvoiceCompanyId(c_id)
@@ -16,11 +17,11 @@ def WLinitialize(c_id):
 	ws_two_balance = getWlBalance(c_id)
 	upaidData = getUnpaidData(c_id)
 	print(upaidData["count_"])
-	insert_ = insert(c_id,ws2_balance,ws_two_balance,upaidData["count_"],invoice_company_balance)
+	insert_ = insert(c_id,ws2_balance,ws_two_balance,upaidData["count_"],invoice_company_balance,execute_time)
 	print(insert_)
 	return True
 
-def EntrustInitialize(mobile):
+def EntrustInitialize(mobile,execute_time):
 	driverWallet = getDriverWallet(mobile)
 	user_id = driverWallet['user_id']
 	sum_balance = driverWallet['balance'] + driverWallet['out']
@@ -28,9 +29,8 @@ def EntrustInitialize(mobile):
 	freeze = driverWallet['freeze']
 	extract = driverWallet['out']
 	print(driverWallet)
-	DriverInitialize = setDriverInitialize(user_id,mobile,balance,freeze,extract,sum_balance)
+	DriverInitialize = setDriverInitialize(user_id,mobile,balance,freeze,extract,sum_balance,execute_time)
 	print(DriverInitialize)
-
-print(WLinitialize(764))
-print(EntrustInitialize(13651770956))
-
+# a = int(time.time())
+# # WLinitialize(770,a)
+# # EntrustInitialize(13651770956,a)

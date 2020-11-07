@@ -1,5 +1,8 @@
 # from test_server.tmsPay.initialize import sql_
+import time
+
 from test_server.data.mysqls import Data
+
 
 sql_ = Data().query
 '''
@@ -18,8 +21,6 @@ CREATE TABLE `driver_initialize` (
 '''
 
 
-def getDriverInitialize():
-	pass
 
 
 def setDriverInitialize(user_id, mobile, balance, freeze, out, sum_balance, execute_time):
@@ -39,12 +40,3 @@ def grtDriverAddWaller(mobile):
 	re = sql_('localhost',sql)
 	return re[0]['waller']
 
-# def insert(user_id=0, mobile='', balance=0, freeze=0, out=0, sum_balance=0, execute_time=''):
-# 	sql = """INSERT INTO driver_initialize (user_id,mobile,balance,freeze,`out`,sum_balance,time) VALUES (%d,%s,%e,%e,%e,%e,%s);""" % (
-# 		user_id, mobile, float(balance), float(freeze), float(out), float(sum_balance), str(execute_time))
-# 	print(sql)
-# 	re = sql_('localhost', sql)
-# 	print(re)
-# print(float(0))
-# # INSERT INTO driver_initialize(user_id,mobile,balance,freeze,`out`,sum_balance,time) VALUES (1,'',10.00,10.00,10.00,0,'');
-# insert()

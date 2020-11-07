@@ -25,8 +25,8 @@ class Data():
             cur.execute(sql)
             self.conn.commit()
             return cur.fetchall()
-        except:
-            return False
+        except Exception as err:
+            return 'SQL_ERR:',err
 
         finally:
             self.conn.close()
@@ -46,8 +46,4 @@ class Data():
             self.conn.close()
 
 
-# c = Data()
-# re = c.query('localhost',
-#               "INSERT INTO tms_initialize (c_id, ws_wallet, wl_wallet, pay_order_count ) VALUES (22,22,22,21);")
-#
-# print(re)
+
