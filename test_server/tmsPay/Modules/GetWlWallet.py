@@ -1,5 +1,7 @@
 from test_server.utils.jsonRequestAPI import jsonAPI
 from test_server.data.mysqls import Data
+from test_server.tmsPay.utils.responseJSON import responseJSON_0,responseJSON_1
+from test_server.tmsPay.utils.print_ import *
 
 sql_ = Data().query
 
@@ -81,7 +83,6 @@ def getWsBalance(c_id, type=2):
 		return '不支持除1.0和2.0外的公司'
 
 
-
 def getWlBalance(c_id):
 	'''
 	获取物流钱包余额
@@ -137,25 +138,62 @@ def gerInvoiceCompanyId(c_id):
 	return invoice_company_id[0]['invoice_company_id']
 
 
-def getDriverWallet(mobile):
-	a = """
-			SELECT
-			B.user_id, 
-			B.balance,
-			B.freeze,
-			B.`out` 
+def getZybdbWallet(mobile):
+	'''
+	获取司机/车队的钱包余额
+	:param mobile:
+	:return:
+	'''
+	user_type = "SELECT user_type FROM `zyb_customer` WHERE `account`='{}';".format(mobile)
+	is_driver = '''SELECT
+			COUNT(*) count_ 
 		FROM
-			zyb_customer A
-			JOIN zyb_tms_wallet B ON A.id = B.user_id 
+			zyb_driver_person_cert A
+			JOIN zyb_customer B ON A.user_id = B.id 
 		WHERE
-			mobile = '{}';
-		""".format(mobile)
-	wallet = sql_('zyb_test', a)
+			B.account = '{}';
+	'''.format(mobile)
+	user_type = sql_('zyb_test', user_type)
+	is_driver = sql_('zyb_test', is_driver)
+	if is_driver[0]['count_'] > 0:
+		re = responseJSON_0('请勿使用多角色的账户',mobile)
+		return re
+	if user_type[0]['user_type'] == 8:
+		wallet = """
+				SELECT
+					B.user_id, 
+					B.balance,
+					B.freeze,
+					B.`out` 
+			FROM
+				zyb_customer A
+				JOIN zyb_tms_wallet B ON A.id = B.user_id 
+			WHERE
+				mobile = '{}';
+			""".format(mobile)
+	elif user_type[0]['user_type'] == 2:
+		wallet = """
+		
+				SELECT
+					user_id,
+					balance,
+					freeze,
+					`out` 
+				FROM
+					zyb_pay
+					JOIN zyb_customer ON zyb_customer.id = zyb_pay.user_id 
+				WHERE
+					mobile = '{}';
+				""".format(mobile)
+	else:
+		response = responseJSON_0('请输入车队或司机账户', mobile)
+		return response
+	wallet = sql_('zyb_test', wallet)
 	money = {
 		'user_id': wallet[0]["user_id"],
 		'balance': wallet[0]["balance"],
 		'freeze': wallet[0]["freeze"],
 		'out': wallet[0]["out"]
 	}
-	return money
+	return responseJSON_1(data=money)
 

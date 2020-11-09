@@ -1,8 +1,7 @@
 # from test_server.tmsPay.initialize import sql_
 import time
-
+from test_server.tmsPay.utils.responseJSON import responseJSON_0,responseJSON_1
 from test_server.data.mysqls import Data
-
 
 sql_ = Data().query
 '''
@@ -19,8 +18,16 @@ CREATE TABLE `driver_initialize` (
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 '''
+from test_server.tmsPay.utils.print_ import *
 
-
+def delete(mobile, ):
+	try:
+		sql = "DELETE FROM `driver_initialize` WHERE mobile={};".format(mobile)
+		sql_('localhost', sql)
+		print_suc('删除成功:{}'.format(mobile))
+		return responseJSON_1('删除成功:', mobile)
+	except TypeError as err:
+		return responseJSON_0('删除失败', err, )
 
 
 def setDriverInitialize(user_id, mobile, balance, freeze, out, sum_balance, execute_time):
@@ -29,14 +36,13 @@ def setDriverInitialize(user_id, mobile, balance, freeze, out, sum_balance, exec
 			INSERT INTO driver_initialize (user_id,mobile,balance,freeze,`out`,sum_balance,time) VALUES (%d,%s,%e,%e,%e,%e,%s)
 			""" % (user_id, mobile, float(balance), float(freeze), float(out), float(sum_balance), str(execute_time))
 		data = sql_('localhost', sql)
-		print('insert', data)
 		return data
 	except TypeError as err:
 		return err
 
+
 def grtDriverAddWaller(mobile):
 	sql = "SELECT sum_balance - (SELECT sum_balance FROM driver_initialize WHERE mobile = '{}' ORDER BY id DESC LIMIT 1,1" \
-		  ") waller FROM driver_initialize WHERE mobile = '{}' ORDER BY id DESC LIMIT 0,1;".format(mobile,mobile)
-	re = sql_('localhost',sql)
+		  ") waller FROM driver_initialize WHERE mobile = '{}' ORDER BY id DESC LIMIT 0,1;".format(mobile, mobile)
+	re = sql_('localhost', sql)
 	return re[0]['waller']
-
