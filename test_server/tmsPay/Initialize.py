@@ -2,10 +2,11 @@
 from test_server.tmsPay.Modules.DriverInitialize import setDriverInitialize
 from test_server.tmsPay.Modules.GetWlWallet import getWsBalance, getWlBalance, getUnpaidData, getZybdbWallet, \
 	gerInvoiceCompanyId
-from test_server.tmsPay.Modules.TmsInitialize import delete as tms_delete
+from test_server.tmsPay.Modules.TmsInitialize import delete as tms_delete, getInvoiceCompanyType
 from test_server.tmsPay.Modules.DriverInitialize import delete as mobile_delete
 from test_server.data.mysqls import Data
 from test_server.tmsPay.Modules.TmsInitialize import insert
+from test_server.tmsPay.utils.print_ import *
 from test_server.tmsPay.utils.responseJSON import responseJSON_0,responseJSON_1
 sql_ = Data().query
 import time
@@ -13,12 +14,18 @@ import time
 
 #
 def WLinitialize(c_id, execute_time):
-	ws2_balance = getWsBalance(c_id)
+	invoiceCompanyType = getInvoiceCompanyType(c_id)
+	ws2_balance = getWsBalance(c_id,invoiceCompanyType["msg"])
 	invoiceCompanyId = gerInvoiceCompanyId(c_id)
-	invoice_company_balance = getWsBalance(invoiceCompanyId)
+	invoice_company_balance = getWsBalance(invoiceCompanyId,invoiceCompanyType["msg"])
+	print_err(invoice_company_balance)
 	ws_two_balance = getWlBalance(c_id)
 	upaidData = getUnpaidData(c_id)
 	insert_ = insert(c_id, ws2_balance, ws_two_balance, upaidData["count_"], invoice_company_balance, execute_time)
+	print_err(123456)
+	print_err(insert_)
+	if insert_['code'] == 0:
+		return insert_
 	return responseJSON_1('TMS初始化成功！',insert_)
 
 
@@ -31,7 +38,9 @@ def EntrustInitialize(mobile, execute_time):
 	balance = driverWallet['data']['balance']
 	freeze = driverWallet['data']['freeze']
 	extract = driverWallet['data']['out']
-	setDriverInitialize(user_id, mobile, balance, freeze, extract, sum_balance, execute_time)
+	DriverInitialize = setDriverInitialize(user_id, mobile, balance, freeze, extract, sum_balance, execute_time)
+	if DriverInitialize['code'] == 0:
+		return DriverInitialize
 	return responseJSON_1('初始化成功')
 
 def checking(c_id_list, mobile_list):
@@ -48,6 +57,6 @@ def checking(c_id_list, mobile_list):
 			return is_true
 	return responseJSON_1('初始化成功！','初始化代码:{}'.format(execute_time))
 
-
-checking([],[])
+if __name__ == '__main__':
+	print(checking([770],[13651770956,18007530000]))
 

@@ -6,6 +6,25 @@ from test_server.tmsPay.utils.print_ import *
 sql_ = Data().query
 path = r'C:\test_server\test\test_server\tmsPay\Initialize.py'
 
+def getInvoiceCompanyType(c_id):
+	type = '''
+		SELECT ws_status,ws_two_status FROM tms_wl_wallet WHERE `c_id` = '{}';
+	'''.format(c_id)
+	type = sql_('tms_test',type)
+	if len(type) < 1:
+		return responseJSON_1(0)
+	ws_status = type[0]['ws_status']
+	ws_two_status = type[0]['ws_two_status']
+	if ws_status == 2 and (ws_two_status == 0 or ws_two_status):
+		return responseJSON_1(1)
+	elif ws_two_status == 2 and (ws_status == 0 or ws_status == 4):
+		return responseJSON_1(2)
+	else:
+		print_err('请使用网商1.0或网商2.0物流公司' + 'c_id:{}'.format(c_id))
+		return responseJSON_0(0)
+
+
+# print_warn_(getInvoiceCompanyType(770))
 
 def insert(c_id, ws_wallet, wl_wallet, pay_order_count, invoice_wallet, execute_time):
 	try:
@@ -14,9 +33,11 @@ def insert(c_id, ws_wallet, wl_wallet, pay_order_count, invoice_wallet, execute_
 			""" % (
 			c_id, str(ws_wallet), str(wl_wallet), int(pay_order_count), str(invoice_wallet), str(execute_time))
 		data = sql_('localhost', sql)
+		print_suc(sql)
 		if len(data) == 0:
 			print_warn_('数据更新成功！')
 			return responseJSON_1('数据')
+		else:print_err(data)
 	except TypeError as err:
 		return responseJSON_0('数据',err)
 

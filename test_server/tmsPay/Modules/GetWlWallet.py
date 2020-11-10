@@ -1,19 +1,23 @@
+from test_server.tmsPay.Modules.TmsInitialize import getInvoiceCompanyType
 from test_server.utils.jsonRequestAPI import jsonAPI
 from test_server.data.mysqls import Data
-from test_server.tmsPay.utils.responseJSON import responseJSON_0,responseJSON_1
+from test_server.tmsPay.utils.responseJSON import responseJSON_0, responseJSON_1
 from test_server.tmsPay.utils.print_ import *
 
 sql_ = Data().query
 
 
-def getWsBalance(c_id, type=2):
+def getWsBalance(c_id, a):
 	'''
 	获取网商钱包余额
 	:param c_id:
 	:param types:
 	:return:
 	'''
-	if int(c_id) < 30 and type == 2:
+	print_warn_('c_id:{}'.format(c_id))
+	print_warn_('a:{}'.format(a))
+	print_warn_('a:{}'.format(type(a)))
+	if a == 2:
 		url = 'http://120.77.206.166:8200'
 		path = '/pay/wsaccount/scbalqu'
 		re_data = {
@@ -26,22 +30,25 @@ def getWsBalance(c_id, type=2):
 				return '2.0网商余额查询异常'
 			return response['data']
 		except:
+			print_warn_('111' + response)
 			return '2.0网商余额查询异常'
-	elif int(c_id) < 30 and type == 1:
+	elif a == 1:
 		url = 'http://120.77.206.166:8090'
 		path = '/api/webbank/accountBalance'
 		re_data = {"userid": "tms{}".format(c_id)}
 		try:
 			response = jsonAPI(url, path, re_data)
 			if response['code'] != 1:
-				return '1.0网商余额查询异常'
+				return '1.0网商余额查询异常1'
 			elif response['data']['account_list'][0]['balance'] != response['data']['account_list'][0][
 				'available_balance']:
-				return '1.0网商余额查询异常'
+				return responseJSON_0('1.0网商余额查询异常3', 'balance != available_balance')
 			return response['data']['account_list'][0]['balance']
-		except:
-			return '1.0网商余额查询异常'
+		except Exception as err:
+			return responseJSON_0('1.0网商余额查询异常3', err)
 
+
+'''
 	status_sql = """
 			SELECT ( CASE ws_two_status WHEN 2 THEN 1 ELSE 0 END ) ws_two_status,( CASE ws_status WHEN 2 THEN 1 ELSE 0 END ) ws_status
 			FROM
@@ -50,7 +57,8 @@ def getWsBalance(c_id, type=2):
 				c_id = {};
 		""".format(c_id)
 	status = sql_('tms_test', status_sql)
-	if status[0]['ws_two_status'] == 1 and status[0]['ws_status'] == 0:
+	print_err(status)
+	if invoiceCompanyType == 2:
 		url = 'http://120.77.206.166:8200'
 		path = '/pay/wsaccount/scbalqu'
 		re_data = {
@@ -65,7 +73,7 @@ def getWsBalance(c_id, type=2):
 		except:
 			return '2.0网商余额查询异常'
 
-	elif status[0]['ws_two_status'] == 0 and status[0]['ws_status'] == 1:
+	elif invoiceCompanyType == 1:
 		url = 'http://120.77.206.166:8090'
 		path = '/api/webbank/accountBalance'
 		re_data = {"userid": "tms{}".format(c_id)}
@@ -81,6 +89,9 @@ def getWsBalance(c_id, type=2):
 			return '1.0网商余额查询异常'
 	else:
 		return '不支持除1.0和2.0外的公司'
+
+'''
+print_err(getWsBalance(2, 1))
 
 
 def getWlBalance(c_id):
@@ -154,11 +165,12 @@ def getZybdbWallet(mobile):
 			B.account = '{}';
 	'''.format(mobile)
 	user_type = sql_('zyb_test', user_type)
-	is_driver = sql_('zyb_test', is_driver)
-	if is_driver[0]['count_'] > 0:
-		re = responseJSON_0('请勿使用多角色的账户',mobile)
-		return re
 	if user_type[0]['user_type'] == 8:
+		print_err(1111)
+		is_driver = sql_('zyb_test', is_driver)
+		if is_driver[0]['count_'] > 0:
+			re = responseJSON_0('请勿使用多角色的账户', mobile)
+			return re
 		wallet = """
 				SELECT
 					B.user_id, 
@@ -169,9 +181,10 @@ def getZybdbWallet(mobile):
 				zyb_customer A
 				JOIN zyb_tms_wallet B ON A.id = B.user_id 
 			WHERE
-				mobile = '{}';
+				A.mobile = '{}';
 			""".format(mobile)
 	elif user_type[0]['user_type'] == 2:
+
 		wallet = """
 		
 				SELECT
@@ -189,6 +202,9 @@ def getZybdbWallet(mobile):
 		response = responseJSON_0('请输入车队或司机账户', mobile)
 		return response
 	wallet = sql_('zyb_test', wallet)
+	if len(wallet) == 0:
+		user_id = sql_('zyb_test', "SELECT id FROM zyb_customer WHERE mobile='{}';".format(mobile))
+		wallet = [{'user_id': user_id[0]['id'], 'balance': '0', 'freeze': '0', 'out': '0'}]
 	money = {
 		'user_id': wallet[0]["user_id"],
 		'balance': wallet[0]["balance"],
@@ -196,4 +212,3 @@ def getZybdbWallet(mobile):
 		'out': wallet[0]["out"]
 	}
 	return responseJSON_1(data=money)
-

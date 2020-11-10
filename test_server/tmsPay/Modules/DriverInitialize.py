@@ -36,9 +36,11 @@ def setDriverInitialize(user_id, mobile, balance, freeze, out, sum_balance, exec
 			INSERT INTO driver_initialize (user_id,mobile,balance,freeze,`out`,sum_balance,time) VALUES (%d,%s,%e,%e,%e,%e,%s)
 			""" % (user_id, mobile, float(balance), float(freeze), float(out), float(sum_balance), str(execute_time))
 		data = sql_('localhost', sql)
-		return data
+		if len(data) == 0:
+			return responseJSON_1('更新成功！')
+		else:return responseJSON_0('更新失败！')
 	except TypeError as err:
-		return err
+		return responseJSON_0('更新失败！',err)
 
 
 def grtDriverAddWaller(mobile):
