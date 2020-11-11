@@ -24,7 +24,6 @@ def getInvoiceCompanyType(c_id):
 		return responseJSON_0(0)
 
 
-# print_warn_(getInvoiceCompanyType(770))
 
 def insert(c_id, ws_wallet, wl_wallet, pay_order_count, invoice_wallet, execute_time):
 	try:
@@ -33,13 +32,11 @@ def insert(c_id, ws_wallet, wl_wallet, pay_order_count, invoice_wallet, execute_
 			""" % (
 			c_id, str(ws_wallet), str(wl_wallet), int(pay_order_count), str(invoice_wallet), str(execute_time))
 		data = sql_('localhost', sql)
-		print_suc(sql)
 		if len(data) == 0:
-			print_warn_('数据更新成功！')
-			return responseJSON_1('数据')
-		else:print_err(data)
+			return responseJSON_1('数据更新成功！')
+		else:return responseJSON_0('数据更新失败！',sql)
 	except TypeError as err:
-		return responseJSON_0('数据',err)
+		return responseJSON_0('数据更新异常！',err)
 
 
 def delete(c_id, ):

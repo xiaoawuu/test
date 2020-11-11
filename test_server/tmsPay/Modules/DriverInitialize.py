@@ -24,7 +24,6 @@ def delete(mobile, ):
 	try:
 		sql = "DELETE FROM `driver_initialize` WHERE mobile={};".format(mobile)
 		sql_('localhost', sql)
-		print_suc('删除成功:{}'.format(mobile))
 		return responseJSON_1('删除成功:', mobile)
 	except TypeError as err:
 		return responseJSON_0('删除失败', err, )

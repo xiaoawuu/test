@@ -14,9 +14,6 @@ def getWsBalance(c_id, a):
 	:param types:
 	:return:
 	'''
-	print_warn_('c_id:{}'.format(c_id))
-	print_warn_('a:{}'.format(a))
-	print_warn_('a:{}'.format(type(a)))
 	if a == 2:
 		url = 'http://120.77.206.166:8200'
 		path = '/pay/wsaccount/scbalqu'
@@ -30,7 +27,6 @@ def getWsBalance(c_id, a):
 				return '2.0网商余额查询异常'
 			return response['data']
 		except:
-			print_warn_('111' + response)
 			return '2.0网商余额查询异常'
 	elif a == 1:
 		url = 'http://120.77.206.166:8090'
@@ -91,8 +87,6 @@ def getWsBalance(c_id, a):
 		return '不支持除1.0和2.0外的公司'
 
 '''
-print_err(getWsBalance(2, 1))
-
 
 def getWlBalance(c_id):
 	'''
@@ -166,7 +160,6 @@ def getZybdbWallet(mobile):
 	'''.format(mobile)
 	user_type = sql_('zyb_test', user_type)
 	if user_type[0]['user_type'] == 8:
-		print_err(1111)
 		is_driver = sql_('zyb_test', is_driver)
 		if is_driver[0]['count_'] > 0:
 			re = responseJSON_0('请勿使用多角色的账户', mobile)
