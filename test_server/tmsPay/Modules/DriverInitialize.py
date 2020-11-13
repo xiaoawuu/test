@@ -1,6 +1,6 @@
 # from test_server.tmsPay.initialize import sql_
 import time
-from test_server.tmsPay.utils.responseJSON import responseJSON_0,responseJSON_1
+from test_server.tmsPay.utils.responseJSON import responseJSON_0, responseJSON_1
 from test_server.data.mysqls import Data
 
 sql_ = Data().query
@@ -20,6 +20,7 @@ CREATE TABLE `driver_initialize` (
 '''
 from test_server.tmsPay.utils.print_ import *
 
+
 def delete(mobile, ):
 	try:
 		sql = "DELETE FROM `driver_initialize` WHERE mobile={};".format(mobile)
@@ -27,6 +28,21 @@ def delete(mobile, ):
 		return responseJSON_1('删除成功:', mobile)
 	except TypeError as err:
 		return responseJSON_0('删除失败', err, )
+
+
+
+
+def localhostInsert(table_name=None,**kwargs):
+	values = []
+	keys = []
+	for value in kwargs.keys():
+		keys.append(value)
+	for value in kwargs.values():
+		values.append(value)
+	sql = 'insert into {} {}'.format(table_name,tuple(keys)).replace("'", "")+' VALUES {};'.format(tuple(values))
+	return sql_('localhost',sql)
+if __name__ == '__main__':
+	localhostInsert('s',a='123', b=456.36)
 
 
 def setDriverInitialize(user_id, mobile, balance, freeze, out, sum_balance, execute_time):
@@ -37,9 +53,10 @@ def setDriverInitialize(user_id, mobile, balance, freeze, out, sum_balance, exec
 		data = sql_('localhost', sql)
 		if len(data) == 0:
 			return responseJSON_1('更新成功！')
-		else:return responseJSON_0('更新失败！')
+		else:
+			return responseJSON_0('更新失败！')
 	except TypeError as err:
-		return responseJSON_0('更新失败！',err)
+		return responseJSON_0('更新失败！', err)
 
 
 def grtDriverAddWaller(mobile):

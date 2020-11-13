@@ -31,19 +31,14 @@ class Data():
         finally:
             self.conn.close()
 
-    def insert(self, types, sql, *args):
-        data = Data().config(types)
-        try:
-            self.conn = pymysql.connect(host=data["host"], user=data["account"],
-                                        passwd=data["pwd"], db=data["library_name"], charset='utf8')
-            cur = self.conn.cursor(cursor=pymysql.cursors.DictCursor)
-            cur.execute(sql)
-            self.conn.commit()
-        except Exception as err:
-            return err
+if __name__ == '__main__':
+    sql_ = Data().query
+    sql = '''
+    DELETE FROM zyb_customer WHERE id = '54'; DELETE FROM zyb_driver_person_cert WHERE user_id = '54'; 
+    '''
 
-        finally:
-            self.conn.close()
+    print(sql_('zyb_test', sql))
+
 
 
 
