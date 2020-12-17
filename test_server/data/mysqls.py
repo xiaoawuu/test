@@ -31,13 +31,13 @@ class Data():
         finally:
             self.conn.close()
 
-if __name__ == '__main__':
-    sql_ = Data().query
-    sql = '''
-    DELETE FROM zyb_customer WHERE id = '54'; DELETE FROM zyb_driver_person_cert WHERE user_id = '54'; 
-    '''
-
-    print(sql_('zyb_test', sql))
+# if __name__ == '__main__':
+#     sql_ = Data().query
+#     sql = '''
+#     DELETE FROM zyb_customer WHERE id = '54'; DELETE FROM zyb_driver_person_cert WHERE user_id = '54';
+#     '''
+#
+#     print(sql_('zyb_test', sql))
 
 
 

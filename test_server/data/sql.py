@@ -49,3 +49,4 @@ def sql_exec(data, type='jy_live_r'):
 	return sql
 
 
+

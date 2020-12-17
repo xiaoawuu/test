@@ -49,7 +49,6 @@ gender_send = 'com.fcx.jy:id/tv_login'
 # 聊天输入框：com.fcx.jy:id/chat_message_input
 # 聊天发送：com.fcx.jy:id/send_btn
 # 聊发表情：com.fcx.jy:id/face_btn
-
 # 选择城市后的确定：com.fcx.jy:id/tv_login
 
 # 消息列表

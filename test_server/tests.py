@@ -322,7 +322,6 @@ class ImageDetection():
 # print("/Resources/UserPicture/19152/10d8c7ec23ac4704a84c1ebacc554c99.png")
 # print("/Resources/UserPicture/19152/10d8c7ec23ac4704a84c1ebacc554c99.png"[-9:] )
 
-
 '''
 # os 模块
 os.sep 可以取代操作系统特定的路径分隔符。windows下为 '\\'
@@ -458,7 +457,6 @@ driver.find_element_by_id('com.fcx.jy:id/send_btn').click()
 
 # driver.tap([(宽, 高), (分辨率)], 500)
 
-print('exit!')
 
 # driver.find_element_by_id("com.fcx.jy:id/rb_bt3").click()
 

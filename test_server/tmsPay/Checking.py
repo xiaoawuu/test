@@ -89,10 +89,6 @@ def checking(time):
 			print_suc('\n物流公司总支出运费:{}'.format(payTotalWallet))
 			print_suc('分公司总收入服务费:{}'.format(serviceFeeIncometTotal))
 			print_suc('司机总收入运费:{}'.format(driverAddWallerTotal))
-			if (payTotalWallet - serviceFeeIncometTotal) == driverAddWallerTotal:
-				return responseJSON_1('---------------对账成功------------------！')
-			else:
-				return responseJSON_0('---------------对账失败！---------------')
 		else:
 			return responseJSON_0('对账数据异常', '对账ID:{}'.format(time))
 	else:
@@ -100,4 +96,4 @@ def checking(time):
 
 
 if __name__ == '__main__':
-	print_warn_(checking(1605062253))
+	print_warn_(checking(1605684956))

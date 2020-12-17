@@ -55,5 +55,5 @@ def checking(c_id_list, mobile_list):
 	return responseJSON_1('初始化成功！','初始化代码:{}'.format(execute_time))
 
 if __name__ == '__main__':
-	print_suc(checking([770],[13651770956,18007530000]))
+	print_suc(checking([810,811],[16615599999,16616666666,18007555555]))
 
