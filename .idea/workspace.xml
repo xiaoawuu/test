@@ -19,32 +19,12 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a9de5cc0-0f1b-4004-a870-0b88027a6076" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/jy_server/Data/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jy_server/Data/bizVipRecord.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jy_server/Data/bizWallet.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jy_server/Data/sysLog.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jy_server/Modules/DeleteUser.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jy_server/Modules/UserStatus.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jy_server/Modules/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jy_server/Modules/addMoney.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jy_server/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jy_server/test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jy_server/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jy_server/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_server/juyuanServer/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_server/utils/print_.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_server/utils/responseJSON.py" afterDir="false" />
+    <list default="true" id="a9de5cc0-0f1b-4004-a870-0b88027a6076" name="Default Changelist" comment="1.1">
+      <change afterPath="$PROJECT_DIR$/jy_server/Modules/TimingTask.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_server/A_ModuleGather/learning_catalogue.txt" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/A_ModuleGather/learning_catalogue.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_server/appium_android/ElementModules/location_element.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/appium_android/ElementModules/location_element.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_server/appium_android/test_weixin.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/appium_android/test_weixin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_server/appium_android/utils/is_true" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/appium_android/utils/is_true" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test_server/data/mysqls.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/data/mysqls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_server/data/sql.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/data/sql.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_server/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/tests.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_server/tmsPay/Checking.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/tmsPay/Checking.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_server/tmsPay/Initialize.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/tmsPay/Initialize.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_server/tmsPay/Modules/TmsInitialize.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/tmsPay/Modules/TmsInitialize.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_server/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,7 +59,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/test_server/utils" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -87,19 +67,57 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Console Colors" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\test_server\test\test_server\utils" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\test_server\test\jy_server\Modules" />
       <recent name="C:\test_s\test_server\appium_android\ElementModules" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.test">
-    <configuration name="DeleteUser" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.TimingTask">
+    <configuration name="Checking" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="test_server" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test_server/tmsPay" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_server/tmsPay/Checking.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Initialize" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="test_server" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test_server/tmsPay" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_server/tmsPay/Initialize.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TimingTask" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="test_server" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -111,7 +129,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/jy_server/Modules/DeleteUser.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/jy_server/Modules/TimingTask.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -120,7 +138,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="UserStatus" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="print_ (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="test_server" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -128,11 +146,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/jy_server/Modules" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test_server/tmsPay/utils" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/jy_server/Modules/UserStatus.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_server/tmsPay/utils/print_.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -141,7 +159,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="addMoney" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="sql" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="test_server" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -149,53 +167,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/jy_server/Modules" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test_server/data" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/jy_server/Modules/addMoney.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="bizVipRecord" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="test_server" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/jy_server/Data" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/jy_server/Data/bizVipRecord.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="test_server" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/jy_server" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/jy_server/test.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_server/data/sql.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -206,15 +182,15 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.test" />
-        <item itemvalue="Python.DeleteUser" />
-        <item itemvalue="Python.UserStatus" />
-        <item itemvalue="Python.addMoney" />
-        <item itemvalue="Python.bizVipRecord" />
+        <item itemvalue="Python.TimingTask" />
+        <item itemvalue="Python.sql" />
+        <item itemvalue="Python.Checking" />
+        <item itemvalue="Python.Initialize" />
+        <item itemvalue="Python.print_ (1)" />
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="false" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -294,28 +270,7 @@
       <option name="project" value="LOCAL" />
       <updated>1604916470504</updated>
     </task>
-    <task id="LOCAL-00010" summary="1.2">
-      <created>1605011282333</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1605011282333</updated>
-    </task>
-    <task id="LOCAL-00011" summary="1.2">
-      <created>1605062539973</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1605062539973</updated>
-    </task>
-    <task id="LOCAL-00012" summary="1.2">
-      <created>1605262151012</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1605262151012</updated>
-    </task>
-    <option name="localTasksCounter" value="13" />
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -326,13 +281,12 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="1.1" />
@@ -345,19 +299,15 @@
     </state>
     <state x="586" y="198" key="#Inspections/0.0.1920.1040@0.0.1920.1040" timestamp="1602063862207" />
     <state x="586" y="221" key="#Inspections/0.0.1920.1160@0.0.1920.1160" timestamp="1604892326687" />
-    <state x="668" y="205" key="#addMoney" timestamp="1606180723855">
-      <screen x="0" y="0" width="1920" height="1160" />
-    </state>
-    <state x="668" y="205" key="#addMoney/0.0.1920.1160@0.0.1920.1160" timestamp="1606180723855" />
     <state x="640" y="255" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1601955171273">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="640" y="255" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1601955171273" />
-    <state x="558" y="97" key="CommitChangelistDialog2" timestamp="1605262144674">
+    <state x="558" y="97" key="CommitChangelistDialog2" timestamp="1604916462005">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
     <state x="558" y="87" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1601955446940" />
-    <state x="558" y="97" key="CommitChangelistDialog2/0.0.1920.1160@0.0.1920.1160" timestamp="1605262144674" />
+    <state x="558" y="97" key="CommitChangelistDialog2/0.0.1920.1160@0.0.1920.1160" timestamp="1604916462005" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1601956206332">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -366,72 +316,68 @@
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
     <state x="740" y="335" key="FileChooserDialogImpl/0.0.1920.1160@0.0.1920.1160" timestamp="1603959086384" />
-    <state width="1531" height="174" key="GridCell.Tab.0.bottom" timestamp="1608172768361">
-      <screen x="0" y="0" width="1920" height="1160" />
+    <state width="1899" height="245" key="GridCell.Tab.0.bottom" timestamp="1608213763415">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1602065701710" />
-    <state width="1531" height="174" key="GridCell.Tab.0.bottom/0.0.1920.1160@0.0.1920.1160" timestamp="1608172768361" />
-    <state width="1531" height="174" key="GridCell.Tab.0.center" timestamp="1608172768361">
-      <screen x="0" y="0" width="1920" height="1160" />
+    <state width="1899" height="245" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1608213763415" />
+    <state width="1899" height="293" key="GridCell.Tab.0.bottom/0.0.1920.1160@0.0.1920.1160" timestamp="1605004895802" />
+    <state width="1899" height="245" key="GridCell.Tab.0.center" timestamp="1608213763414">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1602065701709" />
-    <state width="1531" height="174" key="GridCell.Tab.0.center/0.0.1920.1160@0.0.1920.1160" timestamp="1608172768361" />
-    <state width="1531" height="174" key="GridCell.Tab.0.left" timestamp="1608172768360">
-      <screen x="0" y="0" width="1920" height="1160" />
+    <state width="1899" height="245" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1608213763414" />
+    <state width="1899" height="293" key="GridCell.Tab.0.center/0.0.1920.1160@0.0.1920.1160" timestamp="1605004895802" />
+    <state width="1899" height="245" key="GridCell.Tab.0.left" timestamp="1608213763414">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1602065701709" />
-    <state width="1531" height="174" key="GridCell.Tab.0.left/0.0.1920.1160@0.0.1920.1160" timestamp="1608172768360" />
-    <state width="1531" height="174" key="GridCell.Tab.0.right" timestamp="1608172768361">
-      <screen x="0" y="0" width="1920" height="1160" />
+    <state width="1899" height="245" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1608213763414" />
+    <state width="1899" height="293" key="GridCell.Tab.0.left/0.0.1920.1160@0.0.1920.1160" timestamp="1605004895802" />
+    <state width="1899" height="245" key="GridCell.Tab.0.right" timestamp="1608213763415">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="348" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1602065701710" />
-    <state width="1531" height="174" key="GridCell.Tab.0.right/0.0.1920.1160@0.0.1920.1160" timestamp="1608172768361" />
-    <state width="949" height="328" key="GridCell.Tab.1.bottom" timestamp="1608088607220">
+    <state width="1899" height="245" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1608213763415" />
+    <state width="1899" height="293" key="GridCell.Tab.0.right/0.0.1920.1160@0.0.1920.1160" timestamp="1605004895802" />
+    <state width="1899" height="328" key="GridCell.Tab.1.bottom" timestamp="1604733885773">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
     <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1602065701710" />
-    <state width="949" height="328" key="GridCell.Tab.1.bottom/0.0.1920.1160@0.0.1920.1160" timestamp="1608088607220" />
-    <state width="949" height="328" key="GridCell.Tab.1.center" timestamp="1608088607220">
+    <state width="1899" height="328" key="GridCell.Tab.1.bottom/0.0.1920.1160@0.0.1920.1160" timestamp="1604733885773" />
+    <state width="1899" height="328" key="GridCell.Tab.1.center" timestamp="1604733885773">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
     <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1602065701710" />
-    <state width="949" height="328" key="GridCell.Tab.1.center/0.0.1920.1160@0.0.1920.1160" timestamp="1608088607220" />
-    <state width="949" height="328" key="GridCell.Tab.1.left" timestamp="1608088607219">
+    <state width="1899" height="328" key="GridCell.Tab.1.center/0.0.1920.1160@0.0.1920.1160" timestamp="1604733885773" />
+    <state width="1899" height="328" key="GridCell.Tab.1.left" timestamp="1604733885773">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
     <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1602065701710" />
-    <state width="949" height="328" key="GridCell.Tab.1.left/0.0.1920.1160@0.0.1920.1160" timestamp="1608088607219" />
-    <state width="949" height="328" key="GridCell.Tab.1.right" timestamp="1608088607220">
+    <state width="1899" height="328" key="GridCell.Tab.1.left/0.0.1920.1160@0.0.1920.1160" timestamp="1604733885773" />
+    <state width="1899" height="328" key="GridCell.Tab.1.right" timestamp="1604733885773">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
     <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1602065701710" />
-    <state width="949" height="328" key="GridCell.Tab.1.right/0.0.1920.1160@0.0.1920.1160" timestamp="1608088607220" />
+    <state width="1899" height="328" key="GridCell.Tab.1.right/0.0.1920.1160@0.0.1920.1160" timestamp="1604733885773" />
     <state x="318" y="98" key="MergeDialog" timestamp="1601955403821">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="318" y="98" key="MergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1601955403821" />
-    <state x="1167" y="439" key="Performance.Activity.Monitor" timestamp="1605594595419">
-      <screen x="0" y="0" width="1920" height="1160" />
-    </state>
-    <state x="1167" y="439" key="Performance.Activity.Monitor/0.0.1920.1160@0.0.1920.1160" timestamp="1605594595419" />
-    <state x="504" y="254" key="SettingsEditor" timestamp="1605753044567">
+    <state x="445" y="444" key="SettingsEditor" timestamp="1604731902815">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
     <state x="461" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1602063566279" />
-    <state x="504" y="254" key="SettingsEditor/0.0.1920.1160@0.0.1920.1160" timestamp="1605753044567" />
+    <state x="445" y="444" key="SettingsEditor/0.0.1920.1160@0.0.1920.1160" timestamp="1604731902815" />
     <state x="806" y="432" key="VCS.ChangelistChooser" timestamp="1601955397798">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="806" y="432" key="VCS.ChangelistChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1601955397798" />
-    <state x="552" y="282" key="Vcs.Push.Dialog.v2" timestamp="1605262154491">
+    <state x="552" y="282" key="Vcs.Push.Dialog.v2" timestamp="1604916507159">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
     <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1602083095387" />
-    <state x="552" y="282" key="Vcs.Push.Dialog.v2/0.0.1920.1160@0.0.1920.1160" timestamp="1605262154491" />
-    <state x="640" y="404" key="com.intellij.ide.util.TipDialog" timestamp="1608083300545">
+    <state x="552" y="282" key="Vcs.Push.Dialog.v2/0.0.1920.1160@0.0.1920.1160" timestamp="1604916507159" />
+    <state x="640" y="404" key="com.intellij.ide.util.TipDialog" timestamp="1604733817647">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state x="640" y="404" key="com.intellij.ide.util.TipDialog/0.0.1920.1160@0.0.1920.1160" timestamp="1608083300545" />
+    <state x="640" y="404" key="com.intellij.ide.util.TipDialog/0.0.1920.1160@0.0.1920.1160" timestamp="1604733817647" />
     <state x="771" y="167" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1602048509243">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -440,9 +386,9 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="897" y="445" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1601955272197" />
-    <state x="623" y="255" width="672" height="678" key="search.everywhere.popup" timestamp="1606180687653">
+    <state x="623" y="255" width="672" height="678" key="search.everywhere.popup" timestamp="1604890794979">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state x="623" y="255" width="672" height="678" key="search.everywhere.popup/0.0.1920.1160@0.0.1920.1160" timestamp="1606180687653" />
+    <state x="623" y="255" width="672" height="678" key="search.everywhere.popup/0.0.1920.1160@0.0.1920.1160" timestamp="1604890794979" />
   </component>
 </project>
