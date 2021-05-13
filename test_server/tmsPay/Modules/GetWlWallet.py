@@ -25,7 +25,7 @@ def getWsBalance(c_id, a):
 			response = jsonAPI(url, path, re_data)
 			if response['code'] != 1:
 				return '2.0网商余额查询异常'
-			return response['data']
+			return response['table_s']
 		except:
 			return '2.0网商余额查询异常'
 	elif a == 1:
@@ -36,10 +36,10 @@ def getWsBalance(c_id, a):
 			response = jsonAPI(url, path, re_data)
 			if response['code'] != 1:
 				return '1.0网商余额查询异常1'
-			elif response['data']['account_list'][0]['balance'] != response['data']['account_list'][0][
+			elif response['table_s']['account_list'][0]['balance'] != response['table_s']['account_list'][0][
 				'available_balance']:
 				return responseJSON_0('1.0网商余额查询异常3', 'balance != available_balance')
-			return response['data']['account_list'][0]['balance']
+			return response['table_s']['account_list'][0]['balance']
 		except Exception as err:
 			return responseJSON_0('1.0网商余额查询异常3', err)
 
@@ -65,7 +65,7 @@ def getWsBalance(c_id, a):
 			response = jsonAPI(url, path, re_data)
 			if response['code'] != 1:
 				return '2.0网商余额查询异常'
-			return response['data']
+			return response['table_s']
 		except:
 			return '2.0网商余额查询异常'
 
@@ -77,10 +77,10 @@ def getWsBalance(c_id, a):
 			response = jsonAPI(url, path, re_data)
 			if response['code'] != 1:
 				return '1.0网商余额查询异常'
-			elif response['data']['account_list'][0]['balance'] != response['data']['account_list'][0][
+			elif response['table_s']['account_list'][0]['balance'] != response['table_s']['account_list'][0][
 				'available_balance']:
 				return '1.0网商余额查询异常'
-			return response['data']['account_list'][0]['balance']
+			return response['table_s']['account_list'][0]['balance']
 		except:
 			return '1.0网商余额查询异常'
 	else:

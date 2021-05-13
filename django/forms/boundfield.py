@@ -12,7 +12,7 @@ __all__ = ('BoundField',)
 
 @html_safe
 class BoundField:
-    "A Field plus data"
+    "A Field plus table_s"
     def __init__(self, form, field, name):
         self.form = form
         self.field = field
@@ -115,14 +115,14 @@ class BoundField:
     @property
     def data(self):
         """
-        Return the data for this BoundField, or None if it wasn't given.
+        Return the table_s for this BoundField, or None if it wasn't given.
         """
         return self.field.widget.value_from_datadict(self.form.data, self.form.files, self.html_name)
 
     def value(self):
         """
         Return the value for this BoundField, using the initial value if
-        the form is not bound or the data otherwise.
+        the form is not bound or the table_s otherwise.
         """
         data = self.initial
         if self.form.is_bound:

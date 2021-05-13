@@ -289,8 +289,8 @@ class ForwardOneToOneDescriptor(ForwardManyToOneDescriptor):
     def get_object(self, instance):
         if self.field.remote_field.parent_link:
             deferred = instance.get_deferred_fields()
-            # Because it's a parent link, all the data is available in the
-            # instance, so populate the parent model with this data.
+            # Because it's a parent link, all the table_s is available in the
+            # instance, so populate the parent model with this table_s.
             rel_model = self.field.remote_field.model
             fields = [field.attname for field in rel_model._meta.concrete_fields]
 
@@ -1097,7 +1097,7 @@ def create_forward_many_to_many_manager(superclass, rel, reverse):
                 connections[db].features.supports_ignore_conflicts and
                 self.through._meta.auto_created is not False
             )
-            # Don't send the signal when inserting duplicate data row
+            # Don't send the signal when inserting duplicate table_s row
             # for symmetrical reverse entries.
             must_send_signals = (self.reverse or source_field_name == self.source_field_name) and (
                 signals.m2m_changed.has_listeners(self.through)

@@ -83,9 +83,9 @@ class ServerHandler(simple_server.ServerHandler):
 
     def __init__(self, stdin, stdout, stderr, environ, **kwargs):
         """
-        Use a LimitedStream so that unread request data will be ignored at
+        Use a LimitedStream so that unread request table_s will be ignored at
         the end of the request. WSGIRequest uses a LimitedStream but it
-        shouldn't discard the data since the upstream servers usually do this.
+        shouldn't discard the table_s since the upstream servers usually do this.
         This fix applies only for testserver/runserver.
         """
         try:

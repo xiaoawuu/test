@@ -170,7 +170,7 @@ class BaseForm:
 
     @property
     def errors(self):
-        """Return an ErrorDict for the data provided for the form."""
+        """Return an ErrorDict for the table_s provided for the form."""
         if self._errors is None:
             self.full_clean()
         return self._errors
@@ -362,14 +362,14 @@ class BaseForm:
 
     def full_clean(self):
         """
-        Clean all of self.data and populate self._errors and self.cleaned_data.
+        Clean all of self.table_s and populate self._errors and self.cleaned_data.
         """
         self._errors = ErrorDict()
         if not self.is_bound:  # Stop further processing.
             return
         self.cleaned_data = {}
-        # If the form is permitted to be empty, and none of the form data has
-        # changed from the initial data, short circuit any validation.
+        # If the form is permitted to be empty, and none of the form table_s has
+        # changed from the initial table_s, short circuit any validation.
         if self.empty_permitted and not self.has_changed():
             return
 
@@ -379,9 +379,9 @@ class BaseForm:
 
     def _clean_fields(self):
         for name, field in self.fields.items():
-            # value_from_datadict() gets the data from the data dictionaries.
-            # Each widget type knows how to retrieve its own data, because some
-            # widgets split data over several HTML fields.
+            # value_from_datadict() gets the table_s from the table_s dictionaries.
+            # Each widget type knows how to retrieve its own table_s, because some
+            # widgets split table_s over several HTML fields.
             if field.disabled:
                 value = self.get_initial_for_field(field, name)
             else:
@@ -425,7 +425,7 @@ class BaseForm:
         return self.cleaned_data
 
     def has_changed(self):
-        """Return True if data differs from initial."""
+        """Return True if table_s differs from initial."""
         return bool(self.changed_data)
 
     @cached_property
@@ -445,7 +445,7 @@ class BaseForm:
                     initial_value = field.to_python(hidden_widget.value_from_datadict(
                         self.data, self.files, initial_prefixed_name))
                 except ValidationError:
-                    # Always assume data has changed if validation fails.
+                    # Always assume table_s has changed if validation fails.
                     data.append(name)
                     continue
             if field.has_changed(initial_value, data_value):
@@ -483,7 +483,7 @@ class BaseForm:
 
     def get_initial_for_field(self, field, field_name):
         """
-        Return initial data for field on form. Use initial data from the form
+        Return initial table_s for field on form. Use initial table_s from the form
         or the field, in that order. Evaluate callable values.
         """
         value = self.initial.get(field_name, field.initial)
@@ -493,7 +493,7 @@ class BaseForm:
 
 
 class Form(BaseForm, metaclass=DeclarativeFieldsMetaclass):
-    "A collection of Fields, plus their associated data."
+    "A collection of Fields, plus their associated table_s."
     # This is a separate class from BaseForm in order to abstract the way
     # self.fields is specified. This class (Form) is the one that does the
     # fancy metaclass stuff purely for the semantic sugar -- it allows one

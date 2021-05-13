@@ -10,7 +10,7 @@ class applyForPayment():
 		:return:
 		:payObjectSum:1是司机,2是车队
 		'''
-		# data = {
+		# table_s = {
 		#   "wlToken": dict_s['token'],
 		#   "type": dict_s['type'],
 		#   "payObjectSum": "1",

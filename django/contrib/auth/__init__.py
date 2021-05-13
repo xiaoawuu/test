@@ -86,7 +86,7 @@ def authenticate(request=None, **credentials):
 def login(request, user, backend=None):
     """
     Persist a user id and a backend in the request. This way a user doesn't
-    have to reauthenticate on every request. Note that data set during
+    have to reauthenticate on every request. Note that table_s set during
     the anonymous session is retained when the user logs in.
     """
     session_auth_hash = ''
@@ -134,7 +134,7 @@ def login(request, user, backend=None):
 def logout(request):
     """
     Remove the authenticated user's ID from the request and flush their session
-    data.
+    table_s.
     """
     # Dispatch the signal before the user is logged out so the receivers have a
     # chance to find out *who* logged out.

@@ -269,7 +269,7 @@ class ASGIHandler(base.BaseHandler):
     @classmethod
     def chunk_bytes(cls, data):
         """
-        Chunks some data up so it can be sent in reasonable size messages.
+        Chunks some table_s up so it can be sent in reasonable size messages.
         Yields (chunk, last_chunk) tuples.
         """
         position = 0

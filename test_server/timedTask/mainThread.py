@@ -25,7 +25,7 @@ import base64
 from test_server.data.sql import sql_select,sql_exec
 
 def update_base64():
-	# data = sql_select("SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile LIKE 'MT%';")
+	# table_s = sql_select("SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile LIKE 'MT%';")
 	data = sql_select("SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile != '' AND id > 11356;")
 	for i in data:
 		if not is_num_by_except(i[1]):
@@ -42,11 +42,11 @@ def update_base64():
 def job1():
 	data = '执行job1()，执行时间是:{}'.format(time.strftime('%Y-%m-%d %H:%M:%S'))
 	print(data)
-	# read(data)
+	# read(table_s)
 
 # def job2():
-	# data = '执行job2()，执行时间是:{}'.format(time.strftime('%Y-%m-%d %H:%M:%S'))
-	# read(data)
+	# table_s = '执行job2()，执行时间是:{}'.format(time.strftime('%Y-%m-%d %H:%M:%S'))
+	# read(table_s)
 
 
 def job3():
@@ -55,11 +55,11 @@ def job3():
 	print(data)
 
 # def job4():
-# 	data = '执行job4(),每天01:00点执行,执行时间是:{}'.format(time.strftime('%Y-%m-%d %H:%M:%S'))
-# 	read(data)
+# 	table_s = '执行job4(),每天01:00点执行,执行时间是:{}'.format(time.strftime('%Y-%m-%d %H:%M:%S'))
+# 	read(table_s)
 # def job5():
-# 	data = '执行job5()，执行时间是:{}'.format(time.strftime('%Y-%m-%d %H:%M:%S'))
-# 	read(data)
+# 	table_s = '执行job5()，执行时间是:{}'.format(time.strftime('%Y-%m-%d %H:%M:%S'))
+# 	read(table_s)
 # job3()
 if __name__ == '__main__':
 # 	# schedule.every(10).seconds.do(job1)

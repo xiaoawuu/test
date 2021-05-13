@@ -87,7 +87,7 @@ class LayerMapping:
                  transform=True, unique=None, using=None):
         """
         A LayerMapping object is initialized using the given Model (not an instance),
-        a DataSource (or string path to an OGR-supported data file), and a mapping
+        a DataSource (or string path to an OGR-supported table_s file), and a mapping
         dictionary.  See the module level docstring for more details and keyword
         argument usage.
         """
@@ -348,7 +348,7 @@ class LayerMapping:
         if (isinstance(ogr_field, OFTString) and
                 isinstance(model_field, (models.CharField, models.TextField))):
             if self.encoding and ogr_field.value is not None:
-                # The encoding for OGR data sources may be specified here
+                # The encoding for OGR table_s sources may be specified here
                 # (e.g., 'cp437' for Census Bureau boundary files).
                 val = force_str(ogr_field.value, self.encoding)
             else:
@@ -459,7 +459,7 @@ class LayerMapping:
             return CoordTransform(self.source_srs, target_srs)
         except Exception as exc:
             raise LayerMapError(
-                'Could not translate between the data source and model geometry.'
+                'Could not translate between the table_s source and model geometry.'
             ) from exc
 
     def geometry_field(self):
@@ -490,9 +490,9 @@ class LayerMapping:
 
          fid_range:
            May be set with a slice or tuple of (begin, end) feature ID's to map
-           from the data source.  In other words, this keyword enables the user
+           from the table_s source.  In other words, this keyword enables the user
            to selectively import a subset range of features in the geographic
-           data source.
+           table_s source.
 
          step:
            If set with an integer, transactions will occur at every step

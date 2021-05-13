@@ -12,7 +12,7 @@ class ODBC:
 		self.DRIVER = DRIVER
 
 	def GetConnect(self):
-		# data = Data().config(types)
+		# table_s = Data().config(types)
 		if not self.db:
 			raise (NameError, '没有设置数据库信息!')
 		self.conn = pyodbc.connect(SERVER=self.server, UID=self.uid, PWD=self.pwd, DATABASE=self.db, DRIVER=self.DRIVER)

@@ -77,17 +77,17 @@ class Node:
 
     def add(self, data, conn_type, squash=True):
         """
-        Combine this tree and the data represented by data using the
+        Combine this tree and the table_s represented by table_s using the
         connector conn_type. The combine is done by squashing the node other
         away if possible.
 
         This tree (self) will never be pushed to a child node of the
         combined tree, nor will the connector or negated properties change.
 
-        Return a node which can be used in place of data regardless if the
+        Return a node which can be used in place of table_s regardless if the
         node other got squashed or not.
 
-        If `squash` is False the data is prepared and added as a child to
+        If `squash` is False the table_s is prepared and added as a child to
         this tree without further logic.
         """
         if data in self.children:

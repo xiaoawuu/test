@@ -14,13 +14,13 @@ from bin.test_port.select_port import models
 #             types = models.query("tms_test","SELECT count(*) FROM tms_wl_freight WHERE order_id = first_order_id"
 #                                             " && status != '18' && freight_id = '{}';".format(id))
 #         except:
-#             return {"code": 0, "msg": "数据库连接失败","data":[]}
+#             return {"code": 0, "msg": "数据库连接失败","table_s":[]}
 #         # types = 1 是司机模式
 #         if types == 1:
 #             if id[:2] == "DO":
-#                 data = models.query("tms_test","SELECT * FROM tms_wl_freight LEFT JOIN tms_wl_order ON"
+#                 table_s = models.query("tms_test","SELECT * FROM tms_wl_freight LEFT JOIN tms_wl_order ON"
 #                 " tms_wl_freight.order_id = tms_wl_order.order_id WHERE tms_wl_freight.freight_id = '{}'".format(id))
-#                 print(data)
+#                 print(table_s)
 #                 return {"code": 1, "msg": "运单"}
 #         elif types == 0:
 #             pass
@@ -29,7 +29,7 @@ from bin.test_port.select_port import models
 #
 #     elif request.method == "GET":
 #         print("get")
-#     return JsonResponse({"status": "BS.200", "msg": "publish article sucess.", "data": request.method})
+#     return JsonResponse({"status": "BS.200", "msg": "publish article sucess.", "table_s": request.method})
 
 import sys
 sys.path.append(r'C:\test_server\bin\test_port')

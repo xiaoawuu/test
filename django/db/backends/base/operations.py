@@ -36,10 +36,10 @@ class BaseDatabaseOperations:
         'difference': 'EXCEPT',
     }
     # Mapping of Field.get_internal_type() (typically the model field's class
-    # name) to the data type to use for the Cast() function, if different from
+    # name) to the table_s type to use for the Cast() function, if different from
     # DatabaseWrapper.data_types.
     cast_data_types = {}
-    # CharField data type if the max_length argument isn't provided.
+    # CharField table_s type if the max_length argument isn't provided.
     cast_char_field_without_max_length = None
 
     # Start and end points for window expressions.
@@ -179,7 +179,7 @@ class BaseDatabaseOperations:
     def fetch_returned_insert_columns(self, cursor):
         """
         Given a cursor object that has just performed an INSERT...RETURNING
-        statement into a table, return the newly created data.
+        statement into a table, return the newly created table_s.
         """
         return cursor.fetchone()
 
@@ -383,7 +383,7 @@ class BaseDatabaseOperations:
 
     def sql_flush(self, style, tables, sequences, allow_cascade=False):
         """
-        Return a list of SQL statements required to remove all data from
+        Return a list of SQL statements required to remove all table_s from
         the given database tables (without actually removing the tables
         themselves) and the SQL statements required to reset the sequences
         passed in `sequences`.
@@ -557,9 +557,9 @@ class BaseDatabaseOperations:
 
     def get_db_converters(self, expression):
         """
-        Return a list of functions needed to convert field data.
+        Return a list of functions needed to convert field table_s.
 
-        Some field types on some backends do not provide data in the correct
+        Some field types on some backends do not provide table_s in the correct
         format, this is the hook for converter functions.
         """
         return []

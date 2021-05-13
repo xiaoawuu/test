@@ -52,7 +52,7 @@ def mark_safe(s):
     Explicitly mark a string as safe for (HTML) output purposes. The returned
     object can be used everywhere a string is appropriate.
 
-    If used on a method as a decorator, mark the returned data as safe.
+    If used on a method as a decorator, mark the returned table_s as safe.
 
     Can be called multiple times on a single string.
     """

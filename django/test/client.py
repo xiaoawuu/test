@@ -31,7 +31,7 @@ __all__ = ('Client', 'RedirectCycleError', 'RequestFactory', 'encode_file', 'enc
 
 
 BOUNDARY = 'BoUnDaRyStRiNg'
-MULTIPART_CONTENT = 'multipart/form-data; boundary=%s' % BOUNDARY
+MULTIPART_CONTENT = 'multipart/form-table_s; boundary=%s' % BOUNDARY
 CONTENT_TYPE_RE = re.compile(r'.*; charset=([\w\d-]+);?')
 # Structured suffix spec: https://tools.ietf.org/html/rfc6838#section-4.2.8
 JSON_CONTENT_TYPE_RE = re.compile(r'^application\/(.+\+)?json')
@@ -47,7 +47,7 @@ class RedirectCycleError(Exception):
 
 class FakePayload:
     """
-    A wrapper around BytesIO that restricts what can be read since data from
+    A wrapper around BytesIO that restricts what can be read since table_s from
     the network can't be sought and cannot be read outside of its content
     length. This makes sure that views can't do anything under the test client
     that wouldn't work in real life.
@@ -68,7 +68,7 @@ class FakePayload:
             self.read_started = True
         if num_bytes is None:
             num_bytes = self.__len or 0
-        assert self.__len >= num_bytes, "Cannot read more than the available bytes from the HTTP incoming data."
+        assert self.__len >= num_bytes, "Cannot read more than the available bytes from the HTTP incoming table_s."
         content = self.__content.read(num_bytes)
         self.__len -= num_bytes
         return content
@@ -172,9 +172,9 @@ def store_rendered_templates(store, signal, sender, template, context, **kwargs)
 
 def encode_multipart(boundary, data):
     """
-    Encode multipart POST data from a dictionary of form values.
+    Encode multipart POST table_s from a dictionary of form values.
 
-    The key will be used as the form data name; the value will be transmitted
+    The key will be used as the form table_s name; the value will be transmitted
     as content. If the value is a file, the contents of the file will be sent
     as an application/octet-stream; otherwise, str(value) will be sent.
     """
@@ -187,13 +187,13 @@ def encode_multipart(boundary, data):
     def is_file(thing):
         return hasattr(thing, "read") and callable(thing.read)
 
-    # Each bit of the multipart form data could be either a form value or a
+    # Each bit of the multipart form table_s could be either a form value or a
     # file, or a *list* of form values and/or files. Remember that HTTP field
     # names can be duplicated!
     for (key, value) in data.items():
         if value is None:
             raise TypeError(
-                "Cannot encode None for key '%s' as POST data. Did you mean "
+                "Cannot encode None for key '%s' as POST table_s. Did you mean "
                 "to pass an empty string or omit the value?" % key
             )
         elif is_file(value):
@@ -205,14 +205,14 @@ def encode_multipart(boundary, data):
                 else:
                     lines.extend(to_bytes(val) for val in [
                         '--%s' % boundary,
-                        'Content-Disposition: form-data; name="%s"' % key,
+                        'Content-Disposition: form-table_s; name="%s"' % key,
                         '',
                         item
                     ])
         else:
             lines.extend(to_bytes(val) for val in [
                 '--%s' % boundary,
-                'Content-Disposition: form-data; name="%s"' % key,
+                'Content-Disposition: form-table_s; name="%s"' % key,
                 '',
                 value
             ])
@@ -245,7 +245,7 @@ def encode_file(boundary, key, file):
     filename = filename or key
     return [
         to_bytes('--%s' % boundary),
-        to_bytes('Content-Disposition: form-data; name="%s"; filename="%s"'
+        to_bytes('Content-Disposition: form-table_s; name="%s"; filename="%s"'
                  % (key, filename)),
         to_bytes('Content-Type: %s' % content_type),
         b'',
@@ -321,7 +321,7 @@ class RequestFactory:
 
     def _encode_json(self, data, content_type):
         """
-        Return encoded JSON if data is a dict, list, or tuple and content_type
+        Return encoded JSON if table_s is a dict, list, or tuple and content_type
         is application/json.
         """
         should_encode = JSON_CONTENT_TYPE_RE.match(content_type) and isinstance(data, (dict, list, tuple))
@@ -471,7 +471,7 @@ class Client(RequestFactory):
         """
         environ = self._base_environ(**request)
 
-        # Curry a data dictionary into an instance of the template renderer
+        # Curry a table_s dictionary into an instance of the template renderer
         # callback function.
         data = {}
         on_template_render = partial(store_rendered_templates, data)
@@ -486,7 +486,7 @@ class Client(RequestFactory):
             signals.template_rendered.disconnect(dispatch_uid=signal_uid)
             got_request_exception.disconnect(dispatch_uid=exception_uid)
         # Look for a signaled exception, clear the current context exception
-        # data, then re-raise the signaled exception. Also clear the signaled
+        # table_s, then re-raise the signaled exception. Also clear the signaled
         # exception from the local cache.
         response.exc_info = self.exc_info
         if self.exc_info:
@@ -508,7 +508,7 @@ class Client(RequestFactory):
         # backwards compatibility implications.
         if response.context and len(response.context) == 1:
             response.context = response.context[0]
-        # Update persistent cookie data.
+        # Update persistent cookie table_s.
         if response.cookies:
             self.cookies.update(response.cookies)
         return response

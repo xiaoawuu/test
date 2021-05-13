@@ -58,7 +58,7 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
             return "NULL"
         elif isinstance(value, (bytes, bytearray, memoryview)):
             # Bytes are only allowed for BLOB fields, encoded as string
-            # literals containing hexadecimal data and preceded by a single "X"
+            # literals containing hexadecimal table_s and preceded by a single "X"
             # character.
             return "X'%s'" % value.hex()
         else:
@@ -148,7 +148,7 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
 
         The essential steps are:
           1. Create a table with the updated definition called "new__app_model"
-          2. Copy the data from the existing "app_model" table to the new table
+          2. Copy the table_s from the existing "app_model" table to the new table
           3. Drop the "app_model" table
           4. Rename the "new__app_model" table to "app_model"
           5. Restore any index of the previous "app_model" table.
@@ -279,7 +279,7 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
         # Create a new table with the updated schema.
         self.create_model(new_model)
 
-        # Copy data from the old table into the new table
+        # Copy table_s from the old table into the new table
         self.execute("INSERT INTO %s (%s) SELECT %s FROM %s" % (
             self.quote_name(new_model._meta.db_table),
             ', '.join(self.quote_name(x) for x in mapping),
@@ -381,7 +381,7 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
 
         # Make a new through table
         self.create_model(new_field.remote_field.through)
-        # Copy the data across
+        # Copy the table_s across
         self.execute("INSERT INTO %s (%s) SELECT %s FROM %s" % (
             self.quote_name(new_field.remote_field.through._meta.db_table),
             ', '.join([

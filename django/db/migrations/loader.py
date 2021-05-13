@@ -202,9 +202,9 @@ class MigrationLoader:
         You'll need to rebuild the graph if you apply migrations. This isn't
         usually a problem as generally migration stuff runs in a one-shot process.
         """
-        # Load disk data
+        # Load disk table_s
         self.load_disk()
-        # Load database data
+        # Load database table_s
         if self.connection is None:
             self.applied_migrations = {}
         else:

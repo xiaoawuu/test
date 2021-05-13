@@ -38,7 +38,7 @@ def timingTask(time_sleep):
             'Content-Type': 'application/x-www-form-urlencoded'
         }
         print(payload)
-        # response = requests.request("POST", url, headers=headers, data=payload)
+        # response = requests.request("POST", url, headers=headers, table_s=payload)
         # return response
 
 # if __name__ == '__main__':

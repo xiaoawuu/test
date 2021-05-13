@@ -154,7 +154,7 @@ class Query(BaseExpression):
     def __init__(self, model, where=WhereNode):
         self.model = model
         self.alias_refcount = {}
-        # alias_map is the most important data structure regarding joins.
+        # alias_map is the most important table_s structure regarding joins.
         # It's used for recording which joins exist in the query and what
         # types they are. The key is the alias of the joined table (possibly
         # the table name) and the value is a Join-like object (see
@@ -647,7 +647,7 @@ class Query(BaseExpression):
 
     def deferred_to_data(self, target, callback):
         """
-        Convert the self.deferred_loading data structure to an alternate data
+        Convert the self.deferred_loading table_s structure to an alternate table_s
         structure, describing the field that *will* be loaded. This is used to
         compute the columns to select from the database and also by the
         QuerySet class to work out which fields are being initialized on each
@@ -1927,7 +1927,7 @@ class Query(BaseExpression):
         Expand the GROUP BY clause required by the query.
 
         This will usually be the set of all non-aggregate fields in the
-        return data. If the database backend supports grouping by the
+        return table_s. If the database backend supports grouping by the
         primary key, and the query would be equivalent, the optimization
         will be made automatically.
         """
@@ -1953,7 +1953,7 @@ class Query(BaseExpression):
 
     def add_select_related(self, fields):
         """
-        Set up the select_related data structure so that we only select
+        Set up the select_related table_s structure so that we only select
         certain related models (as opposed to all models, when
         self.select_related=True).
         """
@@ -1969,7 +1969,7 @@ class Query(BaseExpression):
 
     def add_extra(self, select, select_params, where, params, tables, order_by):
         """
-        Add data to the various extra_* attributes for user-created additions
+        Add table_s to the various extra_* attributes for user-created additions
         to the query.
         """
         if select:

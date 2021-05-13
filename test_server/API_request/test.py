@@ -1,6 +1,7 @@
 import json
 
 
+
 def is_json(myjson):
 	try:
 		json_object = json.loads(myjson)
@@ -10,12 +11,15 @@ def is_json(myjson):
 		return False
 
 
-print(is_json("{}"))  # prints True
-print(is_json("{asdf}"))  # prints False
-print(is_json('{ "age":100}'))  # prints True
-print(is_json("{'age':100 }"))  # prints False
-print(is_json("{\"age\":100 }"))  # prints True
-print(is_json('{"age":100 }'))  # prints True
-print(is_json('{"foo":[5,6.8],"foo":"bar"}'))  # prints True
-print(is_json('{"foo":[5,6.8],"foo":{"name":"ahua"}}'))  # prints True
+# print(is_json("{}"))  # prints True
+# print(is_json("{asdf}"))  # prints False
+# print(is_json('{ "age":100}'))  # prints True
+# print(is_json("{'age':100 }"))  # prints False
+# print(is_json("{\"age\":100 }"))  # prints True
+# print(is_json('{"age":100 }'))  # prints True
+# print(is_json('{"foo":[5,6.8],"foo":"bar"}'))  # prints True
+# print(is_json('{"foo":[5,6.8],"foo":{"name":"ahua"}}'))  # prints True
+#
+
+
 
