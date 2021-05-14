@@ -1,3 +1,4 @@
+# coding=utf-8
 def responseJSON_1(msg='', data='', ):
 	return {'code': 1, 'msg': msg, 'data': data}
 

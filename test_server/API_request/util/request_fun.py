@@ -11,8 +11,8 @@ def test_port_from_data(url, payload):
 		}
 		response = requests.request("POST", url, headers=headers, data=payload)
 		if response.status_code == 200:
-			return responseJSON_1()
-		return responseJSON_1()
+			return responseJSON_1(data=response.json())
+		return responseJSON_0()
 	except Exception as ERR:
 		return responseJSON_0(msg='test_port_from_data方法异常！', data=ERR)
 

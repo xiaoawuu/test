@@ -10,16 +10,15 @@ def is_json(myjson):
 	except ValueError as e:
 		return False
 
+import re
+a = 'hello word'
 
-# print(is_json("{}"))  # prints True
-# print(is_json("{asdf}"))  # prints False
-# print(is_json('{ "age":100}'))  # prints True
-# print(is_json("{'age':100 }"))  # prints False
-# print(is_json("{\"age\":100 }"))  # prints True
-# print(is_json('{"age":100 }'))  # prints True
-# print(is_json('{"foo":[5,6.8],"foo":"bar"}'))  # prints True
-# print(is_json('{"foo":[5,6.8],"foo":{"name":"ahua"}}'))  # prints True
-#
+print(a.replace('word', 'python'))
+
+strinfo = re.compile('word')
+b = strinfo.sub('python',a)
+print(b)
+
 
 
 
