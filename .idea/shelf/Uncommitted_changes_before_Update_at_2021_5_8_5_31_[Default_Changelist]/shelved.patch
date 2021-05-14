@@ -1,0 +1,594 @@
+Index: test_server/tmsPay/Checking.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from test_server.tmsPay.Initialize import WLinitialize, EntrustInitialize\r\nfrom test_server.tmsPay.Modules.DriverInitialize import grtDriverAddWaller\r\nfrom test_server.tmsPay.Modules.TmsInitialize import getPayWallet, getServiceFeeIncomet\r\nfrom test_server.tmsPay.utils.responseJSON import responseJSON_1, responseJSON_0\r\n\r\nfrom test_server.data.mysqls import Data\r\nfrom test_server.tmsPay.utils.print_ import *\r\n\r\nsql_ = Data().query\r\n\r\n\r\ndef checking(time):\r\n\tcount_c_id = '''\r\n\t\tSELECT numbers count_c_id from (SELECT COUNT(c_id) as numbers FROM tms_initialize \r\n\t\tWHERE time = '{}' GROUP BY c_id) a GROUP BY numbers;\r\n\t'''.format(time)\r\n\tcount_mobile = '''\r\n\t\t\tSELECT numbers count_c_id from (SELECT COUNT(mobile) as numbers FROM driver_initialize \r\n\t\t\tWHERE time = '{}' GROUP BY mobile) a GROUP BY numbers;\r\n\t\t'''.format(time)\r\n\tc_id = '''\r\n\tSELECT c_id FROM tms_initialize WHERE time = '{}' GROUP BY c_id;\r\n\t'''.format(time)\r\n\tmobile = '''\r\n\t\tSELECT mobile FROM driver_initialize WHERE time = '{}' GROUP BY mobile;\r\n\t\t'''.format(time)\r\n\tcount_c_id = sql_('localhost', count_c_id)\r\n\tc_id = sql_('localhost', c_id)\r\n\tcount_mobile = sql_('localhost', count_mobile)\r\n\tmobile = sql_('localhost', mobile)\r\n\tif len(count_c_id) == 0 or len(count_mobile) == 0:\r\n\t\treturn responseJSON_0('初始化ID无效！', '初始化ID:{}'.format(time))\r\n\telif len(count_c_id) == len(count_mobile) == 1:\r\n\t\tpayTotalWallet = 0\r\n\t\tserviceFeeIncometTotal = 0\r\n\t\tdriverAddWallerTotal = 0\r\n\t\tif count_c_id[0]['count_c_id'] == 1:\r\n\t\t\t'''\r\n\t\t\t未对账\r\n\t\t\t'''\r\n\t\t\tfor i in c_id:\r\n\t\t\t\tinitialize = WLinitialize(i['c_id'], time)\r\n\t\t\t\tif initialize['code'] == 0:\r\n\t\t\t\t\treturn initialize\r\n\t\t\t\tprint_warn_(initialize)\r\n\t\t\tfor i in mobile:\r\n\t\t\t\tentrustInitialize = EntrustInitialize(i['mobile'], time)\r\n\t\t\t\tif entrustInitialize['code'] == 0:\r\n\t\t\t\t\treturn initialize\r\n\r\n\t\t\tfor i in c_id:\r\n\t\t\t\tpayWallet = getPayWallet(i['c_id'])\r\n\t\t\t\tpayTotalWallet += float(payWallet)\r\n\t\t\t\tprint_suc(str(i['c_id']) + '物流公司支付:' + str(payWallet) + '元')\r\n\r\n\t\t\t\tserviceFeeIncomet = getServiceFeeIncomet(i['c_id'])\r\n\t\t\t\tprint_suc(str(i['c_id']) + '物流公司分公司收入服务费:' + str(serviceFeeIncomet) + '元')\r\n\t\t\t\tserviceFeeIncometTotal += float(serviceFeeIncomet)\r\n\r\n\t\t\tfor i in mobile:\r\n\t\t\t\tdriverAddWaller = grtDriverAddWaller(i['mobile'])\r\n\t\t\t\tprint_suc(str(i['mobile']) + '司机收入运费:' + str(driverAddWaller) + '元')\r\n\t\t\t\tdriverAddWallerTotal += float(driverAddWaller)\r\n\t\t\tprint_suc('\\n物流公司总支出运费:{}'.format(payTotalWallet))\r\n\t\t\tprint_suc('分公司总收入服务费:{}'.format(serviceFeeIncometTotal))\r\n\t\t\tprint_suc('司机总收入运费:{}'.format(driverAddWallerTotal))\r\n\t\t\tif (payTotalWallet - serviceFeeIncometTotal) == driverAddWallerTotal:\r\n\t\t\t\treturn responseJSON_1('\\n---------------对账成功------------------！\\n')\r\n\t\t\telse:\r\n\t\t\t\treturn responseJSON_0('\\n---------------对账失败！\\n---------------')\r\n\t\telif count_c_id[0]['count_c_id'] == 2:\r\n\t\t\t'''\r\n\t\t\t已对账\r\n\t\t\t'''\r\n\r\n\t\t\tfor i in c_id:\r\n\t\t\t\tpayWallet = getPayWallet(i['c_id'])\r\n\t\t\t\tprint_suc(str(i['c_id']) + '物流公司支付:' + str(payWallet) + '元')\r\n\t\t\t\tpayTotalWallet += float(payWallet)\r\n\r\n\t\t\t\tserviceFeeIncomet = getServiceFeeIncomet(i['c_id'])\r\n\t\t\t\tprint_suc(str(i['c_id']) + '物流公司分公司收入服务费:' + str(serviceFeeIncomet) + '元')\r\n\t\t\t\tserviceFeeIncometTotal += float(serviceFeeIncomet)\r\n\r\n\t\t\tfor i in mobile:\r\n\t\t\t\tdriverAddWaller = grtDriverAddWaller(i['mobile'])\r\n\t\t\t\tprint_suc(str(i['mobile']) + '司机收入运费:' + str(driverAddWaller) + '元')\r\n\t\t\t\tdriverAddWallerTotal += float(driverAddWaller)\r\n\t\t\tprint_suc('\\n物流公司总支出运费:{}'.format(payTotalWallet))\r\n\t\t\tprint_suc('分公司总收入服务费:{}'.format(serviceFeeIncometTotal))\r\n\t\t\tprint_suc('司机总收入运费:{}'.format(driverAddWallerTotal))\r\n\t\telse:\r\n\t\t\treturn responseJSON_0('对账数据异常', '对账ID:{}'.format(time))\r\n\telse:\r\n\t\treturn responseJSON_0('初始化数据异常', '初始化ID:{}'.format(time))\r\n\r\n\r\nif __name__ == '__main__':\r\n\tprint_warn_(checking(1605684956))\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/tmsPay/Checking.py	(revision 0d2e5d7f57e5c835548a70db39e5048f3beaeacb)
++++ test_server/tmsPay/Checking.py	(date 1612617378494)
+@@ -96,4 +96,5 @@
+ 
+ 
+ if __name__ == '__main__':
+-	print_warn_(checking(1605684956))
++	pass
++	# print_warn_(checking(1605684956))
+Index: test_server/urls.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"\"\"test_server URL Configuration\r\n\r\nThe `urlpatterns` list routes URLs to views. For more information please see:\r\n    https://docs.djangoproject.com/en/3.0/topics/http/urls/\r\nExamples:\r\nFunction views\r\n    1. Add an import:  from my_app import views\r\n    2. Add a URL to urlpatterns:  path('', views.home, name='home')\r\nClass-based views\r\n    1. Add an import:  from other_app.views import Home\r\n    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')\r\nIncluding another URLconf\r\n    1. Import the include() function: from django.urls import include, path\r\n    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))\r\n\"\"\"\r\nfrom django.contrib import admin\r\nfrom django.urls import path\r\nfrom django.conf.urls import url, include\r\nfrom test_server import views\r\nfrom test_server.Order import Process\r\n\r\nurlpatterns = [\r\n\turl(r'^juyuanServer/', include('jy_server.urls')),\r\n\turl(r'^addMoney', views.addMoney),\r\n\turl(r'^weixin_main', views.weixin_main),\r\n\turl(r'^addMembers', views.addMembers),\r\n\turl(r'^removeUser', views.removeUser),\r\n\turl(r'^testPortInsert', views.testPortInsert),\r\n\turl(r'^$', views.addMoneys),\r\n\turl(r'^addOrder', Process.Process().orderProcess),\r\n]\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/urls.py	(revision 0d2e5d7f57e5c835548a70db39e5048f3beaeacb)
++++ test_server/urls.py	(date 1612617536442)
+@@ -20,9 +20,9 @@
+ from test_server.Order import Process
+ 
+ urlpatterns = [
+-	url(r'^juyuanServer/', include('jy_server.urls')),
++	# url(r'^juyuanServer/', include('jy_server.urls')),
+ 	url(r'^addMoney', views.addMoney),
+-	url(r'^weixin_main', views.weixin_main),
++	# url(r'^weixin_main', views.weixin_main),
+ 	url(r'^addMembers', views.addMembers),
+ 	url(r'^removeUser', views.removeUser),
+ 	url(r'^testPortInsert', views.testPortInsert),
+Index: test_server/tmsPay/Initialize.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># 初始化数据\r\nfrom test_server.tmsPay.Modules.DriverInitialize import setDriverInitialize\r\nfrom test_server.tmsPay.Modules.GetWlWallet import getWsBalance, getWlBalance, getUnpaidData, getZybdbWallet, \\\r\n\tgerInvoiceCompanyId\r\nfrom test_server.tmsPay.Modules.TmsInitialize import delete as tms_delete, getInvoiceCompanyType\r\nfrom test_server.tmsPay.Modules.DriverInitialize import delete as mobile_delete\r\nfrom test_server.data.mysqls import Data\r\nfrom test_server.tmsPay.Modules.TmsInitialize import insert\r\nfrom test_server.tmsPay.utils.print_ import *\r\nfrom test_server.tmsPay.utils.responseJSON import responseJSON_0,responseJSON_1\r\nsql_ = Data().query\r\nimport time\r\n\r\n\r\n#\r\ndef WLinitialize(c_id, execute_time):\r\n\tinvoiceCompanyType = getInvoiceCompanyType(c_id)\r\n\tws2_balance = getWsBalance(c_id,invoiceCompanyType[\"msg\"])\r\n\tinvoiceCompanyId = gerInvoiceCompanyId(c_id)\r\n\tinvoice_company_balance = getWsBalance(invoiceCompanyId,invoiceCompanyType[\"msg\"])\r\n\tws_two_balance = getWlBalance(c_id)\r\n\tupaidData = getUnpaidData(c_id)\r\n\tinsert_ = insert(c_id, ws2_balance, ws_two_balance, upaidData[\"count_\"], invoice_company_balance, execute_time)\r\n\tif insert_['code'] == 0:\r\n\t\treturn insert_\r\n\treturn responseJSON_1('TMS初始化成功！',insert_)\r\n\r\n\r\ndef EntrustInitialize(mobile, execute_time):\r\n\tdriverWallet = getZybdbWallet(mobile)\r\n\tif driverWallet['code'] == 0:\r\n\t\treturn driverWallet\r\n\tuser_id = driverWallet['data']['user_id']\r\n\tsum_balance = driverWallet['data']['balance'] + driverWallet['data']['out']\r\n\tbalance = driverWallet['data']['balance']\r\n\tfreeze = driverWallet['data']['freeze']\r\n\textract = driverWallet['data']['out']\r\n\tDriverInitialize = setDriverInitialize(user_id, mobile, balance, freeze, extract, sum_balance, execute_time)\r\n\tif DriverInitialize['code'] == 0:\r\n\t\treturn DriverInitialize\r\n\treturn responseJSON_1('初始化成功')\r\n\r\ndef checking(c_id_list, mobile_list):\r\n\texecute_time = int(time.time())\r\n\tfor i in mobile_list:\r\n\t\tmobile_delete(i)\r\n\tfor i in c_id_list:\r\n\t\ttms_delete(i)\r\n\tfor c_id in c_id_list:\r\n\t\tWLinitialize(c_id, execute_time)\r\n\tfor mobile in mobile_list:\r\n\t\tis_true = EntrustInitialize(mobile, execute_time)\r\n\t\tif is_true['code'] == 0:\r\n\t\t\treturn is_true\r\n\treturn responseJSON_1('初始化成功！','初始化代码:{}'.format(execute_time))\r\n\r\nif __name__ == '__main__':\r\n\tprint_suc(checking([810,811],[16615599999,16616666666,18007555555]))\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/tmsPay/Initialize.py	(revision 0d2e5d7f57e5c835548a70db39e5048f3beaeacb)
++++ test_server/tmsPay/Initialize.py	(date 1612617378514)
+@@ -54,6 +54,6 @@
+ 			return is_true
+ 	return responseJSON_1('初始化成功！','初始化代码:{}'.format(execute_time))
+ 
+-if __name__ == '__main__':
+-	print_suc(checking([810,811],[16615599999,16616666666,18007555555]))
++# if __name__ == '__main__':
++# 	print_suc(checking([810,811],[16615599999,16616666666,18007555555]))
+ 
+Index: test_server/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.shortcuts import render\r\nfrom django.http import HttpResponse, JsonResponse\r\nfrom bin.test_port.select_port import models\r\nfrom django.shortcuts import HttpResponse\r\nfrom django.shortcuts import redirect\r\nimport json\r\nimport sys, corsheaders\r\n\r\nsys.path.append(r'C:\\test_server\\bin')\r\n\r\nfrom django.shortcuts import render, HttpResponse\r\nimport json\r\nfrom test_server.data import sql, mysqls\r\nfrom test_server.utils import is_int\r\nimport time\r\n\r\n\r\ndef addMoneys(request):\r\n\treturn render(request, 'config.html')\r\n\r\n\r\ndef addMoney(request):\r\n\tif request.method == \"POST\":\r\n\t\tmobile = json.loads(request.body.decode().replace(\"'\", \"\\\"\")).get('mobile')\r\n\t\tmoney = json.loads(request.body.decode().replace(\"'\", \"\\\"\")).get('money')\r\n\t\tsetMealList = [0.5, 1, 3, 6]\r\n\t\tif float(money) in setMealList:\r\n\t\t\tmoney = float(money)\r\n\t\t\tis_mobile = sql.sql_select(\"SELECT status FROM biz_user WHERE mobile = '{}';\".format(mobile))\r\n\t\t\tif is_mobile == []:\r\n\t\t\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"用户不存在！\", \"data\": \"\"}))\r\n\t\t\tif is_mobile[0][0] != 4:\r\n\t\t\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"用户还未完成认证！\", \"data\": \"\"}))\r\n\t\t\tif float(money) not in [0.5, 1, 3, 6]:\r\n\t\t\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"充值失败,充值月份不在范围！\", \"data\": \"\"}))\r\n\t\t\tis_true = sql.sql_select(\r\n\t\t\t\t\"SELECT A.id,B.expire_time FROM biz_user A JOIN biz_vip_record B ON A.id = B.user_id WHERE sex=1 AND A.mobile='{}';\".format(\r\n\t\t\t\t\tmobile))\r\n\t\t\tif is_true == []:\r\n\t\t\t\tuser_id = sql.sql_select(\"SELECT id FROM biz_user WHERE mobile = '{}';\".format(mobile))[0][0]\r\n\t\t\t\tvalidTime = time.strftime(\"%Y-%m-%d %H:%M:%S\", time.localtime(2678400 * money + int(time.time())))\r\n\t\t\t\tsql.sql_exec(\r\n\t\t\t\t\t\"INSERT INTO biz_vip_record (user_id,expire_time) VALUES ({},'{}');\"\r\n\t\t\t\t\t\"update biz_user set is_vip=1 where id={};\".format(user_id, validTime, user_id))\r\n\t\t\t\treturn HttpResponse(\r\n\t\t\t\t\tjson.dumps({\"code\": 1, \"msg\": \"未充值VIP！\", \"data\": \"user_id: {},会员时间：{}\".format(user_id, validTime)}))\r\n\t\t\tuser_id = is_true[0][0]\r\n\t\t\ttimeArray = time.strptime(is_true[0][1], \"%Y-%m-%d %H:%M:%S\")\r\n\t\t\ttimeStamp = int(time.mktime(timeArray))\r\n\r\n\t\t\tif timeStamp > int(time.time()):\r\n\t\t\t\tvalidTime = time.strftime(\"%Y-%m-%d %H:%M:%S\", time.localtime(2678400 * money + timeStamp))\r\n\t\t\t\tsql.sql_exec(\"UPDATE biz_vip_record SET expire_time='{}' WHERE user_id= {};\"\r\n\t\t\t\t\t\t\t \"update biz_user set is_vip=1 where id={};\".format(validTime, user_id, user_id))\r\n\t\t\t\treturn HttpResponse(json.dumps({\"code\": 1, \"msg\": \"未过期！\", \"data\": \"{}\".format(validTime)}))\r\n\r\n\t\t\tif timeStamp < int(time.time()):\r\n\t\t\t\tvalidTime = time.strftime(\"%Y-%m-%d %H:%M:%S\", time.localtime(2678400 * money + int(time.time())))\r\n\t\t\t\tsql.sql_exec(\r\n\t\t\t\t\t\"UPDATE biz_vip_record SET expire_time='{}' WHERE user_id= {};\"\r\n\t\t\t\t\t\"update biz_user set is_vip=1 where id={};\".format(validTime, user_id, user_id))\r\n\t\t\t\treturn HttpResponse(json.dumps({\"code\": 1, \"msg\": \"过期！\", \"data\": \"\"}))\r\n\r\n\t\telse:\r\n\t\t\tif money == \"\" or mobile == \"\":\r\n\t\t\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"金额或金额类型异常\", \"data\": \"\"}))\r\n\t\t\tif type(money) != int:\r\n\t\t\t\tmoney = int(money)\r\n\t\t\tif is_int.is_number(money) or type(money) != int:\r\n\t\t\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"金额或金额类型异常\", \"data\": \"\"}))\r\n\t\t\tif money > 4000 or money < 1:\r\n\t\t\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"金额充值范围1~4000币\", \"data\": \"\"}))\r\n\t\t\tis_mobile = sql.sql_select(\"SELECT status FROM biz_user WHERE mobile = '{}';\".format(mobile))\r\n\t\t\tif is_mobile == []:\r\n\t\t\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"用户不存在！\", \"data\": \"\"}))\r\n\t\t\tif is_mobile[0][0] != 4:\r\n\t\t\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"用户还未完成认证！\", \"data\": \"\"}))\r\n\r\n\t\t\treturn HttpResponse(json.dumps({\"code\": 1, \"msg\": \"充值成功！\", \"data\": \"当前账户余额:{}\"}))\r\n\telse:\r\n\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"请使用POST请求！\", \"data\": \"\"}))\r\n\r\n\r\ndef addMembers(request):\r\n\ttry:\r\n\t\tif request.method == \"POST\":\r\n\t\t\tmobile = json.loads(request.body.decode().replace(\"'\", \"\\\"\")).get('mobile')\r\n\t\t\tmonth = json.loads(request.body.decode().replace(\"'\", \"\\\"\")).get('month')\r\n\t\t\tif month == \"\" or mobile == \"\":\r\n\t\t\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"金额或金额类型异常\", \"data\": \"\"}))\r\n\t\t\tis_mobile = sql.sql_select(\"SELECT status FROM biz_user WHERE mobile = '{}';\".format(mobile))\r\n\t\t\tif is_mobile == []:\r\n\t\t\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"用户不存在！\", \"data\": \"\"}))\r\n\t\t\tif is_mobile[0][0] != 4:\r\n\t\t\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"用户还未完成认证！\", \"data\": \"\"}))\r\n\t\t\tif float(month) not in [0.5, 1, 3, 6]:\r\n\t\t\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"充值失败,充值月份不在范围！\", \"data\": \"\"}))\r\n\t\t\tis_true = sql.sql_select(\r\n\t\t\t\t\"SELECT A.id,B.expire_time FROM biz_user A JOIN biz_vip_record B ON A.id = B.user_id WHERE sex=1 AND A.mobile='{}';\".format(\r\n\t\t\t\t\tmobile))\r\n\t\t\tif is_true == []:\r\n\t\t\t\tuser_id = sql.sql_select(\"SELECT id FROM biz_user WHERE mobile = '{}';\".format(mobile))[0][0]\r\n\t\t\t\tvalidTime = time.strftime(\"%Y-%m-%d %H:%M:%S\", time.localtime(2678400 * month + int(time.time())))\r\n\t\t\t\tsql.sql_exec(\r\n\t\t\t\t\t\"INSERT INTO biz_vip_record (user_id,expire_time) VALUES ({},'{}');\"\r\n\t\t\t\t\t\"update biz_user set is_vip=1 where id={};\".format(user_id, validTime, user_id))\r\n\t\t\t\treturn HttpResponse(\r\n\t\t\t\t\tjson.dumps({\"code\": 1, \"msg\": \"未充值VIP！\", \"data\": \"user_id: {},会员时间：{}\".format(user_id, validTime)}))\r\n\t\t\tuser_id = is_true[0][0]\r\n\t\t\ttimeArray = time.strptime(is_true[0][1], \"%Y-%m-%d %H:%M:%S\")\r\n\t\t\ttimeStamp = int(time.mktime(timeArray))\r\n\r\n\t\t\tif timeStamp > int(time.time()):\r\n\t\t\t\tvalidTime = time.strftime(\"%Y-%m-%d %H:%M:%S\", time.localtime(2678400 * month + timeStamp))\r\n\t\t\t\tsql.sql_exec(\"UPDATE biz_vip_record SET expire_time='{}' WHERE user_id= {};\"\r\n\t\t\t\t\t\t\t \"update biz_user set is_vip=1 where id={};\".format(validTime, user_id, user_id))\r\n\t\t\t\treturn HttpResponse(json.dumps({\"code\": 1, \"msg\": \"未过期！\", \"data\": \"{}\".format(validTime)}))\r\n\r\n\t\t\tif timeStamp < int(time.time()):\r\n\t\t\t\tvalidTime = time.strftime(\"%Y-%m-%d %H:%M:%S\", time.localtime(2678400 * month + int(time.time())))\r\n\t\t\t\tsql.sql_exec(\r\n\t\t\t\t\t\"UPDATE biz_vip_record SET expire_time='{}' WHERE user_id= {};\"\r\n\t\t\t\t\t\"update biz_user set is_vip=1 where id={};\".format(validTime, user_id, user_id))\r\n\t\t\t\treturn HttpResponse(json.dumps({\"code\": 1, \"msg\": \"过期！\", \"data\": \"\"}))\r\n\r\n\t\telse:\r\n\t\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"请使用POST请求！\", \"data\": \"\"}))\r\n\texcept Exception as err:\r\n\t\treturn HttpResponse(json.dumps({\"code\": 500, \"msg\": \"addMembers 异常！\", \"data\": \"{}\".format(err)}))\r\n\r\n\r\n# def addMembers(request):\r\n# \tif request.method == \"POST\":\r\n# \t\tmobile = json.loads(request.body.decode().replace(\"'\", \"\\\"\")).get('mobile')\r\n# \t\tmonth = json.loads(request.body.decode().replace(\"'\", \"\\\"\")).get('money')\r\n# \t\ttimeList = [0.5, 1, 3, 6]\r\n#     else：\r\n# \t\t# validityTime = 2592000 * month\r\n#         # if len(mobile) != 11:\r\n#         #     return HttpResponse(json.dumps({\"code\": 0, \"msg\": \"手机号错误！\", \"data\": \"\"}))\r\n#         # if float(month) not in timeList:\r\n#         #     return HttpResponse(json.dumps({\"code\": 0, \"msg\": \"充值失败！充值月份不在范围\", \"data\": \"\"}))\r\n#         #\r\n#         # if aa == []:\r\n#         #     aaa = int(time.time()) + validityTime\r\n#         #     print('未充值VIP')\r\n#         #     return HttpResponse(json.dumps({\"code\": 1, \"msg\": \"未充值VIP！\", \"data\": \"\"}))\r\n#         # timeArray = time.strptime(aa[0][0], \"%Y-%m-%d %H:%M:%S\")\r\n#         # timeStamp = int(time.mktime(timeArray))\r\n#         # print('ss', timeStamp)\r\n#         # if timeStamp < int(time.time()):\r\n#         #     return HttpResponse(json.dumps({\"code\": 1, \"msg\": \"过期！\", \"data\": \"\"}))\r\n#         # if timeStamp > int(time.time()):\r\n#         #     print(\"未过期\")\r\n#         #     return HttpResponse(json.dumps({\"code\": 1, \"msg\": \"未过期！\", \"data\": \"\"}))\r\n#         # else:\r\n# \t\t# tss1 = aa[0][0]\r\n# \t\t# timeArray = time.strptime(tss1, \"%Y-%m-%d %H:%M:%S\")\r\n# \t\t# timeStamp = int(time.mktime(timeArray))\r\n# \t\t# return HttpResponse(json.dumps({\"code\": 1, \"msg\": \"充值成功！\", \"data\": \"{}\".format(timeArray)}))\r\n\r\n\r\n# Create your views here.\r\n# -*- coding: utf-8 -*-\r\n\r\nimport hashlib\r\nimport json\r\nfrom django.utils.encoding import smart_str\r\nfrom django.views.decorators.csrf import csrf_exempt\r\nfrom django.http import HttpResponse\r\n\r\n\r\n# django默认开启csrf防护，这里使用@csrf_exempt去掉防护\r\n@csrf_exempt\r\ndef weixin_main(request):\r\n\tif request.method == \"GET\":\r\n\t\t# 接收微信服务器get请求发过来的参数\r\n\t\tsignature = request.GET.get('signature', None)\r\n\t\ttimestamp = request.GET.get('timestamp', None)\r\n\t\tnonce = request.GET.get('nonce', None)\r\n\t\techostr = request.GET.get('echostr', None)\r\n\t\t# 服务器配置中的token\r\n\t\ttoken = '写你的token在这里'\r\n\t\t# 把参数放到list中排序后合成一个字符串，再用sha1加密得到新的字符串与微信发来的signature对比，如果相同就返回echostr给服务器，校验通过\r\n\t\thashlist = [token, timestamp, nonce]\r\n\t\thashlist.sort()\r\n\t\thashstr = ''.join([s for s in hashlist])\r\n\t\thashstr = hashlib.sha1(hashstr).hexdigest()\r\n\t\tif hashstr == signature:\r\n\t\t\treturn HttpResponse(echostr)\r\n\t\telse:\r\n\t\t\treturn HttpResponse(\"field\")\r\n\telse:\r\n\t\tothercontent = autoreply(request)\r\n\t\treturn HttpResponse(othercontent)\r\n\r\n\r\n# 微信服务器推送消息是xml的，根据利用ElementTree来解析出的不同xml内容返回不同的回复信息，就实现了基本的自动回复功能了，也可以按照需求用其他的XML解析方法\r\nimport xml.etree.ElementTree as ET\r\n\r\n\r\ndef autoreply(request):\r\n\ttry:\r\n\t\twebData = request.body\r\n\t\txmlData = ET.fromstring(webData)\r\n\r\n\t\tmsg_type = xmlData.find('MsgType').text\r\n\t\tToUserName = xmlData.find('ToUserName').text\r\n\t\tFromUserName = xmlData.find('FromUserName').text\r\n\t\tCreateTime = xmlData.find('CreateTime').text\r\n\t\tMsgType = xmlData.find('MsgType').text\r\n\t\tMsgId = xmlData.find('MsgId').text\r\n\r\n\t\ttoUser = FromUserName\r\n\t\tfromUser = ToUserName\r\n\r\n\t\tif msg_type == 'text':\r\n\t\t\tcontent = \"您好,欢迎来到Python大学习!希望我们可以一起进步!\"\r\n\t\t\treplyMsg = TextMsg(toUser, fromUser, content)\r\n\t\t\tprint(\"成功了!!!!!!!!!!!!!!!!!!!\")\r\n\t\t\tprint(replyMsg)\r\n\r\n\t\t\treturn replyMsg.send()\r\n\r\n\t\telif msg_type == 'image':\r\n\t\t\tcontent = \"图片已收到,谢谢\"\r\n\t\t\treplyMsg = TextMsg(toUser, fromUser, content)\r\n\t\t\treturn replyMsg.send()\r\n\t\telif msg_type == 'voice':\r\n\t\t\tcontent = \"语音已收到,谢谢\"\r\n\t\t\treplyMsg = TextMsg(toUser, fromUser, content)\r\n\t\t\treturn replyMsg.send()\r\n\t\telif msg_type == 'video':\r\n\t\t\tcontent = \"视频已收到,谢谢\"\r\n\t\t\treplyMsg = TextMsg(toUser, fromUser, content)\r\n\t\t\treturn replyMsg.send()\r\n\t\telif msg_type == 'shortvideo':\r\n\t\t\tcontent = \"小视频已收到,谢谢\"\r\n\t\t\treplyMsg = TextMsg(toUser, fromUser, content)\r\n\t\t\treturn replyMsg.send()\r\n\t\telif msg_type == 'location':\r\n\t\t\tcontent = \"位置已收到,谢谢\"\r\n\t\t\treplyMsg = TextMsg(toUser, fromUser, content)\r\n\t\t\treturn replyMsg.send()\r\n\t\telse:\r\n\t\t\tmsg_type == 'link'\r\n\t\t\tcontent = \"链接已收到,谢谢\"\r\n\t\t\treplyMsg = TextMsg(toUser, fromUser, content)\r\n\t\t\treturn replyMsg.send()\r\n\r\n\texcept Exception as Argment:\r\n\t\treturn Argment\r\n\r\n\r\nclass Msg(object):\r\n\tdef __init__(self, xmlData):\r\n\t\tself.ToUserName = xmlData.find('ToUserName').text\r\n\t\tself.FromUserName = xmlData.find('FromUserName').text\r\n\t\tself.CreateTime = xmlData.find('CreateTime').text\r\n\t\tself.MsgType = xmlData.find('MsgType').text\r\n\t\tself.MsgId = xmlData.find('MsgId').text\r\n\r\n\r\nimport time\r\n\r\n\r\nclass TextMsg(Msg):\r\n\tdef __init__(self, toUserName, fromUserName, content):\r\n\t\tself.__dict = dict()\r\n\t\tself.__dict['ToUserName'] = toUserName\r\n\t\tself.__dict['FromUserName'] = fromUserName\r\n\t\tself.__dict['CreateTime'] = int(time.time())\r\n\t\tself.__dict['Content'] = content\r\n\r\n\tdef send(self):\r\n\t\tXmlForm = \"\"\"\r\n        <xml>\r\n        <ToUserName><![CDATA[{ToUserName}]]></ToUserName>\r\n        <FromUserName><![CDATA[{FromUserName}]]></FromUserName>\r\n        <CreateTime>{CreateTime}</CreateTime>\r\n        <MsgType><![CDATA[text]]></MsgType>\r\n        <Content><![CDATA[{Content}]]></Content>\r\n        </xml>\r\n        \"\"\"\r\n\t\treturn XmlForm.format(**self.__dict)\r\n\r\n\r\n\r\n\r\ndef removeUser(request):\r\n\tif request.method == \"POST\":\r\n\t\tprint(request.body)\r\n\t\tmobile = json.loads(request.body.decode().replace(\"'\", \"\\\"\")).get('mobile')\r\n\t\tis_mobile = sql.sql_select(\"SELECT status FROM biz_user WHERE mobile = '{}';\".format(mobile))\r\n\t\tif is_mobile == []:\r\n\t\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"要删除的用户不存在！\", \"data\": \"\"}))\r\n\t\tre = sql.sql_exec(\"exec RemoveUserByMobile '{}';\".format(mobile))\r\n\t\tprint(\"删除手机\", mobile)\r\n\t\treturn HttpResponse(json.dumps({\"code\": 1, \"msg\": \"删除成功！\", \"data\": \"{}\".format(re)}))\r\n\telse:\r\n\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"请使用POST请求！\", \"data\": \"\"}))\r\n\r\n\r\nimport time\r\n\r\n\r\ndef testPortInsert(request):\r\n\tif request.method == \"POST\":\r\n\t\ttry:\r\n\t\t\tmobile = json.loads(request.body.decode().replace(\"'\", \"\\\"\")).get('mobile')\r\n\t\t\tmoney = json.loads(request.body.decode().replace(\"'\", \"\\\"\")).get('money')\r\n\t\t\tprint('mobile:', mobile)\r\n\t\t\tprint('money:', money)\r\n\t\t\tsql = \"INSERT INTO freight_id_payment (freight_id,id_s,`status`) VALUES ('DO-20200585685','{}',1)\".format(\r\n\t\t\t\ttime.time())\r\n\t\t\tmysqls.Data().query('localhost', sql)\r\n\t\t\treturn HttpResponse(json.dumps({\"code\": 1, \"msg\": \"请求成功！\", \"data\": \"\"}))\r\n\t\texcept Exception as err:\r\n\t\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"请求失败！\", \"data\": \"{}\".format(err)}))\r\n\telse:\r\n\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"请使用POST请求！\", \"data\": \"\"}))\r\n\r\n\r\ndef testPortSelect(request):\r\n\tif request.method == \"POST\":\r\n\t\ttry:\r\n\t\t\tmobile = json.loads(request.body.decode().replace(\"'\", \"\\\"\")).get('mobile')\r\n\t\t\tmoney = json.loads(request.body.decode().replace(\"'\", \"\\\"\")).get('money')\r\n\t\t\tprint('mobile:', mobile)\r\n\t\t\tprint('money:', money)\r\n\t\t\tsql = \"INSERT INTO freight_id_payment (freight_id,id_s,`status`) VALUES ('DO-20200585685','{}',1)\".format(\r\n\t\t\t\ttime.time())\r\n\t\t\tmysqls.Data().query('localhost', sql)\r\n\t\t\treturn HttpResponse(json.dumps({\"code\": 1, \"msg\": \"请求成功！\", \"data\": \"\"}))\r\n\t\texcept Exception as err:\r\n\t\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"请求失败！\", \"data\": \"{}\".format(err)}))\r\n\telse:\r\n\t\treturn HttpResponse(json.dumps({\"code\": 0, \"msg\": \"请使用POST请求！\", \"data\": \"\"}))\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/views.py	(revision 0d2e5d7f57e5c835548a70db39e5048f3beaeacb)
++++ test_server/views.py	(date 1612617378506)
+@@ -170,122 +170,6 @@
+ from django.http import HttpResponse
+ 
+ 
+-# django默认开启csrf防护，这里使用@csrf_exempt去掉防护
+-@csrf_exempt
+-def weixin_main(request):
+-	if request.method == "GET":
+-		# 接收微信服务器get请求发过来的参数
+-		signature = request.GET.get('signature', None)
+-		timestamp = request.GET.get('timestamp', None)
+-		nonce = request.GET.get('nonce', None)
+-		echostr = request.GET.get('echostr', None)
+-		# 服务器配置中的token
+-		token = '写你的token在这里'
+-		# 把参数放到list中排序后合成一个字符串，再用sha1加密得到新的字符串与微信发来的signature对比，如果相同就返回echostr给服务器，校验通过
+-		hashlist = [token, timestamp, nonce]
+-		hashlist.sort()
+-		hashstr = ''.join([s for s in hashlist])
+-		hashstr = hashlib.sha1(hashstr).hexdigest()
+-		if hashstr == signature:
+-			return HttpResponse(echostr)
+-		else:
+-			return HttpResponse("field")
+-	else:
+-		othercontent = autoreply(request)
+-		return HttpResponse(othercontent)
+-
+-
+-# 微信服务器推送消息是xml的，根据利用ElementTree来解析出的不同xml内容返回不同的回复信息，就实现了基本的自动回复功能了，也可以按照需求用其他的XML解析方法
+-import xml.etree.ElementTree as ET
+-
+-
+-def autoreply(request):
+-	try:
+-		webData = request.body
+-		xmlData = ET.fromstring(webData)
+-
+-		msg_type = xmlData.find('MsgType').text
+-		ToUserName = xmlData.find('ToUserName').text
+-		FromUserName = xmlData.find('FromUserName').text
+-		CreateTime = xmlData.find('CreateTime').text
+-		MsgType = xmlData.find('MsgType').text
+-		MsgId = xmlData.find('MsgId').text
+-
+-		toUser = FromUserName
+-		fromUser = ToUserName
+-
+-		if msg_type == 'text':
+-			content = "您好,欢迎来到Python大学习!希望我们可以一起进步!"
+-			replyMsg = TextMsg(toUser, fromUser, content)
+-			print("成功了!!!!!!!!!!!!!!!!!!!")
+-			print(replyMsg)
+-
+-			return replyMsg.send()
+-
+-		elif msg_type == 'image':
+-			content = "图片已收到,谢谢"
+-			replyMsg = TextMsg(toUser, fromUser, content)
+-			return replyMsg.send()
+-		elif msg_type == 'voice':
+-			content = "语音已收到,谢谢"
+-			replyMsg = TextMsg(toUser, fromUser, content)
+-			return replyMsg.send()
+-		elif msg_type == 'video':
+-			content = "视频已收到,谢谢"
+-			replyMsg = TextMsg(toUser, fromUser, content)
+-			return replyMsg.send()
+-		elif msg_type == 'shortvideo':
+-			content = "小视频已收到,谢谢"
+-			replyMsg = TextMsg(toUser, fromUser, content)
+-			return replyMsg.send()
+-		elif msg_type == 'location':
+-			content = "位置已收到,谢谢"
+-			replyMsg = TextMsg(toUser, fromUser, content)
+-			return replyMsg.send()
+-		else:
+-			msg_type == 'link'
+-			content = "链接已收到,谢谢"
+-			replyMsg = TextMsg(toUser, fromUser, content)
+-			return replyMsg.send()
+-
+-	except Exception as Argment:
+-		return Argment
+-
+-
+-class Msg(object):
+-	def __init__(self, xmlData):
+-		self.ToUserName = xmlData.find('ToUserName').text
+-		self.FromUserName = xmlData.find('FromUserName').text
+-		self.CreateTime = xmlData.find('CreateTime').text
+-		self.MsgType = xmlData.find('MsgType').text
+-		self.MsgId = xmlData.find('MsgId').text
+-
+-
+-import time
+-
+-
+-class TextMsg(Msg):
+-	def __init__(self, toUserName, fromUserName, content):
+-		self.__dict = dict()
+-		self.__dict['ToUserName'] = toUserName
+-		self.__dict['FromUserName'] = fromUserName
+-		self.__dict['CreateTime'] = int(time.time())
+-		self.__dict['Content'] = content
+-
+-	def send(self):
+-		XmlForm = """
+-        <xml>
+-        <ToUserName><![CDATA[{ToUserName}]]></ToUserName>
+-        <FromUserName><![CDATA[{FromUserName}]]></FromUserName>
+-        <CreateTime>{CreateTime}</CreateTime>
+-        <MsgType><![CDATA[text]]></MsgType>
+-        <Content><![CDATA[{Content}]]></Content>
+-        </xml>
+-        """
+-		return XmlForm.format(**self.__dict)
+-
+-
+-
+ 
+ def removeUser(request):
+ 	if request.method == "POST":
+Index: test_server/settings.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"\"\"\r\nDjango settings for test_server project.\r\n\r\nGenerated by 'django-admin startproject' using Django 3.0.4.\r\n\r\nFor more information on this file, see\r\nhttps://docs.djangoproject.com/en/3.0/topics/settings/\r\n\r\nFor the full list of settings and their values, see\r\nhttps://docs.djangoproject.com/en/3.0/ref/settings/\r\n\"\"\"\r\n\r\nimport os\r\n\r\n# Build paths inside the project like this: os.path.join(BASE_DIR, ...)\r\nBASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))\r\n\r\n\r\n# Quick-start development settings - unsuitable for production\r\n# See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/\r\n\r\n# SECURITY WARNING: keep the secret key used in production secret!\r\nSECRET_KEY = 'rzr+7tko)()p0p(dfgjaihy8^r0(su0x9y$m4)p8_+%ucn@cwt'\r\n\r\n# SECURITY WARNING: don't run with debug turned on in production!\r\nDEBUG = True\r\n\r\nALLOWED_HOSTS = ['*' ]\r\n\r\n\r\n# Application definition\r\n\r\nINSTALLED_APPS = [\r\n    'django.contrib.admin',\r\n    'django.contrib.auth',\r\n    'django.contrib.contenttypes',\r\n    'django.contrib.sessions',\r\n    'django.contrib.messages',\r\n    'django.contrib.staticfiles',\r\n    'django_crontab',\r\n    'test_server',\r\n\r\n]\r\n\r\nMIDDLEWARE = [\r\n    'django.middleware.security.SecurityMiddleware',\r\n    'django.contrib.sessions.middleware.SessionMiddleware',\r\n    'corsheaders.middleware.CorsMiddleware',\r\n    'django.middleware.common.CommonMiddleware',\r\n    # 'django.middleware.csrf.CsrfViewMiddleware',\r\n    'django.contrib.auth.middleware.AuthenticationMiddleware',\r\n    'django.contrib.messages.middleware.MessageMiddleware',\r\n    'django.middleware.clickjacking.XFrameOptionsMiddleware',\r\n]\r\n\r\n# 最简单配置\r\nCRONJOBS = [\r\n    # 表示每天2：01执行\r\n    ('01 2 * * *', 'test_server.tests.read')\r\n]\r\n\r\nROOT_URLCONF = 'test_server.urls'\r\n\r\nTEMPLATES = [\r\n    {\r\n        'BACKEND': 'django.template.backends.django.DjangoTemplates',\r\n        'DIRS': [os.path.join(BASE_DIR,\"template\")],\r\n        'APP_DIRS': True,\r\n        'OPTIONS': {\r\n            'context_processors': [\r\n                'django.template.context_processors.debug',\r\n                'django.template.context_processors.request',\r\n                'django.contrib.auth.context_processors.auth',\r\n                'django.contrib.messages.context_processors.messages',\r\n            ],\r\n        },\r\n    },\r\n]\r\n\r\nWSGI_APPLICATION = 'test_server.wsgi.application'\r\nSTATIC_ROOT=os.path.join(BASE_DIR,\"/static/\")#正确\r\n\r\n# Database\r\n# https://docs.djangoproject.com/en/3.0/ref/settings/#databases\r\n\r\nDATABASES = {\r\n    'default': {\r\n        'ENGINE': 'django.db.backends.sqlite3',\r\n        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),\r\n    }\r\n}\r\n\r\n\r\n# Password validation\r\n# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators\r\n\r\nAUTH_PASSWORD_VALIDATORS = [\r\n    {\r\n        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',\r\n    },\r\n    {\r\n        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',\r\n    },\r\n    {\r\n        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',\r\n    },\r\n    {\r\n        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',\r\n    },\r\n]\r\n\r\n\r\n\r\n\r\n# Internationalization\r\n# https://docs.djangoproject.com/en/3.0/topics/i18n/\r\n\r\nLANGUAGE_CODE = 'en-us'\r\n\r\nTIME_ZONE = 'UTC'\r\n\r\nUSE_I18N = True\r\n\r\nUSE_L10N = True\r\n\r\nUSE_TZ = True\r\n\r\n\r\n# Static files (CSS, JavaScript, Images)\r\n# https://docs.djangoproject.com/en/3.0/howto/static-files/\r\n\r\nSTATIC_URL = '/static/'\r\n\r\n# 跨域增加忽略\r\nCORS_ALLOW_CREDENTIALS = True\r\nCORS_ORIGIN_ALLOW_ALL = True\r\n# CORS_ORIGIN_WHITELIST = [\r\n#     # ‘<YOUR_DOMAIN>[:PORT]‘,\r\n#     'http://127.0.0.1:8800',\r\n#     'http://*:*',\r\n#\r\n# ]\r\n# SESSION_COOKIE_SAMESITE = None\r\n\r\nCORS_ALLOW_METHODS = (\r\n\t'DELETE',\r\n\t'GET',\r\n\t'OPTIONS',\r\n\t'PATCH',\r\n\t'POST',\r\n\t'PUT',\r\n\t'VIEW',\r\n)\r\nCORS_ALL_HEADERS = (\r\n'XMLHttpRequest',\r\n'X_FILENAME',\r\n'accept-encoding',\r\n'authorization',\r\n'content-type',\r\n'dnt',\r\n'origin',\r\n'user-agent',\r\n'x-csrftoken',\r\n'x-requested-with',\r\n'Pragma',\r\n)\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/settings.py	(revision 0d2e5d7f57e5c835548a70db39e5048f3beaeacb)
++++ test_server/settings.py	(date 1612617517130)
+@@ -37,7 +37,7 @@
+     'django.contrib.sessions',
+     'django.contrib.messages',
+     'django.contrib.staticfiles',
+-    'django_crontab',
++    # 'django_crontab',
+     'test_server',
+ 
+ ]
+Index: test_server/timedTask/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from apscheduler.schedulers.background import BackgroundScheduler\r\nfrom django_apscheduler.jobstores import DjangoJobStore, register_events, register_job\r\n\r\n#开启定时工作\r\ntry:\r\n    # 实例化调度器\r\n    scheduler = BackgroundScheduler()\r\n    # 调度器使用DjangoJobStore()\r\n    scheduler.add_jobstore(DjangoJobStore(), \"default\")\r\n    # 设置定时任务，选择方式为interval，时间间隔为10s\r\n    # 另一种方式为每天固定时间执行任务，对应代码为：\r\n    # @register_job(scheduler, 'cron', day_of_week='mon-fri', hour='9', minute='30', second='10',id='task_time')\r\n    @register_job(scheduler,\"interval\", seconds=10)\r\n    def my_job():\r\n        print(True)\r\n        pass\r\n    register_events(scheduler)\r\n    scheduler.start()\r\nexcept Exception as e:\r\n    print(e)\r\n    # 有错误就停止定时器\r\n    scheduler.shutdown()
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/timedTask/views.py	(revision 0d2e5d7f57e5c835548a70db39e5048f3beaeacb)
++++ test_server/timedTask/views.py	(date 1612617237475)
+@@ -1,22 +1,22 @@
+-from apscheduler.schedulers.background import BackgroundScheduler
+-from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
++# from apscheduler.schedulers.background import BackgroundScheduler
++# from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
+ 
+ #开启定时工作
+-try:
+-    # 实例化调度器
+-    scheduler = BackgroundScheduler()
+-    # 调度器使用DjangoJobStore()
+-    scheduler.add_jobstore(DjangoJobStore(), "default")
+-    # 设置定时任务，选择方式为interval，时间间隔为10s
+-    # 另一种方式为每天固定时间执行任务，对应代码为：
+-    # @register_job(scheduler, 'cron', day_of_week='mon-fri', hour='9', minute='30', second='10',id='task_time')
+-    @register_job(scheduler,"interval", seconds=10)
+-    def my_job():
+-        print(True)
+-        pass
+-    register_events(scheduler)
+-    scheduler.start()
+-except Exception as e:
+-    print(e)
+-    # 有错误就停止定时器
+-    scheduler.shutdown()
+\ No newline at end of file
++# try:
++#     # 实例化调度器
++#     scheduler = BackgroundScheduler()
++#     # 调度器使用DjangoJobStore()
++#     scheduler.add_jobstore(DjangoJobStore(), "default")
++#     # 设置定时任务，选择方式为interval，时间间隔为10s
++#     # 另一种方式为每天固定时间执行任务，对应代码为：
++#     # @register_job(scheduler, 'cron', day_of_week='mon-fri', hour='9', minute='30', second='10',id='task_time')
++#     @register_job(scheduler,"interval", seconds=10)
++#     def my_job():
++#         print(True)
++#         pass
++#     register_events(scheduler)
++#     scheduler.start()
++# except Exception as e:
++#     print(e)
++#     # 有错误就停止定时器
++#     scheduler.shutdown()
+\ No newline at end of file
+Index: test_server/timedTask/mainThread.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\r\nclass mainThread():\r\n\tdef __init__(self):\r\n\t\tpass\r\n\tdef timing(self):\r\n\t\tpass\r\n# from test_server.tests import read\r\n\r\nimport schedule\r\nimport time\r\n\r\n\r\nimport schedule\r\nimport time\r\nimport datetime\r\n\r\ndef is_num_by_except(num):\r\n\ttry:\r\n\t\tint(num)\r\n\t\treturn True\r\n\texcept ValueError:\r\n\t\treturn False\r\n\r\nimport base64\r\nfrom test_server.data.sql import sql_select,sql_exec\r\n\r\ndef update_base64():\r\n\t# data = sql_select(\"SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile LIKE 'MT%';\")\r\n\tdata = sql_select(\"SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile != '' AND id > 11356;\")\r\n\tfor i in data:\r\n\t\tif not is_num_by_except(i[1]):\r\n\t\t\ttry:\r\n\t\t\t\ttemp = base64.b64decode(i[1].replace('\\n', '').replace('\\r', ''))\r\n\t\t\t\tsql_exec(\r\n\t\t\t\t\t\"UPDATE biz_invite_code SET recommend_mobile = '{}' WHERE id = {};\".format(temp.decode(), i[0]))\r\n\t\t\t\tprint(i[1], '转换为：', temp.decode())\r\n\t\t\texcept:\r\n\t\t\t\tbreak\r\n\r\n\r\n\r\ndef job1():\r\n\tdata = '执行job1()，执行时间是:{}'.format(time.strftime('%Y-%m-%d %H:%M:%S'))\r\n\tprint(data)\r\n\t# read(data)\r\n\r\n# def job2():\r\n\t# data = '执行job2()，执行时间是:{}'.format(time.strftime('%Y-%m-%d %H:%M:%S'))\r\n\t# read(data)\r\n\r\n\r\ndef job3():\r\n\tdata = '每分钟执行一次,执行时间是:{}'.format(time.strftime('%Y-%m-%d %H:%M:%S'))\r\n\tupdate_base64()\r\n\tprint(data)\r\n\r\n# def job4():\r\n# \tdata = '执行job4(),每天01:00点执行,执行时间是:{}'.format(time.strftime('%Y-%m-%d %H:%M:%S'))\r\n# \tread(data)\r\n# def job5():\r\n# \tdata = '执行job5()，执行时间是:{}'.format(time.strftime('%Y-%m-%d %H:%M:%S'))\r\n# \tread(data)\r\n# job3()\r\nif __name__ == '__main__':\r\n# \t# schedule.every(10).seconds.do(job1)\r\n# \t# schedule.every(30).seconds.do(job2)\r\n\tschedule.every(1).minutes.do(job3)\r\n\t# schedule.every().day.at('01:00').do(job4)\r\n\t# schedule.every(5).to(10).seconds.do(job5)\r\n\twhile True:\r\n\t\tschedule.run_pending()\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/timedTask/mainThread.py	(revision 0d2e5d7f57e5c835548a70db39e5048f3beaeacb)
++++ test_server/timedTask/mainThread.py	(date 1612617237456)
+@@ -61,12 +61,12 @@
+ # 	data = '执行job5()，执行时间是:{}'.format(time.strftime('%Y-%m-%d %H:%M:%S'))
+ # 	read(data)
+ # job3()
+-if __name__ == '__main__':
+-# 	# schedule.every(10).seconds.do(job1)
+-# 	# schedule.every(30).seconds.do(job2)
+-	schedule.every(1).minutes.do(job3)
+-	# schedule.every().day.at('01:00').do(job4)
+-	# schedule.every(5).to(10).seconds.do(job5)
+-	while True:
+-		schedule.run_pending()
++# if __name__ == '__main__':
++# # 	# schedule.every(10).seconds.do(job1)
++# # 	# schedule.every(30).seconds.do(job2)
++# 	schedule.every(1).minutes.do(job3)
++# 	# schedule.every().day.at('01:00').do(job4)
++# 	# schedule.every(5).to(10).seconds.do(job5)
++# 	while True:
++# 		schedule.run_pending()
+ 
+Index: test_server/timedTask/VerifySigningContract.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from test_server.data.mysqls import Data\r\nimport datetime, time\r\nfrom test_server.timedTask.utils.WriteLog import writeLog\r\nimport json\r\n\r\n\r\nclass VerifySigningContract():\r\n\tdef __init__(self):\r\n\t\tself.data = Data()\r\n\t\tyesterday = datetime.date.today() + datetime.timedelta(-1)\r\n\t\tself.startTime = '{} 00:00:00'.format(yesterday)\r\n\t\tself.endTime = '{} 23:59:59'.format(yesterday)\r\n\t\tself.startTimestamp = int(time.mktime(time.strptime(self.startTime, \"%Y-%m-%d %H:%M:%S\")))\r\n\t\tself.endTimestamp = int(time.mktime(time.strptime(self.endTime, \"%Y-%m-%d %H:%M:%S\")))\r\n\r\n\tdef contractOfAffreightment(self):\r\n\t\t'''\r\n\t\t检验承运合同\r\n\t\t:return:\r\n\t\t'''\r\n\t\ttry:\r\n\t\t\tsql = \"SELECT * FROM (SELECT fre1.freight_id FROM\ttms_wl_freight fre1 WHERE ( fre1.create_time BETWEEN\" \\\r\n\t\t\t\t  \" '{}' AND '{}' ) AND fre1.`status` IN ( 12, 14, 15, 16, 17 )) B WHERE (SELECT count(1) num FROM (SELECT com1.freight_id FROM tms_commission_contract\" \\\r\n\t\t\t\t  \" com1 WHERE com1.contract_type = 2 ) A WHERE A.freight_id = B.freight_id ) = 0 ;\".format(\r\n\t\t\t\tself.startTime, self.endTime)\r\n\t\t\tprint(\"检验承运合同\")\r\n\t\t\tisTrue = self.data.query('tms_live_r', sql)\r\n\t\t\twriteLog('未签署承运合同的运单', isTrue)\r\n\t\t\treturn isTrue\r\n\t\texcept Exception as err:\r\n\t\t\twriteLog('contractOfAffreightment>>>error:', err)\r\n\t\t\treturn err\r\n\r\n\tdef checkTheContract(self):\r\n\t\t'''\r\n\t\t检验托运合同\r\n\t\t:return:\r\n\t\t'''\r\n\t\ttry:\r\n\t\t\tsql = \"SELECT * FROM (SELECT fre1.first_order_id FROM tms_wl_freight fre1 \" \\\r\n\t\t\t\t  \"WHERE (fre1.create_time BETWEEN '{}' AND '{}') \" \\\r\n\t\t\t\t  \"AND fre1.`status` IN ( 12, 14, 15, 16, 17 )) B WHERE (SELECT count( 1 ) num FROM ( \" \\\r\n\t\t\t\t  \"SELECT com1.order_id FROM tms_commission_contract com1 WHERE com1.contract_type = 3 ) \" \\\r\n\t\t\t\t  \"A WHERE\tA.order_id = B.first_order_id) = 0;\".format(self.startTime, self.endTime, )\r\n\t\t\tisTrue = self.data.query('tms_live_r', sql)\r\n\t\t\twriteLog('未签署托运合同的订单', isTrue)\r\n\t\t\tprint(\"检验托运合同\")\r\n\t\t\treturn isTrue\r\n\t\texcept Exception as err:\r\n\t\t\twriteLog('checkTheContract>>>error:', err)\r\n\t\t\treturn err\r\n\r\n\tdef letterOfEntrustment(self):\r\n\t\tlist_s = []\r\n\t\t'''\r\n\t\t委托函\r\n\t\t:return:\r\n\t\t'''\r\n\t\ttry:\r\n\t\t\tsignFreightIdSQL = \"SELECT C.waybill_sn,D.phone,D.card_name FROM zyb_pay_order A JOIN zyb_tms_wallet_out B \" \\\r\n\t\t\t\t\t\t\t   \"ON A.pay_out_id =  B.id JOIN zyb_tms_wallet_log C ON A.pay_log_id = C.id JOIN zyb_tms_wallet_bankcard \" \\\r\n\t\t\t\t\t\t\t   \"D on B.bankcard_id = D.id WHERE add_time BETWEEN '{}' AND '{}'\".format(\r\n\t\t\t\tself.startTimestamp, self.endTimestamp)\r\n\t\t\tresponseData = self.data.query('zyb_live_r', signFreightIdSQL)\r\n\t\t\tprint(\"检测委托函\")\r\n\t\t\tfor i in responseData:\r\n\r\n\t\t\t\tsql = \"SELECT driver_name,driver_mobile FROM tms_wl_freight WHERE freight_id ='{}';\".format(\r\n\t\t\t\t\ti['waybill_sn'])\r\n\t\t\t\tresponse = self.data.query('tms_live_r', sql)\r\n\t\t\t\tif i['phone'] != response[0]['driver_mobile']:\r\n\t\t\t\t\tcomm_sql = \"SELECT count(*) A FROM tms_commission_contract WHERE contract_type = 1 AND freight_id = '{}'\".format(\r\n\t\t\t\t\t\ti['waybill_sn'])\r\n\t\t\t\t\tresponse_comm = self.data.query('tms_live_r', comm_sql)\r\n\t\t\t\t\tif response_comm[0]['A'] == 0:\r\n\t\t\t\t\t\tlist_s.append(i['waybill_sn'])\r\n\t\t\tif len(list_s) > 1:\r\n\t\t\t\twriteLog('未签署w委托合同的运单', list_s)\r\n\t\texcept Exception as err:\r\n\t\t\twriteLog('letterOfEntrustment>>>error:', err)\r\n\r\n\r\nv = VerifySigningContract()\r\nv.checkTheContract()\r\nv.letterOfEntrustment()\r\n\r\n'''\r\n司机\r\nSELECT * FROM zyb_pay_order RIGHT JOIN zyb_pay_log ON zyb_pay_order.pay_log_id = zyb_pay_log.id WHERE zyb_pay_order.type = 1 AND zyb_pay_order.add_time BETWEEN '1598544000' AND '1598630399';\r\n车队\r\nSELECT * FROM zyb_pay_order RIGHT JOIN zyb_tms_wallet_log ON zyb_pay_order.pay_log_id = zyb_tms_wallet_log.id WHERE zyb_pay_order.type = 2 AND zyb_pay_order.add_time BETWEEN '1598544000' AND '1598630399';\r\n\r\n\r\n车队：三遍关联\r\nSELECT * FROM `zyb_pay_order` JOIN zyb_tms_wallet_out ON zyb_pay_order.pay_out_id =  zyb_tms_wallet_out.id JOIN zyb_tms_wallet_log ON zyb_pay_order.pay_log_id = zyb_tms_wallet_log.id  WHERE add_time BETWEEN '1598544000' AND '1598630399' AND zyb_pay_order.type = 2;\r\n司机：三遍关联\r\nSELECT * FROM `zyb_pay_order` JOIN zyb_pay_out ON zyb_pay_order.pay_out_id =  zyb_pay_out.id JOIN zyb_pay_log ON zyb_pay_order.pay_log_id = zyb_pay_log.id  WHERE add_time BETWEEN '1598544000' AND '1598630399' AND zyb_pay_order.type = 1;\r\n\r\n已申请付款的单子：\r\n(SELECT zyb_tms_wallet_log.waybill_sn FROM `zyb_pay_order`  JOIN zyb_tms_wallet_log ON zyb_pay_order.pay_log_id = zyb_tms_wallet_log.id  WHERE zyb_pay_order.add_time BETWEEN '1598544000' AND '1598630399')\r\n UNION \r\n(SELECT waybill_sn FROM `zyb_pay_order` JOIN zyb_pay_log ON zyb_pay_order.pay_log_id = zyb_pay_log.id  WHERE add_time BETWEEN '1598544000' AND '1598630399' AND zyb_pay_order.type = 1);\r\n\r\nSELECT C.waybill_sn,D.phone,D.card_name FROM zyb_pay_order A JOIN zyb_tms_wallet_out B ON A.pay_out_id =  B.id JOIN zyb_tms_wallet_log C ON A.pay_log_id = C.id JOIN zyb_tms_wallet_bankcard D on B.bankcard_id = D.id WHERE add_time BETWEEN '1598544000' AND '1598630399' AND A.type = 2;\r\n\r\n'''\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/timedTask/VerifySigningContract.py	(revision 0d2e5d7f57e5c835548a70db39e5048f3beaeacb)
++++ test_server/timedTask/VerifySigningContract.py	(date 1612617237522)
+@@ -80,9 +80,9 @@
+ 			writeLog('letterOfEntrustment>>>error:', err)
+ 
+ 
+-v = VerifySigningContract()
+-v.checkTheContract()
+-v.letterOfEntrustment()
++# v = VerifySigningContract()
++# v.checkTheContract()
++# v.letterOfEntrustment()
+ 
+ '''
+ 司机
+Index: test_server/timedTask/JYtiming.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import datetime, time\r\nfrom test_server.timedTask.utils.WriteLog import writeLog\r\nfrom test_server.data.sql import sql_select, sql_exec\r\n\r\n\r\ndef IOSRechargeRecord():\r\n\t'''\r\n\t检测IOS充值未处理的订单\r\n\t:return:\r\n\t'''\r\n\ttry:\r\n\t\tre_data = sql_select(\"SELECT order_sn FROM apple_pay_callback_log WHERE status = 0 GROUP BY order_sn;\")\r\n\t\tprint(re_data)\r\n\t\tif re_data != []:\r\n\t\t\twriteLog(\"IOS充值未成功订单\", re_data)\r\n\texcept Exception as Err:\r\n\t\twriteLog(\"IOSRechargeRecord:异常\", Err)\r\n\r\n\r\n# IOSRechargeRecord()\r\n\r\n\r\ndef Complain():\r\n\tyesterday = datetime.date.today() + datetime.timedelta(-1)\r\n\tstartTime = '{} 00:00:00'.format(yesterday)\r\n\tendTime = '{} 23:59:59'.format(yesterday)\r\n\tstartTimestamp = int(time.mktime(time.strptime(startTime, \"%Y-%m-%d %H:%M:%S\")))\r\n\tendTimestamp = int(time.mktime(time.strptime(endTime, \"%Y-%m-%d %H:%M:%S\")))\r\n\t# print(startTime)\r\n\ttry:\r\n\t\tre_data = sql_select(\r\n\t\t\t\"SELECT COUNT(*) FROM biz_complain WHERE create_time BETWEEN '{}' AND '{}';\".format(startTime, endTime))\r\n\t\tre_data1 = sql_select(\r\n\t\t\t\"SELECT COUNT(*) FROM biz_report WHERE create_time BETWEEN '{}' AND '{}';\".format(startTime, endTime))\r\n\r\n\t\tprint(re_data[0][0])\r\n\t\tif re_data[0][0] != 0 or re_data1[0][0] != 0:\r\n\t\t\twriteLog(\"用户投诉\", \"昨天有{}位用户发起投诉,{}用户发起举报！\".format(re_data[0][0], re_data1[0][0]))\r\n\texcept Exception as Err:\r\n\t\twriteLog(\"Complain:异常\", Err)\r\n\r\n# Complain()\r\nIOSRechargeRecord()
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/timedTask/JYtiming.py	(revision 0d2e5d7f57e5c835548a70db39e5048f3beaeacb)
++++ test_server/timedTask/JYtiming.py	(date 1612617237513)
+@@ -40,4 +40,4 @@
+ 		writeLog("Complain:异常", Err)
+ 
+ # Complain()
+-IOSRechargeRecord()
+\ No newline at end of file
++# IOSRechargeRecord()
+\ No newline at end of file
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"BranchesTreeState\">\r\n    <expand>\r\n      <path>\r\n        <item name=\"ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n        <item name=\"LOCAL_ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n      </path>\r\n      <path>\r\n        <item name=\"ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n        <item name=\"REMOTE_ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n      </path>\r\n      <path>\r\n        <item name=\"ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n        <item name=\"REMOTE_ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n        <item name=\"GROUP_NODE:origin\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n      </path>\r\n    </expand>\r\n    <select />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"a9de5cc0-0f1b-4004-a870-0b88027a6076\" name=\"Default Changelist\" comment=\"1.1\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/jy_server/Modules/TimingTask.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/jy_server/Modules/TimingTask.py\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Python Script\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"PREVIOUS_COMMIT_AUTHORS\">\r\n      <list>\r\n        <option value=\"xiaoawuu &lt;858239977@qq.com&gt;\" />\r\n      </list>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"JupyterTrust\" id=\"d86eac75-5285-4a7a-b15f-74ff779ae337\" />\r\n  <component name=\"ProjectId\" id=\"1h5ssOOT8B0aILQyJRV5ToZNUAC\" />\r\n  <component name=\"ProjectLevelVcsManager\">\r\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">\r\n    <property name=\"RunOnceActivity.OpenProjectViewOnStart\" value=\"true\" />\r\n    <property name=\"RunOnceActivity.ShowReadmeOnStart\" value=\"true\" />\r\n    <property name=\"WebServerToolWindowFactoryState\" value=\"false\" />\r\n    <property name=\"last_opened_file_path\" value=\"$PROJECT_DIR$\" />\r\n    <property name=\"node.js.detected.package.eslint\" value=\"true\" />\r\n    <property name=\"node.js.detected.package.tslint\" value=\"true\" />\r\n    <property name=\"node.js.path.for.package.eslint\" value=\"project\" />\r\n    <property name=\"node.js.path.for.package.tslint\" value=\"project\" />\r\n    <property name=\"node.js.selected.package.eslint\" value=\"(autodetect)\" />\r\n    <property name=\"node.js.selected.package.tslint\" value=\"(autodetect)\" />\r\n    <property name=\"restartRequiresConfirmation\" value=\"false\" />\r\n    <property name=\"settings.editor.selected.configurable\" value=\"com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable\" />\r\n  </component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\test_s\\test_server\\appium_android\\ElementModules\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Python.TimingTask\">\r\n    <configuration name=\"Checking\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"test_server\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/test_server/tmsPay\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/test_server/tmsPay/Checking.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"Initialize\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"test_server\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/test_server/tmsPay\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/test_server/tmsPay/Initialize.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"TimingTask\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"test_server\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/jy_server/Modules\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/jy_server/Modules/TimingTask.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"print_ (1)\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"test_server\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/test_server/tmsPay/utils\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/test_server/tmsPay/utils/print_.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"sql\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"test_server\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/test_server/data\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/test_server/data/sql.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Python.TimingTask\" />\r\n        <item itemvalue=\"Python.sql\" />\r\n        <item itemvalue=\"Python.Checking\" />\r\n        <item itemvalue=\"Python.Initialize\" />\r\n        <item itemvalue=\"Python.print_ (1)\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"SvnConfiguration\">\r\n    <configuration />\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"a9de5cc0-0f1b-4004-a870-0b88027a6076\" name=\"Default Changelist\" comment=\"\" />\r\n      <created>1599312493383</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1599312493383</updated>\r\n      <workItem from=\"1599312494514\" duration=\"2687000\" />\r\n      <workItem from=\"1601954951385\" duration=\"1255000\" />\r\n      <workItem from=\"1601964105913\" duration=\"643000\" />\r\n      <workItem from=\"1601971058539\" duration=\"1800000\" />\r\n      <workItem from=\"1601973272213\" duration=\"31000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"1.1\">\r\n      <created>1601955447908</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1601955447908</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"1.1\">\r\n      <created>1601975883228</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1601975883228</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"1.1\">\r\n      <created>1602083075358</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1602083075358</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"1.1\">\r\n      <created>1602083445627</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1602083445627</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"1.2\">\r\n      <created>1604577404563</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1604577404563</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"1.2\">\r\n      <created>1604729306446</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1604729306447</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00007\" summary=\"1.2\">\r\n      <created>1604729364496</created>\r\n      <option name=\"number\" value=\"00007\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1604729364496</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00008\" summary=\"1.2\">\r\n      <created>1604745055528</created>\r\n      <option name=\"number\" value=\"00008\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00008\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1604745055528</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00009\" summary=\"1.2\">\r\n      <created>1604916470504</created>\r\n      <option name=\"number\" value=\"00009\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00009\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1604916470504</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00010\" summary=\"1.1\">\r\n      <created>1608215037824</created>\r\n      <option name=\"number\" value=\"00010\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00010\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1608215037824</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"11\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n    <option name=\"oldMeFiltersMigrated\" value=\"true\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"1.2\" />\r\n    <MESSAGE value=\"1.1\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"1.1\" />\r\n  </component>\r\n  <component name=\"WindowStateProjectService\">\r\n    <state x=\"586\" y=\"221\" key=\"#Inspections\" timestamp=\"1604892326687\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state x=\"586\" y=\"198\" key=\"#Inspections/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1602063862207\" />\r\n    <state x=\"586\" y=\"221\" key=\"#Inspections/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604892326687\" />\r\n    <state x=\"640\" y=\"255\" key=\"#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog\" timestamp=\"1601955171273\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"640\" y=\"255\" key=\"#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1601955171273\" />\r\n    <state x=\"558\" y=\"97\" key=\"CommitChangelistDialog2\" timestamp=\"1604916462005\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state x=\"558\" y=\"87\" key=\"CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1601955446940\" />\r\n    <state x=\"558\" y=\"97\" key=\"CommitChangelistDialog2/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604916462005\" />\r\n    <state x=\"92\" y=\"92\" width=\"1736\" height=\"856\" key=\"DiffContextDialog\" timestamp=\"1601956206332\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"92\" y=\"92\" width=\"1736\" height=\"856\" key=\"DiffContextDialog/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1601956206332\" />\r\n    <state x=\"740\" y=\"335\" key=\"FileChooserDialogImpl\" timestamp=\"1603959086384\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state x=\"740\" y=\"335\" key=\"FileChooserDialogImpl/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1603959086384\" />\r\n    <state width=\"1899\" height=\"247\" key=\"GridCell.Tab.0.bottom\" timestamp=\"1608558121167\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1899\" height=\"247\" key=\"GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1608558121167\" />\r\n    <state width=\"1899\" height=\"293\" key=\"GridCell.Tab.0.bottom/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1605004895802\" />\r\n    <state width=\"1899\" height=\"247\" key=\"GridCell.Tab.0.center\" timestamp=\"1608558121167\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1899\" height=\"247\" key=\"GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1608558121167\" />\r\n    <state width=\"1899\" height=\"293\" key=\"GridCell.Tab.0.center/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1605004895802\" />\r\n    <state width=\"1899\" height=\"247\" key=\"GridCell.Tab.0.left\" timestamp=\"1608558121166\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1899\" height=\"247\" key=\"GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1608558121166\" />\r\n    <state width=\"1899\" height=\"293\" key=\"GridCell.Tab.0.left/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1605004895802\" />\r\n    <state width=\"1899\" height=\"247\" key=\"GridCell.Tab.0.right\" timestamp=\"1608558121167\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1899\" height=\"247\" key=\"GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1608558121167\" />\r\n    <state width=\"1899\" height=\"293\" key=\"GridCell.Tab.0.right/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1605004895802\" />\r\n    <state width=\"1899\" height=\"328\" key=\"GridCell.Tab.1.bottom\" timestamp=\"1604733885773\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state width=\"1899\" height=\"348\" key=\"GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1602065701710\" />\r\n    <state width=\"1899\" height=\"328\" key=\"GridCell.Tab.1.bottom/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604733885773\" />\r\n    <state width=\"1899\" height=\"328\" key=\"GridCell.Tab.1.center\" timestamp=\"1604733885773\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state width=\"1899\" height=\"348\" key=\"GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1602065701710\" />\r\n    <state width=\"1899\" height=\"328\" key=\"GridCell.Tab.1.center/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604733885773\" />\r\n    <state width=\"1899\" height=\"328\" key=\"GridCell.Tab.1.left\" timestamp=\"1604733885773\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state width=\"1899\" height=\"348\" key=\"GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1602065701710\" />\r\n    <state width=\"1899\" height=\"328\" key=\"GridCell.Tab.1.left/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604733885773\" />\r\n    <state width=\"1899\" height=\"328\" key=\"GridCell.Tab.1.right\" timestamp=\"1604733885773\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state width=\"1899\" height=\"348\" key=\"GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1602065701710\" />\r\n    <state width=\"1899\" height=\"328\" key=\"GridCell.Tab.1.right/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604733885773\" />\r\n    <state x=\"318\" y=\"98\" key=\"MergeDialog\" timestamp=\"1601955403821\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"318\" y=\"98\" key=\"MergeDialog/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1601955403821\" />\r\n    <state x=\"445\" y=\"444\" key=\"SettingsEditor\" timestamp=\"1604731902815\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state x=\"461\" y=\"164\" key=\"SettingsEditor/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1602063566279\" />\r\n    <state x=\"445\" y=\"444\" key=\"SettingsEditor/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604731902815\" />\r\n    <state x=\"806\" y=\"432\" key=\"VCS.ChangelistChooser\" timestamp=\"1601955397798\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"806\" y=\"432\" key=\"VCS.ChangelistChooser/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1601955397798\" />\r\n    <state x=\"552\" y=\"253\" key=\"Vcs.Push.Dialog.v2\" timestamp=\"1608215046510\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"552\" y=\"253\" key=\"Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1608215046510\" />\r\n    <state x=\"552\" y=\"282\" key=\"Vcs.Push.Dialog.v2/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604916507159\" />\r\n    <state x=\"640\" y=\"404\" key=\"com.intellij.ide.util.TipDialog\" timestamp=\"1604733817647\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state x=\"640\" y=\"404\" key=\"com.intellij.ide.util.TipDialog/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604733817647\" />\r\n    <state x=\"771\" y=\"167\" key=\"com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser\" timestamp=\"1602048509243\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"771\" y=\"167\" key=\"com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1602048509243\" />\r\n    <state x=\"897\" y=\"445\" key=\"com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2\" timestamp=\"1601955272197\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"897\" y=\"445\" key=\"com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1601955272197\" />\r\n    <state x=\"623\" y=\"229\" width=\"672\" height=\"608\" key=\"search.everywhere.popup\" timestamp=\"1608555438961\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"623\" y=\"229\" width=\"672\" height=\"608\" key=\"search.everywhere.popup/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1608555438961\" />\r\n    <state x=\"623\" y=\"255\" width=\"672\" height=\"678\" key=\"search.everywhere.popup/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604890794979\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/workspace.xml	(revision 0d2e5d7f57e5c835548a70db39e5048f3beaeacb)
++++ .idea/workspace.xml	(date 1620423087892)
+@@ -21,7 +21,22 @@
+   <component name="ChangeListManager">
+     <list default="true" id="a9de5cc0-0f1b-4004-a870-0b88027a6076" name="Default Changelist" comment="1.1">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/jy_server/Modules/TimingTask.py" beforeDir="false" afterPath="$PROJECT_DIR$/jy_server/Modules/TimingTask.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/jy_server/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/jy_server/test.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/test_server/Order/applyForPayment.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/Order/applyForPayment.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/test_server/appium_android/TestCase/Login.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/appium_android/TestCase/Login.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/test_server/appium_android/TestCase/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/appium_android/TestCase/test.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/test_server/appium_android/test_weixin.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/appium_android/test_weixin.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/test_server/juyuanServer/iosCallBack.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/juyuanServer/iosCallBack.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/test_server/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/settings.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/test_server/timedTask/JYtiming.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/timedTask/JYtiming.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/test_server/timedTask/VerifySigningContract.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/timedTask/VerifySigningContract.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/test_server/timedTask/data/GetOrderData.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/timedTask/data/GetOrderData.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/test_server/timedTask/mainThread.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/timedTask/mainThread.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/test_server/timedTask/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/timedTask/views.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/test_server/tmsPay/Checking.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/tmsPay/Checking.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/test_server/tmsPay/Initialize.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/tmsPay/Initialize.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/test_server/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/urls.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/test_server/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/views.py" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -301,25 +316,11 @@
+     <state x="586" y="221" key="#Inspections" timestamp="1604892326687">
+       <screen x="0" y="0" width="1920" height="1160" />
+     </state>
+-    <state x="586" y="198" key="#Inspections/0.0.1920.1040@0.0.1920.1040" timestamp="1602063862207" />
+     <state x="586" y="221" key="#Inspections/0.0.1920.1160@0.0.1920.1160" timestamp="1604892326687" />
+-    <state x="640" y="255" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1601955171273">
+-      <screen x="0" y="0" width="1920" height="1040" />
+-    </state>
+-    <state x="640" y="255" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1601955171273" />
+     <state x="558" y="97" key="CommitChangelistDialog2" timestamp="1604916462005">
+       <screen x="0" y="0" width="1920" height="1160" />
+     </state>
+-    <state x="558" y="87" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1601955446940" />
+     <state x="558" y="97" key="CommitChangelistDialog2/0.0.1920.1160@0.0.1920.1160" timestamp="1604916462005" />
+-    <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1601956206332">
+-      <screen x="0" y="0" width="1920" height="1040" />
+-    </state>
+-    <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1601956206332" />
+-    <state x="740" y="335" key="FileChooserDialogImpl" timestamp="1603959086384">
+-      <screen x="0" y="0" width="1920" height="1160" />
+-    </state>
+-    <state x="740" y="335" key="FileChooserDialogImpl/0.0.1920.1160@0.0.1920.1160" timestamp="1603959086384" />
+     <state width="1899" height="247" key="GridCell.Tab.0.bottom" timestamp="1608558121167">
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+@@ -343,36 +344,23 @@
+     <state width="1899" height="328" key="GridCell.Tab.1.bottom" timestamp="1604733885773">
+       <screen x="0" y="0" width="1920" height="1160" />
+     </state>
+-    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1602065701710" />
+     <state width="1899" height="328" key="GridCell.Tab.1.bottom/0.0.1920.1160@0.0.1920.1160" timestamp="1604733885773" />
+     <state width="1899" height="328" key="GridCell.Tab.1.center" timestamp="1604733885773">
+       <screen x="0" y="0" width="1920" height="1160" />
+     </state>
+-    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1602065701710" />
+     <state width="1899" height="328" key="GridCell.Tab.1.center/0.0.1920.1160@0.0.1920.1160" timestamp="1604733885773" />
+     <state width="1899" height="328" key="GridCell.Tab.1.left" timestamp="1604733885773">
+       <screen x="0" y="0" width="1920" height="1160" />
+     </state>
+-    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1602065701710" />
+     <state width="1899" height="328" key="GridCell.Tab.1.left/0.0.1920.1160@0.0.1920.1160" timestamp="1604733885773" />
+     <state width="1899" height="328" key="GridCell.Tab.1.right" timestamp="1604733885773">
+       <screen x="0" y="0" width="1920" height="1160" />
+     </state>
+-    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1602065701710" />
+     <state width="1899" height="328" key="GridCell.Tab.1.right/0.0.1920.1160@0.0.1920.1160" timestamp="1604733885773" />
+-    <state x="318" y="98" key="MergeDialog" timestamp="1601955403821">
+-      <screen x="0" y="0" width="1920" height="1040" />
+-    </state>
+-    <state x="318" y="98" key="MergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1601955403821" />
+     <state x="445" y="444" key="SettingsEditor" timestamp="1604731902815">
+       <screen x="0" y="0" width="1920" height="1160" />
+     </state>
+-    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1602063566279" />
+     <state x="445" y="444" key="SettingsEditor/0.0.1920.1160@0.0.1920.1160" timestamp="1604731902815" />
+-    <state x="806" y="432" key="VCS.ChangelistChooser" timestamp="1601955397798">
+-      <screen x="0" y="0" width="1920" height="1040" />
+-    </state>
+-    <state x="806" y="432" key="VCS.ChangelistChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1601955397798" />
+     <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1608215046510">
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+@@ -382,14 +370,10 @@
+       <screen x="0" y="0" width="1920" height="1160" />
+     </state>
+     <state x="640" y="404" key="com.intellij.ide.util.TipDialog/0.0.1920.1160@0.0.1920.1160" timestamp="1604733817647" />
+-    <state x="771" y="167" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1602048509243">
++    <state x="763" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1612616919674">
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+-    <state x="771" y="167" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1602048509243" />
+-    <state x="897" y="445" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1601955272197">
+-      <screen x="0" y="0" width="1920" height="1040" />
+-    </state>
+-    <state x="897" y="445" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1601955272197" />
++    <state x="763" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1612616919674" />
+     <state x="623" y="229" width="672" height="608" key="search.everywhere.popup" timestamp="1608555438961">
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+Index: test_server/timedTask/data/GetOrderData.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import datetime\r\nfrom test_server.data.mysqls import Data\r\n\r\n\r\nclass GetOrderData():\r\n\t'''\r\n\t获取前一天的订单数据(status in (12,14,15,16,17) )\r\n\t:status = 1 是需要有合同的单子，其他相反\r\n\t'''\r\n\r\n\tdef __init__(self):\r\n\t\tself.Data = Data()\r\n\t\tself.yesterday = datetime.date.today() + datetime.timedelta(-1)\r\n\t\tprint('时间:', self.yesterday)\r\n\r\n\tdef getFreightId(self, status=1):\r\n\t\tif status == 1:\r\n\t\t\tself.freight_data = self.Data.query('tms_test',\r\n\t\t\t\t\t\t\t\t\t\t\t\t\"SELECT freight_id FROM tms_wl_freight WHERE (last_update_time BETWEEN '{} 00:00:00'\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\" AND '{} 23:59:59') AND `status` in (12,14,15,16,17);\".format(\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tself.yesterday, self.yesterday))\r\n\t\telse:\r\n\t\t\tself.freight_data = self.Data.query('tms_test',\r\n\t\t\t\t\t\t\t\t\t\t\t\t\"SELECT freight_id FROM tms_wl_freight WHERE (last_update_time BETWEEN '{} 00:00:00'\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\" AND '{} 23:59:59') AND `status` in (11,13);\".format(\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tself.yesterday, self.yesterday))\r\n\t\treturn self.freight_data\r\n\r\n\tdef getOrderId(self, status=1):\r\n\t\tif status == 1:\r\n\r\n\t\t\tself.order_data = self.Data.query('tms_test',\r\n\t\t\t\t\t\t\t\t\t\t\t  \"SELECT first_order_id FROM tms_wl_freight WHERE (last_update_time BETWEEN '{} 00:00:00'\"\r\n\t\t\t\t\t\t\t\t\t\t\t  \" AND '{} 23:59:59') AND `status` in (12,14,15,16,17);\".format(\r\n\t\t\t\t\t\t\t\t\t\t\t\t  self.yesterday,\r\n\t\t\t\t\t\t\t\t\t\t\t\t  self.yesterday))\r\n\t\telse:\r\n\t\t\tself.order_data = self.Data.query('tms_test',\r\n\t\t\t\t\t\t\t\t\t\t\t  \"SELECT first_order_id FROM tms_wl_freight WHERE (last_update_time BETWEEN '{} 00:00:00'\"\r\n\t\t\t\t\t\t\t\t\t\t\t  \" AND '{} 23:59:59') AND `status` in (11,13);\".format(\r\n\t\t\t\t\t\t\t\t\t\t\t\t  self.yesterday,\r\n\t\t\t\t\t\t\t\t\t\t\t\t  self.yesterday))\r\n\t\treturn self.order_data\r\n\r\n\r\n# d = GetOrderData()\r\n# d.getFreightId()\r\n# d.getOrderId()\r\nsql = \"SELECT\t* FROM (SELECT fre1.freight_id FROM\ttms_wl_freight fre1 WHERE ( fre1.last_update_time BETWEEN '2020-08-25 00:00:00' AND '2020-08-25 23:59:59' ) AND fre1.`status` IN ( 12, 14, 15, 16, 17 ) AND freight_id != first_order_id) B WHERE (\tSELECT count( 1 ) num FROM ( SELECT com1.freight_id FROM tms_commission_contract com1 WHERE com1.contract_type = 2 ) A WHERE A.freight_id = B.freight_id ) = 0 ;\"\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/timedTask/data/GetOrderData.py	(revision 0d2e5d7f57e5c835548a70db39e5048f3beaeacb)
++++ test_server/timedTask/data/GetOrderData.py	(date 1612617237496)
+@@ -46,4 +46,4 @@
+ # d = GetOrderData()
+ # d.getFreightId()
+ # d.getOrderId()
+-sql = "SELECT	* FROM (SELECT fre1.freight_id FROM	tms_wl_freight fre1 WHERE ( fre1.last_update_time BETWEEN '2020-08-25 00:00:00' AND '2020-08-25 23:59:59' ) AND fre1.`status` IN ( 12, 14, 15, 16, 17 ) AND freight_id != first_order_id) B WHERE (	SELECT count( 1 ) num FROM ( SELECT com1.freight_id FROM tms_commission_contract com1 WHERE com1.contract_type = 2 ) A WHERE A.freight_id = B.freight_id ) = 0 ;"
++# sql = "SELECT	* FROM (SELECT fre1.freight_id FROM	tms_wl_freight fre1 WHERE ( fre1.last_update_time BETWEEN '2020-08-25 00:00:00' AND '2020-08-25 23:59:59' ) AND fre1.`status` IN ( 12, 14, 15, 16, 17 ) AND freight_id != first_order_id) B WHERE (	SELECT count( 1 ) num FROM ( SELECT com1.freight_id FROM tms_commission_contract com1 WHERE com1.contract_type = 2 ) A WHERE A.freight_id = B.freight_id ) = 0 ;"
+Index: test_server/juyuanServer/iosCallBack.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from test_server.data.sql import sql_select\r\n\r\nclass CallBack():\r\n\tdef __init__(self):\r\n\t\tself.diteData = {}\r\n\t\tpass\r\n\tdef iosCallBack(self):\r\n\t\ttry:\r\n\t\t\tdata =  sql_select('SELECT order_sn,receipt FROM apple_pay_callback_log WHERE status != 0 ;')\r\n\t\t\tfor i in data:\r\n\t\t\t\tself.diteData[i[1]] = i[0]\r\n\t\t\t\tprint(self.diteData[i[1]])\r\n\r\n\t\t\tprint(self.diteData)\r\n\t\t\tprint(len(self.diteData))\r\n\t\texcept Exception as a:\r\n\t\t\treturn a\r\n\r\nc = CallBack()\r\n\r\nc.iosCallBack()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/juyuanServer/iosCallBack.py	(revision 0d2e5d7f57e5c835548a70db39e5048f3beaeacb)
++++ test_server/juyuanServer/iosCallBack.py	(date 1612617237433)
+@@ -16,6 +16,6 @@
+ 		except Exception as a:
+ 			return a
+ 
+-c = CallBack()
++# c = CallBack()
+ 
+-c.iosCallBack()
++# c.iosCallBack()
+Index: test_server/Order/applyForPayment.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from test_server import requestPort\r\n\r\nclass applyForPayment():\r\n\tdef __init__(self):\r\n\t\tpass\r\n\tdef applyForPaymentDriver(self,dict_s):\r\n\t\t'''\r\n\t\t:request:申请付款\r\n\t\t:param dict_s:{}\r\n\t\t:return:\r\n\t\t:payObjectSum:1是司机,2是车队\r\n\t\t'''\r\n\t\t# data = {\r\n\t\t#   \"wlToken\": dict_s['token'],\r\n\t\t#   \"type\": dict_s['type'],\r\n\t\t#   \"payObjectSum\": \"1\",\r\n\t\t#   \"freightId\": \"{}\",\r\n\t\t#   \"payeeName\": \"贾献\",\r\n\t\t#   \"payeeMobile\": \"16616666666\",\r\n\t\t#   \"payeeId\": \"132521197806153017\",\r\n\t\t#   \"payeeBank\": \"农业银行\",\r\n\t\t#   \"payeeAccount\": \"6228481749128570570\",\r\n\t\t#   \"bankcardId\": \"1340\",\r\n\t\t#   \"isEntrust\": \"0\",\r\n\t\t#   \"finalPrice\": \"20.0\"\r\n\t\t# }\r\n\t\turl = '/api/invoice/applyPayment'\r\n\t\treturn requestPort.requestsPort(url,dict_s)\r\naa = {\r\n\t'wlToken': 'wl_token_1598167999796727',\r\n\t'type': '1',\r\n\t'payObjectSum': '1',\r\n\t'freightId': 'DO-202008006242',\r\n\t'payeeName': '黄华',\r\n\t'payeeMobile': '18007530000',\r\n\t'payeeId': '132521197806153017',\r\n\t'payeeBank': '农业银行',\r\n\t'payeeAccount': '6228481749128570570',\r\n\t'bankcardId': '1340',\r\n\t'isEntrust': '0',\r\n\t'advancePrice': '10.00'\r\n}\r\na = applyForPayment()\r\ndd = {'token':'','type':'1','freightId':'',}\r\nprint(a.applyForPaymentDriver(aa))\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/Order/applyForPayment.py	(revision 0d2e5d7f57e5c835548a70db39e5048f3beaeacb)
++++ test_server/Order/applyForPayment.py	(date 1612617237504)
+@@ -40,7 +40,7 @@
+ 	'isEntrust': '0',
+ 	'advancePrice': '10.00'
+ }
+-a = applyForPayment()
+-dd = {'token':'','type':'1','freightId':'',}
+-print(a.applyForPaymentDriver(aa))
++# a = applyForPayment()
++# dd = {'token':'','type':'1','freightId':'',}
++# print(a.applyForPaymentDriver(aa))
+ 
+Index: test_server/appium_android/test_weixin.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import selenium\r\nimport time\r\nfrom appium import webdriver\r\n\r\n# adevice = {\r\n#     \"platformName\": \"Android\",\r\n#     \"platformVersion\": \"8.1.0\",  # adb shell getprop ro.build.version.release\r\n#     \"deviceName\": \"b649c4d\",  # adb devices\r\n#     \"appPackage\": \"com.fcx.jy\",\r\n#     'newCommandTimeout': \"3000\",\r\n#     \"automationName\": \"uiautomator2\",\r\n#     \"appActivity\": \"com.fcx.jy.ui.activity.LoginActivity\"\r\n# }\r\nfrom test_server.data.sql import sql_select\r\n\r\nadevice = {\r\n\t\"platformName\": \"Android\",\r\n\t\"platformVersion\": \"8.1.0\",\r\n\t\"deviceName\": \"b649c4d\",\r\n\t\"appPackage\": \"com.tencent.mm\",\r\n\t'newCommandTimeout': \"3000\",\r\n\t\"automationName\": \"uiautomator2\",\r\n\t\"appActivity\": \".ui.LauncherUI\",\r\n\t\"dontStopAppOnReset\": \"True\",\r\n\t\"noReset\": \"True\"\r\n}\r\nimport os\r\n\r\n\r\n# print('selenium version = ', selenium.__version__)\r\n# driver = webdriver.Remote('http://localhost:4723/wd/hub', adevice)\r\n#\r\n# driver.find_element_by_id(\"com.tencent.mm:id/ef9\").click()\r\n#\r\n# time.sleep(1)\r\n#\r\n# driver.find_element_by_xpath(\r\n# \t\"/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[2]/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.TextView\").click()\r\n#\r\n# # 256686\r\n# time.sleep(2)\r\n#\r\n# driver.find_element_by_id(\"com.tencent.mm:id/fcn\").click()\r\n# time.sleep(2)\r\n# driver.find_element_by_id(\"com.tencent.mm:id/bhn\").send_keys('aaaaaaaaaaaaaaa')\r\n# time.sleep(2)\r\n# driver.find_element_by_id(\"com.tencent.mm:id/bhn\").click()\r\n# time.sleep(2)\r\n# driver.press_keycode(66)\r\n# time.sleep(2)\r\n# try:\r\n#\r\n# \ta = driver.find_element_by_id(\"com.tencent.mm:id/g6f\").text\r\n# \tprint(a)\r\n# except Exception as ERR:\r\n# \tprint(\"不存在！\")\r\n\r\n\r\n# def WeChatIsTrue():\r\n# \tadevice = {\r\n# \t\t\"platformName\": \"Android\",\r\n# \t\t\"platformVersion\": \"8.1.0\",\r\n# \t\t\"deviceName\": \"b649c4d\",\r\n# \t\t\"appPackage\": \"com.tencent.mm\",\r\n# \t\t'newCommandTimeout': \"3000\",\r\n# \t\t\"automationName\": \"uiautomator2\",\r\n# \t\t\"appActivity\": \".ui.LauncherUI\",\r\n# \t\t\"dontStopAppOnReset\": \"True\",\r\n# \t\t\"noReset\": \"True\"\r\n# \t}\r\n# \timport os\r\n#\r\n# \tprint('selenium version = ', selenium.__version__)\r\n# \tdriver = webdriver.Remote('http://localhost:4723/wd/hub', adevice)\r\n#\r\n# \tdriver.find_element_by_id(\"com.tencent.mm:id/ef9\").click()\r\n#\r\n# \ttime.sleep(1)\r\n# \tdriver.tap([(810, 444), (1050, 2160)], 500)\r\n#\r\n# \tdriver.find_element_by_id(\"com.tencent.mm:id/fcn\").click()\r\n#\r\n# \tdriver.find_element_by_id(\"com.tencent.mm:id/bhn\").send_keys('aaaaaaaaaaaaaaa')\r\n#\r\n# \tdriver.find_element_by_id(\"com.tencent.mm:id/bhn\").click()\r\n#\r\n# \tdriver.press_keycode(66)\r\n#\r\n# \ttry:\r\n# \t\ta = driver.find_element_by_id(\"com.tencent.mm:id/g6f\").text\r\n# \t\tprint(a)\r\n# \texcept Exception as ERR:\r\n# \t\tprint(\"不存在！\")\r\ndef ride_file(text):\r\n\twith open(r'C:\\test_s\\test_server\\appium_android\\utils\\is_true', \"a\") as file:  # ”w\"代表着每次运行都覆盖内容\r\n\t\tfile.write(text + \"\\n\")\r\n\r\n\r\n\r\nclass WeChatIDCheck(object):\r\n\tdef __init__(self):\r\n\t\tconfig = {\r\n\t\t\t\"platformName\": \"Android\",\r\n\t\t\t\"platformVersion\": \"8.1.0\",\r\n\t\t\t\"deviceName\": \"6342f6a7\",\r\n\t\t\t\"appPackage\": \"com.tencent.mm\",\r\n\t\t\t'newCommandTimeout': \"3000\",\r\n\t\t\t\"automationName\": \"uiautomator2\",\r\n\t\t\t\"appActivity\": \".ui.LauncherUI\",\r\n\t\t\t\"dontStopAppOnReset\": \"True\",\r\n\t\t\t\"noReset\": \"True\"\r\n\t\t}\r\n\t\tprint('selenium version = ', selenium.__version__)\r\n\t\ttime.sleep(2)\r\n\t\tself.driver = webdriver.Remote('http://localhost:4723/wd/hub', config)\r\n\r\n\t\ttime.sleep(1)\r\n\r\n\tdef is_true(self):\r\n\t\tprint(2)\r\n\t\tself.driver.find_element_by_id(\"com.tencent.mm:id/ef9\").click()\r\n\t\ttime.sleep(0.5)\r\n\t\tself.driver.tap([(810, 444), (1050, 2160)], 500)\r\n\t\ttime.sleep(0.5)\r\n\t\tdata = sql_select(\"SELECT TOP 3 id ,wechat FROM biz_user WHERE sex = 2 AND wechat != '' and\tlen(wechat) BETWEEN 6 and\t20 AND is_valid != 0;\")\r\n\t\tfor i in data:\r\n\t\t\twx = i[1]\r\n\t\t\tself.driver.find_element_by_id(\"com.tencent.mm:id/fcn\").click()\r\n\t\t\ttime.sleep(0.3)\r\n\t\t\tself.driver.find_element_by_id(\"com.tencent.mm:id/bhn\").send_keys(wx)\r\n\t\t\ttime.sleep(0.3)\r\n\t\t\tself.driver.find_element_by_id(\"com.tencent.mm:id/bhn\").click()\r\n\t\t\ttime.sleep(0.3)\r\n\t\t\tself.driver.press_keycode(66)\r\n\t\t\ttime.sleep(0.3)\r\n\t\t\ttry:\r\n\t\t\t\ttext = self.driver.find_element_by_id(\"com.tencent.mm:id/g6f\").text\r\n\t\t\t\tif text == '添加到通讯录':\r\n\t\t\t\t\tride_file('{}:{}'.format(i[0],wx))\r\n\r\n\t\t\t\t\tprint('真实的',wx)\r\n\t\t\t\tself.driver.press_keycode(4)\r\n\t\t\t\ttime.sleep(0.3)\r\n\t\t\t\tself.driver.press_keycode(4)\r\n\t\t\t\ttime.sleep(0.3)\r\n\r\n\t\t\texcept Exception as ERR:\r\n\t\t\t\ttime.sleep(0.3)\r\n\t\t\t\tself.driver.find_element_by_id(\"com.tencent.mm:id/aay\").click()\r\n\r\n\r\n\r\n\r\na = WeChatIDCheck()\r\na.is_true()\r\n\r\nconfig = {\r\n\t\"platformName\": \"Android\",\r\n\t\"platformVersion\": \"8.1.0\",\r\n\t\"deviceName\": \"b649c4d\",\r\n\t\"appPackage\": \"com.tencent.mm\",\r\n\t'newCommandTimeout': \"3000\",\r\n\t\"automationName\": \"uiautomator2\",\r\n\t\"appActivity\": \".ui.LauncherUI\",\r\n\t\"dontStopAppOnReset\": \"True\",\r\n\t\"noReset\": \"True\"\r\n}\r\n\r\n# def test():\r\n# \ta = sql_select(\r\n# \t\t\"SELECT TOP 200 id ,wechat FROM biz_user WHERE sex = 2 AND wechat != '' and\tlen(wechat) BETWEEN 6 and\t20 AND is_valid != 0;\")\r\n# \tfor i in a:\r\n# \t\ta = i[1]\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/appium_android/test_weixin.py	(revision 0d2e5d7f57e5c835548a70db39e5048f3beaeacb)
++++ test_server/appium_android/test_weixin.py	(date 1612617237445)
+@@ -151,8 +151,8 @@
+ 
+ 
+ 
+-a = WeChatIDCheck()
+-a.is_true()
++# a = WeChatIDCheck()
++# a.is_true()
+ 
+ config = {
+ 	"platformName": "Android",
+Index: jy_server/test.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import random\r\nfrom test_server.data import mysqls\r\nprint()\r\n\r\ndef addData(ren):\r\n\ti = 1\r\n\twhile i < ren:\r\n\t\tmobile = '1'+ str(random.randint(3000000000,9999999999))\r\n\t\ti = i+1\r\n\t\tre = mysqls.Data().query('localhost',\"INSERT  INTO `data` (mobile) VALUES ('{}')\".format(mobile))\r\n\r\naddData(151)\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- jy_server/test.py	(revision 0d2e5d7f57e5c835548a70db39e5048f3beaeacb)
++++ jy_server/test.py	(date 1612617022163)
+@@ -9,7 +9,7 @@
+ 		i = i+1
+ 		re = mysqls.Data().query('localhost',"INSERT  INTO `data` (mobile) VALUES ('{}')".format(mobile))
+ 
+-addData(151)
++# addData(151)
+ 
+ 
+ 
+Index: test_server/appium_android/TestCase/Login.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import selenium\r\nimport time\r\nfrom appium import webdriver\r\nfrom test_server.appium_android.utils.config import config as con\r\nfrom test_server.appium_android.ElementModules.location_element import *\r\nfrom test_server.appium_android.ElementModules.LoginAndRegister import *\r\nfrom test_server.appium_android.utils.Assert import *\r\nfrom test_server.appium_android.utils.getToast import getToast\r\n\r\n\r\nclass Case():\r\n\tdef __init__(self):\r\n\t\tself.account = '18007530115'\r\n\t\tself.pwd = '000000'\r\n\t\tself.code = '9514'\r\n\t\tself.invite_code = 'AB53495F48B31C5B'\r\n\t\tself.con = con(\"miui\", \"jy\")\r\n\t\tself.con['newCommandTimeout'] = '3000'\r\n\t\tself.con['automationName'] = 'True'\r\n\t\tself.con['noReset'] = 'True'\r\n\t\tself.con['automationName'] = 'uiautomator2'\r\n\t\tprint(self.con)\r\n\r\n\t\tprint('selenium version = ', selenium.__version__)\r\n\t\tself.driver = webdriver.Remote('http://localhost:4723/wd/hub', self.con)\r\n\t\ttime.sleep(1)\r\n\r\n\tdef addAccount(self):\r\n\t\tself.driver.find_element_by_id(home_mobile_enroll).click()\r\n\t\ttime.sleep(1)\r\n\t\tself.driver.find_element_by_id(enroll_account_input).send_keys(self.account)\r\n\t\tself.driver.find_element_by_id(enroll_code_input).send_keys(self.code)\r\n\t\tself.driver.find_element_by_id(enroll_password_input).send_keys(self.pwd)\r\n\t\tself.driver.find_element_by_id(enroll_button).click()\r\n\t\ttime.sleep(0.5)\r\n\t\tself.driver.find_element_by_id(gender_man).click()\r\n\t\tself.driver.find_element_by_id(gender_send).click()\r\n\t\ttime.sleep(0.5)\r\n\t\tself.driver.find_element_by_id(gender_dialog_confirm).click()\r\n\t\tself.driver.find_element_by_id(invitation_code).send_keys(self.invite_code)\r\n\t\ttime.sleep(0.5)\r\n\t\tself.driver.find_element_by_id(invitation_code_send).click()\r\n\t\tself.driver.implicitly_wait(5)\r\n\t\tself.driver.find_element_by_id(upload_photo).click()\r\n\t\ttime.sleep(0.5)\r\n\t\ttry:\r\n\t\t\tself.driver.find_element_by_id('android:id/button1').click()\r\n\t\texcept:\r\n\t\t\tpass\r\n\t\tself.driver.tap([(400, 997), (1080, 2280)], 500)\r\n\t\tself.driver.find_element_by_id('com.fcx.jy:id/check').click()\r\n\t\tself.driver.tap([(1000, 2220), (1080, 2280)], 500)\r\n\t\ttime.sleep(0.5)\r\n\t\tself.driver.find_element_by_id(tailor_affirm).click()\r\n\t\ttime.sleep(0.5)\r\n\t\tself.driver.find_element_by_id(user_name_input).send_keys('憨憨大叔')\r\n\t\tself.driver.find_element_by_id('com.fcx.jy:id/tv_chengshi').click()\r\n\t\ttime.sleep(0.5)\r\n\t\tself.driver.tap([(730, 330), (1080, 2280)], 500)\r\n\r\n\t\tself.driver.find_element_by_id('com.fcx.jy:id/queding_tv').click()\r\n\r\n\t\tself.driver.find_element_by_id(birthday).click()\r\n\t\tself.driver.find_element_by_id('com.fcx.jy:id/queding_tv').click()\r\n\t\t# 选择职业\r\n\t\tself.driver.find_element_by_id(profession).click()\r\n\t\ttime.sleep(0.5)\r\n\t\tself.driver.tap([(730, 330), (1080, 2280)], 500)\r\n\r\n\t\tself.driver.find_element_by_id(program).click()\r\n\r\n\t\tself.driver.tap([(590, 890), (1080, 2280)], 500)\r\n\r\n\t\tself.driver.find_element_by_id(gender_dialog_confirm).click()\r\n\t\t# 期望对象\r\n\t\tself.driver.find_element_by_id(expect_object).click()\r\n\r\n\t\tself.driver.tap([(550, 880), (1080, 2280)], 500)\r\n\t\ttime.sleep(0.5)\r\n\t\tself.driver.find_element_by_id(gender_dialog_confirm).click()\r\n\t\t# 填写微信\r\n\t\tself.driver.find_element_by_id(wechat).send_keys('weixinhao')\r\n\t\tself.driver.find_element_by_id('com.fcx.jy:id/hide_wechat_view').click()\r\n\r\n\r\n\t\tsize = self.driver.get_window_size()\r\n\t\twidth = size.get('width')\r\n\t\theights = size.get('height')\r\n\r\n\t\tprint(size)\r\n\r\n\r\n\t\tstart_x_end = width * 0.5\r\n\r\n\t\tstart_y = heights * 0.8\r\n\r\n\t\tend_y = heights * 0.2\r\n\r\n\t\tself.driver.swipe(start_x_end, start_y, start_x_end, end_y)\r\n\r\n\t\t# 身高\r\n\t\tself.driver.find_element_by_id(height).click()\r\n\t\ttime.sleep(0.5)\r\n\t\tself.driver.tap([(540, 1450), (1080, 2280)], 500)\r\n\r\n\t\t# 体重\r\n\t\tself.driver.find_element_by_id(weight).click()\r\n\t\ttime.sleep(0.5)\r\n\t\tself.driver.tap([(540, 1480), (1080, 2280)], 500)\r\n\t\tself.driver.find_element_by_id(introduction).send_keys('比较看感觉')\r\n\t\tself.driver.find_element_by_id(send_data).click()\r\n\t\ttime.sleep(5)\r\n\r\n\r\n\r\n\r\n\tdef Login(self):\r\n\t\tprint(\"addAccount\")\r\n\t\tself.driver.find_element_by_id(home_login_button).click()\r\n\t\tself.driver.find_element_by_id(login_account_input).send_keys(\"18007530111\")\r\n\t\tself.driver.find_element_by_id(login_password_input).send_keys(\"0000000\")\r\n\t\tself.driver.find_element_by_id(login_button).click()\r\n\t\tis_true = assertIn(getToast(self.driver,\"账号或密码错误\"),'聚缘公园：账号或密码错误')\r\n\r\n\r\nc = Case()\r\nc.addAccount()\r\nprint(\"exit!\")\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/appium_android/TestCase/Login.py	(revision 0d2e5d7f57e5c835548a70db39e5048f3beaeacb)
++++ test_server/appium_android/TestCase/Login.py	(date 1612617237467)
+@@ -123,6 +123,6 @@
+ 		is_true = assertIn(getToast(self.driver,"账号或密码错误"),'聚缘公园：账号或密码错误')
+ 
+ 
+-c = Case()
+-c.addAccount()
+-print("exit!")
++# c = Case()
++# c.addAccount()
++# print("exit!")
+Index: test_server/appium_android/TestCase/test.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>def print_color(color_name, color):\r\n\tstart_line = '\\033[1;' + color + 'm '\r\n\tend_line = '\\033[0m'\r\n\tprint(start_line + color_name + ' ' + end_line)\r\n\r\n\r\n# if __name__ == '__main__':\r\n# \timport threading\r\n#\r\n# \tcolors_names_list = [\"我是白色/黑色（取决于当前输出栏的背景颜色）\", \"我是红色\", \"我是绿色\", \"我是黄色\", \"我是蓝色\", \"我是紫色\", \"我是深绿色\",\r\n# \t\t\t\t\t\t \"我是白色/灰色（取决于当前输出栏的背景颜色）\"]\r\n# \tthreads_list = []\r\n# \tcolors_list = ['30', '31', '32', '33', '34', '35', '36', '100']\r\n# \tloop_flag = 0\r\n# \tfor color_name in colors_names_list:\r\n# \t\tt = threading.Thread(target=print_color, args=(color_name, colors_list[loop_flag]))\r\n# \t\tt.start()\r\n# \t\tthreads_list.append(t)\r\n# \t\tloop_flag += 1\r\n# \tfor t in threads_list:\r\n# \t\tt.join()\r\n#\r\n\r\nimport re\r\n\r\n\"\"\"\r\n爬虫，需非常理解正则表达式\r\n\r\n\"\"\"\r\n# 从头开始\r\n# print(re.match(\"^[a-zA-Z]\", '' or ''))\r\n# print(re.match(r\"^[a-z]|[A-Z]|_\", \"zhang123san456\"))\r\n# print(re.match(r\"^zhang\\d+\", \"zhang123san456\"))\r\n# print(re.match(r\"^zhang\\d+\", \"zhangsan456\"))\r\n# print(re.match(\".^s.n$\", \"zhangsan456\"))\r\n\"\"\"\r\n开始：match\r\n所有：search\r\n所有：(返回多个)findall\r\n\"\"\"\r\na = 'L_-47jjj--_adsgfssdfgdsgjhjj7'\r\n\r\n# print(re.match(r\"^[a-z]|[A-Z]|_\", a))\r\n# print(len(re.findall(r\"[a-z]|[A-Z]|_|-|[0-9]\", a)))\r\n\r\nprint(re.match(r\"(^[a-zA-Z_])([a-zA-Z0-9_-]{5,19})+$\", a))\r\n\r\n# print(len(a))\r\n\r\n\r\n# print(re.search(r'^a~z|A-Z|_\\d+','_123'))\r\n# print(re.match(r'a-z|A-Z|_\\d+','a123'))\r\n# print(re.search(r'^a-z|A-Z|_','A123'))\r\n# print(re.search(\"s.+n\",\"zhangsan456\"))\r\n# print(re.search(\"s.+n\",\"zhangsan456\"))\r\n# print(re.search(\"[0-9]{3}\",\"12zhang568san\"))\r\n# print(re.search(\"[0-9]{1,3}\",\"1zhang56san\"))\r\n# print(re.findall(\"[0-9]{1,3}\",\"1zhang5678san\"))\r\n# #或者匹配\r\n# print(re.search(\"abc|ABC\",\"ABCabc123aa\"))\r\n# print(re.search(\"abc|ABC\",\"ABCabc123aa\"))\r\n# print(re.findall(\"[a-z]|[1-9]|\\\\/\",\"ABCabc/123/aa\"))\r\n# 匹配abcc\r\n# print(re.search(\"abc{2}\",\"ABCabc123aabcc\"))\r\n# print(re.search(\"(abc){2}\",\"ABCabc123aabcc\"))\r\n# #匹配abcabc\r\n# print(re.search(\"(abc){2}\",\"ABCabc123abcabcabc\"))\r\n# #匹配管道符\r\n# print(re.search(\"(abc){2}|\\|\",\"ABCabc123abcabcabcc|\"))\r\n# print(re.search(\"\\||(abc){2}\",\"|ABCabc123abcabcabcc|\"))\r\n# print(re.search(\"\\||(abc){2}\",\"|ABCabc123|abcabcabcc|\"))\r\n# # #分组匹配\r\n# print(re.search(\"(abc){}v(123|456)z\",\"abcabcv456zasfd\"))\r\n# print(re.search(\"(abc){2}v(123|456)z\",\"abczabcv456zasfd\"))\r\n# print(re.search(\"(abc|abb){2}.+(123|456)z\",\"abcabczx456zasfd\"))\r\n# #\\A跟^一样\r\n# print(re.search(\"\\A[0-9]\",\"abcabczx456zasfd\"))\r\n# print(re.search(\"\\A[0-9][a-z]\\Z\",\"2a\"))\r\n# #\\d匹配数字1-9；\\D匹配非数字\r\n# print(re.search(\"\\A\\d\\D\\Z\",\"2a\"))\r\n#\r\n# print(re.search(\"\\A[0-9][a-z]\\Z\",\"2a\"))\r\n# print(re.search(\"\\A[0-9].+[a-z]\\Z\",\"2abcabczx456zasfd\"))\r\n# #\\w匹配[A-Za-z0-9]  \\W匹配非[A-Za-z0-9]\r\n#\r\n# print(re.search(\"\\w+\",\"2abcabczx456za&sfd\"))\r\n# print(re.findall(\"\\W+\",\"2abc@#abc$zx456za&sfd\"))\r\n#\r\n# #\\s匹配空字符、\\t、\\n、\\r,\r\n# print(re.search(\"\\s+\",\"2abc\\nab\\tczx456za&sfd\"))\r\n# print(re.search(\"\\s+\",\"2abc\\n\\t     czx456za&sfd\"))\r\n# print(re.findall(\"\\s\",\"2a\\nbc@\\t#abc$zx456za&sfd\"))\r\n# #分组匹配\r\n# print(re.search(\"(?P<id>[0-9]+)\",\"abcs12345%15\").groupdict())\r\n# print(re.search(\"(?P<id>[0-9]+)\",\"abcs12345%15\").group())\r\n# print(re.search(\"(?P<id>[0-9]+)\",\"abcs12345%15\").group)\r\n# print(re.search(\"(?P<name>[a-z]+)(?P<age>[0-9])\",\"abcs12345%15\").groupdict())\r\n# print(re.search(\"(?P<name>[a-z]+)(?P<age>[0-9])\",\"abcs12345%15\").group(\"name\"))\r\n\r\n# 正则地址及身份证号\r\n# splita\r\n# splitall\r\n# 使用数字分割\r\n# print(re.split(\"[0-9]+\",\"abc 12de3f45h68\"))\r\n# #sub替换:count=2替换多少次\r\n# print(re.sub(\"[0-9]+\",\"**\",\"12sad1654asdf143e5r4g3a5e4g35\",count=2))\r\n# print(re.search(r\"\\\\\",r\"sd1321\\\\\\65465asdf\"))\r\n# print(re.sub(r\"\\\\\",r\"\\\\\",r\"sd1321\\\\65465asdf\",count=1))\r\n# #忽略大小写\r\n# print(re.findall(\"[a-z]+\",\"sd1321\\\\65465Aasdf\",flags=re.I))\r\n#\r\n# #\r\n# print(re.search(\"^a\",\"\\nabc\\n123\"))\r\n# print(re.search(\"^a+\",\"\\nabc\\na123\",flags=re.M))\r\n# print(re.search(\".+\\\\d+\",\"\\nabc\\na123\",flags=re.M))\r\n# print(re.search(\".+\",\"\\nabc\\na123\",flags=re.S))\r\n# print(re.search(\".+\\D+\",\"\\nabc\\na123\"))\r\n\r\n\r\n# 没匹配到返回None\r\n# >>><re.Match object; span=(0, 5), match='zhang'>\r\n\r\n\r\n\"\"\"\r\n1.来发一个简单的python计算机\r\n2.实现加减乘除及括号优先级解析\r\n    用户输入1-2*((60-30+(-40/50)*(9-285/3+7/3*99/4*2998+10*568/14))-(-4*3)/(16-3*2))\r\n    等类似公式后，必须自己解析里面的(),+,-,*,/符号和公式（不能调用eval等类似功能偷懒实现）\r\n    运行得出结果必须正确\r\n\"\"\"\r\n\r\na = '''SELECT SUM\r\n\t( money ) sum_money,\r\n\tCOUNT ( money ) [order],\r\n\t(\r\n\tSELECT COUNT\r\n\t\t( * ) + (\r\n\t\tSELECT COUNT\r\n\t\t\t( * ) \r\n\t\tFROM\r\n\t\t\tbiz_wallet_record \r\n\t\tWHERE\r\n\t\t\tpay_time >= ( SELECT CONVERT ( VARCHAR, GETDATE( ), 23 ) + ' 00:00:00' ) \r\n\t\t\tAND buy_type = 11 \r\n\t\t) \r\n\tFROM\r\n\t\tbiz_order \r\n\tWHERE\r\n\t\tcreate_time >= ( SELECT CONVERT ( VARCHAR, GETDATE( ), 23 ) + ' 00:00:00' ) \r\n\t\tAND status = 1 \r\n\t\tAND currency = 0 \r\n\t) vip,\r\n\t(\r\n\tSELECT COUNT\r\n\t\t( sex ) \r\n\tFROM\r\n\t\tbiz_user \r\n\tWHERE\r\n\t\tcreate_time >= ( SELECT CONVERT ( VARCHAR, GETDATE( ), 23 ) + ' 00:00:00' ) \r\n\t\tAND status = 4 \r\n\t) count_user \r\nFROM\r\n\tbiz_order \r\nWHERE\r\n\tcreate_time >= ( SELECT CONVERT ( VARCHAR, GETDATE( ), 23 ) + ' 00:00:00' ) \r\n\tAND status = 1;'''\r\n\r\nfrom test_server.data.sql import sql_select\r\n\r\na = sql_select(a)\r\n\r\ndata = {'money':a[0][0],'order':a[0][1],'vip':a[0][2],'user':a[0][3]}\r\nprint(data)\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/appium_android/TestCase/test.py	(revision 0d2e5d7f57e5c835548a70db39e5048f3beaeacb)
++++ test_server/appium_android/TestCase/test.py	(date 1612617237487)
+@@ -43,7 +43,7 @@
+ # print(re.match(r"^[a-z]|[A-Z]|_", a))
+ # print(len(re.findall(r"[a-z]|[A-Z]|_|-|[0-9]", a)))
+ 
+-print(re.match(r"(^[a-zA-Z_])([a-zA-Z0-9_-]{5,19})+$", a))
++# print(re.match(r"(^[a-zA-Z_])([a-zA-Z0-9_-]{5,19})+$", a))
+ 
+ # print(len(a))
+ 
+@@ -129,7 +129,7 @@
+     运行得出结果必须正确
+ """
+ 
+-a = '''SELECT SUM
++'''SELECT SUM
+ 	( money ) sum_money,
+ 	COUNT ( money ) [order],
+ 	(
+@@ -165,9 +165,9 @@
+ 	create_time >= ( SELECT CONVERT ( VARCHAR, GETDATE( ), 23 ) + ' 00:00:00' ) 
+ 	AND status = 1;'''
+ 
+-from test_server.data.sql import sql_select
+-
+-a = sql_select(a)
+-
+-data = {'money':a[0][0],'order':a[0][1],'vip':a[0][2],'user':a[0][3]}
+-print(data)
++# from test_server.data.sql import sql_select
++#
++# a = sql_select(a)
++#
++# data = {'money':a[0][0],'order':a[0][1],'vip':a[0][2],'user':a[0][3]}
++# print(data)

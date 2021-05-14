@@ -1,0 +1,235 @@
+Index: test_server/API_request/mian_run.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/API_request/mian_run.py	(revision 2a04c01fde505c49d9000d5ff134c8a8d3520f10)
++++ test_server/API_request/mian_run.py	(date 1620459948830)
+@@ -1,0 +1,18 @@
++from test_server.API_request.data.get_parameter import get_parameter
++from test_server.API_request.util.request_fun import fron_data
++
++import json
++def	get_request_data(port_path):
++	url = 'http://wl.test.zyb56.cn' + port_path
++	return fron_data(url,get_parameter(port_path))
++
++
++
++
++if __name__ == '__main__':
++	a = get_request_data('/api/login/wllogin')
++	print(a)
++	print(type(a))
++	print(type(json.loads(a)))
++	print(len(a))
++
+Index: test_server/API_request/data/get_parameter.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/API_request/data/get_parameter.py	(revision 2a04c01fde505c49d9000d5ff134c8a8d3520f10)
++++ test_server/API_request/data/get_parameter.py	(date 1620459692632)
+@@ -1,0 +1,25 @@
++
++
++from test_server.API_request.util.run_sql import run_sql
++def get_parameter(port_path):
++	sql = '''
++	SELECT parameter_key,parameter_value FROM port_parameter WHERE port_path = '{}';
++	'''.format(port_path)
++	data = run_sql(sql)
++	re_data = dict()
++	for i in data:
++		re_data[i['parameter_key']] = i['parameter_value']
++	return re_data
++if __name__ == '__main__':
++	print(get_parameter('/api/login/wllogin'))
++
++
++
++
++'''
++[{'parameter_key': 'username', 'parameter_value': 'XLM0042'}, 
++ {'parameter_key': 'pwd', 'parameter_value': '123456'}, 
++ {'parameter_key': 'cToken', 'parameter_value': '4931374c-ba4d-4127-91c4-036e891fa1bd'}, 
++ {'parameter_key': 'captcha', 'parameter_value': '6666'}, 
++ {'parameter_key': 'isLongLogin', 'parameter_value': '0'}]
++'''
+\ No newline at end of file
+Index: test_server/API_request/util/request_fun.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/API_request/util/request_fun.py	(revision 2a04c01fde505c49d9000d5ff134c8a8d3520f10)
++++ test_server/API_request/util/request_fun.py	(date 1620459721596)
+@@ -1,0 +1,23 @@
++
++from test_server.API_request.util.responseJSON import *
++import requests
++
++
++def fron_data(url, payload):
++	try:
++		if type(payload) != dict:
++			return responseJSON_0(msg='请求参数非正确的json值！')
++		headers = {
++			'Cookie': 'SESSION=83325336-931c-4191-a1ec-df3cbd4667ca'
++		}
++		response = requests.request("POST", url, headers=headers, data=payload)
++		return response.text
++		# print(response.text)
++	except Exception as ERR:
++		print(responseJSON_0(msg='fron_data方法异常！',data=ERR))
++
++if __name__ == '__main__':
++	dict_s = {'username': 'XLM0042', 'pwd': '123456', 'cToken': '4931374c-ba4d-4127-91c4-036e891fa1bd', 'captcha': '6666', 'isLongLogin': '0'}
++	fron_data('http://wl.test.zyb56.cn/api/login/wllogin',dict_s)
++
++
+Index: test_server/API_request/util/run_sql.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- test_server/API_request/util/run_sql.py	(revision 2a04c01fde505c49d9000d5ff134c8a8d3520f10)
++++ test_server/API_request/util/run_sql.py	(date 1620459743935)
+@@ -1,0 +1,7 @@
++from test_server.data.mysqls import Data
++def	run_sql(sql):
++	sql_ = Data().query
++	return sql_('localhost',sql)
++
++if __name__ == '__main__':
++	print(run_sql("SELECT parameter_key,parameter_value FROM port_parameter WHERE port_path = '/api/login/wllogin';"))
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"BranchesTreeState\">\r\n    <expand>\r\n      <path>\r\n        <item name=\"ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n        <item name=\"LOCAL_ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n      </path>\r\n      <path>\r\n        <item name=\"ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n        <item name=\"REMOTE_ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n      </path>\r\n      <path>\r\n        <item name=\"ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n        <item name=\"REMOTE_ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n        <item name=\"GROUP_NODE:origin\" type=\"e8cecc67:BranchNodeDescriptor\" />\r\n      </path>\r\n    </expand>\r\n    <select />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"a9de5cc0-0f1b-4004-a870-0b88027a6076\" name=\"Default Changelist\" comment=\"1.1\">\r\n      <change afterPath=\"$PROJECT_DIR$/jy_server/Modules/TimingTask.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/test_server/appium_android/test_weixin.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/test_server/appium_android/test_weixin.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/test_server/appium_android/utils/is_true\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/test_server/appium_android/utils/is_true\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/test_server/data/mysqls.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/test_server/data/mysqls.py\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Python Script\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"PREVIOUS_COMMIT_AUTHORS\">\r\n      <list>\r\n        <option value=\"xiaoawuu &lt;858239977@qq.com&gt;\" />\r\n      </list>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"JupyterTrust\" id=\"d86eac75-5285-4a7a-b15f-74ff779ae337\" />\r\n  <component name=\"ProjectId\" id=\"1h5ssOOT8B0aILQyJRV5ToZNUAC\" />\r\n  <component name=\"ProjectLevelVcsManager\">\r\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">\r\n    <property name=\"RunOnceActivity.OpenProjectViewOnStart\" value=\"true\" />\r\n    <property name=\"RunOnceActivity.ShowReadmeOnStart\" value=\"true\" />\r\n    <property name=\"WebServerToolWindowFactoryState\" value=\"false\" />\r\n    <property name=\"last_opened_file_path\" value=\"$PROJECT_DIR$\" />\r\n    <property name=\"node.js.detected.package.eslint\" value=\"true\" />\r\n    <property name=\"node.js.detected.package.tslint\" value=\"true\" />\r\n    <property name=\"node.js.path.for.package.eslint\" value=\"project\" />\r\n    <property name=\"node.js.path.for.package.tslint\" value=\"project\" />\r\n    <property name=\"node.js.selected.package.eslint\" value=\"(autodetect)\" />\r\n    <property name=\"node.js.selected.package.tslint\" value=\"(autodetect)\" />\r\n    <property name=\"restartRequiresConfirmation\" value=\"false\" />\r\n    <property name=\"settings.editor.selected.configurable\" value=\"com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable\" />\r\n  </component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\test_s\\test_server\\appium_android\\ElementModules\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Python.TimingTask\">\r\n    <configuration name=\"Checking\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"test_server\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/test_server/tmsPay\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/test_server/tmsPay/Checking.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"Initialize\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"test_server\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/test_server/tmsPay\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/test_server/tmsPay/Initialize.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"TimingTask\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"test_server\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/jy_server/Modules\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/jy_server/Modules/TimingTask.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"print_ (1)\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"test_server\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/test_server/tmsPay/utils\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/test_server/tmsPay/utils/print_.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"sql\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"test_server\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/test_server/data\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/test_server/data/sql.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Python.TimingTask\" />\r\n        <item itemvalue=\"Python.sql\" />\r\n        <item itemvalue=\"Python.Checking\" />\r\n        <item itemvalue=\"Python.Initialize\" />\r\n        <item itemvalue=\"Python.print_ (1)\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"false\" />\r\n  <component name=\"SvnConfiguration\">\r\n    <configuration />\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"a9de5cc0-0f1b-4004-a870-0b88027a6076\" name=\"Default Changelist\" comment=\"\" />\r\n      <created>1599312493383</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1599312493383</updated>\r\n      <workItem from=\"1599312494514\" duration=\"2687000\" />\r\n      <workItem from=\"1601954951385\" duration=\"1255000\" />\r\n      <workItem from=\"1601964105913\" duration=\"643000\" />\r\n      <workItem from=\"1601971058539\" duration=\"1800000\" />\r\n      <workItem from=\"1601973272213\" duration=\"31000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"1.1\">\r\n      <created>1601955447908</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1601955447908</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"1.1\">\r\n      <created>1601975883228</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1601975883228</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"1.1\">\r\n      <created>1602083075358</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1602083075358</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"1.1\">\r\n      <created>1602083445627</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1602083445627</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"1.2\">\r\n      <created>1604577404563</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1604577404563</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"1.2\">\r\n      <created>1604729306446</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1604729306447</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00007\" summary=\"1.2\">\r\n      <created>1604729364496</created>\r\n      <option name=\"number\" value=\"00007\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1604729364496</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00008\" summary=\"1.2\">\r\n      <created>1604745055528</created>\r\n      <option name=\"number\" value=\"00008\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00008\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1604745055528</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00009\" summary=\"1.2\">\r\n      <created>1604916470504</created>\r\n      <option name=\"number\" value=\"00009\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00009\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1604916470504</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"10\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n    <option name=\"oldMeFiltersMigrated\" value=\"true\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"1.1\" />\r\n    <MESSAGE value=\"1.2\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"1.2\" />\r\n  </component>\r\n  <component name=\"WindowStateProjectService\">\r\n    <state x=\"586\" y=\"221\" key=\"#Inspections\" timestamp=\"1604892326687\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state x=\"586\" y=\"198\" key=\"#Inspections/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1602063862207\" />\r\n    <state x=\"586\" y=\"221\" key=\"#Inspections/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604892326687\" />\r\n    <state x=\"640\" y=\"255\" key=\"#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog\" timestamp=\"1601955171273\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"640\" y=\"255\" key=\"#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1601955171273\" />\r\n    <state x=\"558\" y=\"97\" key=\"CommitChangelistDialog2\" timestamp=\"1604916462005\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state x=\"558\" y=\"87\" key=\"CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1601955446940\" />\r\n    <state x=\"558\" y=\"97\" key=\"CommitChangelistDialog2/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604916462005\" />\r\n    <state x=\"92\" y=\"92\" width=\"1736\" height=\"856\" key=\"DiffContextDialog\" timestamp=\"1601956206332\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"92\" y=\"92\" width=\"1736\" height=\"856\" key=\"DiffContextDialog/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1601956206332\" />\r\n    <state x=\"740\" y=\"335\" key=\"FileChooserDialogImpl\" timestamp=\"1603959086384\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state x=\"740\" y=\"335\" key=\"FileChooserDialogImpl/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1603959086384\" />\r\n    <state width=\"1899\" height=\"245\" key=\"GridCell.Tab.0.bottom\" timestamp=\"1608213763415\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1899\" height=\"245\" key=\"GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1608213763415\" />\r\n    <state width=\"1899\" height=\"293\" key=\"GridCell.Tab.0.bottom/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1605004895802\" />\r\n    <state width=\"1899\" height=\"245\" key=\"GridCell.Tab.0.center\" timestamp=\"1608213763414\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1899\" height=\"245\" key=\"GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1608213763414\" />\r\n    <state width=\"1899\" height=\"293\" key=\"GridCell.Tab.0.center/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1605004895802\" />\r\n    <state width=\"1899\" height=\"245\" key=\"GridCell.Tab.0.left\" timestamp=\"1608213763414\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1899\" height=\"245\" key=\"GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1608213763414\" />\r\n    <state width=\"1899\" height=\"293\" key=\"GridCell.Tab.0.left/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1605004895802\" />\r\n    <state width=\"1899\" height=\"245\" key=\"GridCell.Tab.0.right\" timestamp=\"1608213763415\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1899\" height=\"245\" key=\"GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1608213763415\" />\r\n    <state width=\"1899\" height=\"293\" key=\"GridCell.Tab.0.right/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1605004895802\" />\r\n    <state width=\"1899\" height=\"328\" key=\"GridCell.Tab.1.bottom\" timestamp=\"1604733885773\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state width=\"1899\" height=\"348\" key=\"GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1602065701710\" />\r\n    <state width=\"1899\" height=\"328\" key=\"GridCell.Tab.1.bottom/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604733885773\" />\r\n    <state width=\"1899\" height=\"328\" key=\"GridCell.Tab.1.center\" timestamp=\"1604733885773\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state width=\"1899\" height=\"348\" key=\"GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1602065701710\" />\r\n    <state width=\"1899\" height=\"328\" key=\"GridCell.Tab.1.center/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604733885773\" />\r\n    <state width=\"1899\" height=\"328\" key=\"GridCell.Tab.1.left\" timestamp=\"1604733885773\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state width=\"1899\" height=\"348\" key=\"GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1602065701710\" />\r\n    <state width=\"1899\" height=\"328\" key=\"GridCell.Tab.1.left/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604733885773\" />\r\n    <state width=\"1899\" height=\"328\" key=\"GridCell.Tab.1.right\" timestamp=\"1604733885773\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state width=\"1899\" height=\"348\" key=\"GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1602065701710\" />\r\n    <state width=\"1899\" height=\"328\" key=\"GridCell.Tab.1.right/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604733885773\" />\r\n    <state x=\"318\" y=\"98\" key=\"MergeDialog\" timestamp=\"1601955403821\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"318\" y=\"98\" key=\"MergeDialog/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1601955403821\" />\r\n    <state x=\"445\" y=\"444\" key=\"SettingsEditor\" timestamp=\"1604731902815\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state x=\"461\" y=\"164\" key=\"SettingsEditor/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1602063566279\" />\r\n    <state x=\"445\" y=\"444\" key=\"SettingsEditor/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604731902815\" />\r\n    <state x=\"806\" y=\"432\" key=\"VCS.ChangelistChooser\" timestamp=\"1601955397798\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"806\" y=\"432\" key=\"VCS.ChangelistChooser/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1601955397798\" />\r\n    <state x=\"552\" y=\"282\" key=\"Vcs.Push.Dialog.v2\" timestamp=\"1604916507159\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state x=\"552\" y=\"253\" key=\"Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1602083095387\" />\r\n    <state x=\"552\" y=\"282\" key=\"Vcs.Push.Dialog.v2/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604916507159\" />\r\n    <state x=\"640\" y=\"404\" key=\"com.intellij.ide.util.TipDialog\" timestamp=\"1604733817647\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state x=\"640\" y=\"404\" key=\"com.intellij.ide.util.TipDialog/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604733817647\" />\r\n    <state x=\"771\" y=\"167\" key=\"com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser\" timestamp=\"1602048509243\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"771\" y=\"167\" key=\"com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1602048509243\" />\r\n    <state x=\"897\" y=\"445\" key=\"com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2\" timestamp=\"1601955272197\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"897\" y=\"445\" key=\"com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1601955272197\" />\r\n    <state x=\"623\" y=\"255\" width=\"672\" height=\"678\" key=\"search.everywhere.popup\" timestamp=\"1604890794979\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1160\" />\r\n    </state>\r\n    <state x=\"623\" y=\"255\" width=\"672\" height=\"678\" key=\"search.everywhere.popup/0.0.1920.1160@0.0.1920.1160\" timestamp=\"1604890794979\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/workspace.xml	(revision 2a04c01fde505c49d9000d5ff134c8a8d3520f10)
++++ .idea/workspace.xml	(date 1620997375916)
+@@ -20,11 +20,10 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="a9de5cc0-0f1b-4004-a870-0b88027a6076" name="Default Changelist" comment="1.1">
+-      <change afterPath="$PROJECT_DIR$/jy_server/Modules/TimingTask.py" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/test_server/appium_android/test_weixin.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/appium_android/test_weixin.py" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/test_server/appium_android/utils/is_true" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/appium_android/utils/is_true" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/test_server/data/mysqls.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/data/mysqls.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/test_server/API_request/data/get_parameter.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/API_request/data/get_parameter.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/test_server/API_request/util/request_fun.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/API_request/util/request_fun.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/test_server/API_request/util/run_sql.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_server/API_request/util/run_sql.py" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -294,101 +293,9 @@
+     <option name="LAST_COMMIT_MESSAGE" value="1.2" />
+   </component>
+   <component name="WindowStateProjectService">
+-    <state x="586" y="221" key="#Inspections" timestamp="1604892326687">
+-      <screen x="0" y="0" width="1920" height="1160" />
+-    </state>
+-    <state x="586" y="198" key="#Inspections/0.0.1920.1040@0.0.1920.1040" timestamp="1602063862207" />
+-    <state x="586" y="221" key="#Inspections/0.0.1920.1160@0.0.1920.1160" timestamp="1604892326687" />
+-    <state x="640" y="255" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1601955171273">
+-      <screen x="0" y="0" width="1920" height="1040" />
+-    </state>
+-    <state x="640" y="255" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1601955171273" />
+-    <state x="558" y="97" key="CommitChangelistDialog2" timestamp="1604916462005">
+-      <screen x="0" y="0" width="1920" height="1160" />
+-    </state>
+-    <state x="558" y="87" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1601955446940" />
+-    <state x="558" y="97" key="CommitChangelistDialog2/0.0.1920.1160@0.0.1920.1160" timestamp="1604916462005" />
+-    <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1601956206332">
+-      <screen x="0" y="0" width="1920" height="1040" />
+-    </state>
+-    <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1601956206332" />
+-    <state x="740" y="335" key="FileChooserDialogImpl" timestamp="1603959086384">
+-      <screen x="0" y="0" width="1920" height="1160" />
+-    </state>
+-    <state x="740" y="335" key="FileChooserDialogImpl/0.0.1920.1160@0.0.1920.1160" timestamp="1603959086384" />
+-    <state width="1899" height="245" key="GridCell.Tab.0.bottom" timestamp="1608213763415">
++    <state x="763" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1620459064677">
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+-    <state width="1899" height="245" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1608213763415" />
+-    <state width="1899" height="293" key="GridCell.Tab.0.bottom/0.0.1920.1160@0.0.1920.1160" timestamp="1605004895802" />
+-    <state width="1899" height="245" key="GridCell.Tab.0.center" timestamp="1608213763414">
+-      <screen x="0" y="0" width="1920" height="1040" />
+-    </state>
+-    <state width="1899" height="245" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1608213763414" />
+-    <state width="1899" height="293" key="GridCell.Tab.0.center/0.0.1920.1160@0.0.1920.1160" timestamp="1605004895802" />
+-    <state width="1899" height="245" key="GridCell.Tab.0.left" timestamp="1608213763414">
+-      <screen x="0" y="0" width="1920" height="1040" />
+-    </state>
+-    <state width="1899" height="245" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1608213763414" />
+-    <state width="1899" height="293" key="GridCell.Tab.0.left/0.0.1920.1160@0.0.1920.1160" timestamp="1605004895802" />
+-    <state width="1899" height="245" key="GridCell.Tab.0.right" timestamp="1608213763415">
+-      <screen x="0" y="0" width="1920" height="1040" />
+-    </state>
+-    <state width="1899" height="245" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1608213763415" />
+-    <state width="1899" height="293" key="GridCell.Tab.0.right/0.0.1920.1160@0.0.1920.1160" timestamp="1605004895802" />
+-    <state width="1899" height="328" key="GridCell.Tab.1.bottom" timestamp="1604733885773">
+-      <screen x="0" y="0" width="1920" height="1160" />
+-    </state>
+-    <state width="1899" height="348" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1602065701710" />
+-    <state width="1899" height="328" key="GridCell.Tab.1.bottom/0.0.1920.1160@0.0.1920.1160" timestamp="1604733885773" />
+-    <state width="1899" height="328" key="GridCell.Tab.1.center" timestamp="1604733885773">
+-      <screen x="0" y="0" width="1920" height="1160" />
+-    </state>
+-    <state width="1899" height="348" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1602065701710" />
+-    <state width="1899" height="328" key="GridCell.Tab.1.center/0.0.1920.1160@0.0.1920.1160" timestamp="1604733885773" />
+-    <state width="1899" height="328" key="GridCell.Tab.1.left" timestamp="1604733885773">
+-      <screen x="0" y="0" width="1920" height="1160" />
+-    </state>
+-    <state width="1899" height="348" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1602065701710" />
+-    <state width="1899" height="328" key="GridCell.Tab.1.left/0.0.1920.1160@0.0.1920.1160" timestamp="1604733885773" />
+-    <state width="1899" height="328" key="GridCell.Tab.1.right" timestamp="1604733885773">
+-      <screen x="0" y="0" width="1920" height="1160" />
+-    </state>
+-    <state width="1899" height="348" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1602065701710" />
+-    <state width="1899" height="328" key="GridCell.Tab.1.right/0.0.1920.1160@0.0.1920.1160" timestamp="1604733885773" />
+-    <state x="318" y="98" key="MergeDialog" timestamp="1601955403821">
+-      <screen x="0" y="0" width="1920" height="1040" />
+-    </state>
+-    <state x="318" y="98" key="MergeDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1601955403821" />
+-    <state x="445" y="444" key="SettingsEditor" timestamp="1604731902815">
+-      <screen x="0" y="0" width="1920" height="1160" />
+-    </state>
+-    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1602063566279" />
+-    <state x="445" y="444" key="SettingsEditor/0.0.1920.1160@0.0.1920.1160" timestamp="1604731902815" />
+-    <state x="806" y="432" key="VCS.ChangelistChooser" timestamp="1601955397798">
+-      <screen x="0" y="0" width="1920" height="1040" />
+-    </state>
+-    <state x="806" y="432" key="VCS.ChangelistChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1601955397798" />
+-    <state x="552" y="282" key="Vcs.Push.Dialog.v2" timestamp="1604916507159">
+-      <screen x="0" y="0" width="1920" height="1160" />
+-    </state>
+-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1602083095387" />
+-    <state x="552" y="282" key="Vcs.Push.Dialog.v2/0.0.1920.1160@0.0.1920.1160" timestamp="1604916507159" />
+-    <state x="640" y="404" key="com.intellij.ide.util.TipDialog" timestamp="1604733817647">
+-      <screen x="0" y="0" width="1920" height="1160" />
+-    </state>
+-    <state x="640" y="404" key="com.intellij.ide.util.TipDialog/0.0.1920.1160@0.0.1920.1160" timestamp="1604733817647" />
+-    <state x="771" y="167" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1602048509243">
+-      <screen x="0" y="0" width="1920" height="1040" />
+-    </state>
+-    <state x="771" y="167" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1602048509243" />
+-    <state x="897" y="445" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1601955272197">
+-      <screen x="0" y="0" width="1920" height="1040" />
+-    </state>
+-    <state x="897" y="445" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1601955272197" />
+-    <state x="623" y="255" width="672" height="678" key="search.everywhere.popup" timestamp="1604890794979">
+-      <screen x="0" y="0" width="1920" height="1160" />
+-    </state>
+-    <state x="623" y="255" width="672" height="678" key="search.everywhere.popup/0.0.1920.1160@0.0.1920.1160" timestamp="1604890794979" />
++    <state x="763" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1620459064677" />
+   </component>
+ </project>
+\ No newline at end of file
