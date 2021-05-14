@@ -36,6 +36,7 @@ def fron_data(url, payload):
 
 
 if __name__ == '__main__':
-	dict_s = {'username': 'XLM0042', 'pwd': '123456', 'cToken': '4931374c-ba4d-4127-91c4-036e891fa1bd',
-			  'captcha': '6666', 'isLongLogin': '0'}
-	print(fron_data('http://wl.test.zyb56.cn/api/login/wllogin', dict_s))
+	# dict_s = {'username': 'XLM0042', 'pwd': '123456', 'cToken': '4931374c-ba4d-4127-91c4-036e891fa1bd',
+	# 		  'captcha': '6666', 'isLongLogin': '0'}
+	# print(fron_data('http://wl.test.zyb56.cn/api/login/wllogin', dict_s))
+	print(fron_data('http://wl.test.zyb56.cn/api/captcha/captcha',{}))

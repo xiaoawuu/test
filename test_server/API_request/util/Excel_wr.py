@@ -16,7 +16,7 @@ def Excel_r():
 			if i == 0:  # 跳过第一行
 				continue
 			config[table2.row_values(i)[:2][0]] = table2.row_values(i)[:2][1]
-		print('配置数据',config)
+		# print('配置数据',config)
 		nrows = table1.nrows  # 获取表的行数
 		for i in range(nrows):  # 循环逐行打
 			if i == 0:  # 跳过第一行
@@ -24,15 +24,25 @@ def Excel_r():
 			data_list = table1.row_values(i)[:4]  # 取前四列
 			print(data_list)
 			responses = test_port_from_data(config['url']+data_list[0],json.loads(data_list[3]))
+
 			if responses['code'] == 1:
-				w = set_variable(data_list[0],json.loads(data_list[3]))
-				print(w)
+				if data_list[2] != '':
+					dict_s = dict()
+					for i in data_list[2].split(','):
+						dict_s[i.split('=')[0]] = eval(i.split('=')[1])
+					print(dict_s)
+					set_variable(data_list[0],dict_s)
+				list_s = data_list[2].split(',')
+				print(list_s)
 			else:
 				print(False)
 
-	except xlrd.biffh.XLRDError:
-		return responseJSON_0(msg='接口只支持.xls文件！')
-
+	except xlrd.biffh.XLRDError as ERR:
+		return responseJSON_0(msg='接口只支持.xls文件！',data=ERR)
+	except FileNotFoundError as ERR:
+		return responseJSON_0(msg='文件路径打不开！',data=ERR)
 
 if __name__ == '__main__':
 	Excel_r()
+
+print(''.split(','))
