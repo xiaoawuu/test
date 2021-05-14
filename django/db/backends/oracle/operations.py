@@ -254,7 +254,7 @@ END;
             # cx_Oracle < 6.3 returns None, >= 6.3 returns empty list.
             raise DatabaseError(
                 'The database did not return a new row id. Probably "ORA-1403: '
-                'no data found" was raised internally but was hidden by the '
+                'no table_s found" was raised internally but was hidden by the '
                 'Oracle OCI library (see https://code.djangoproject.com/ticket/28859).'
             )
         # cx_Oracle < 7 returns value, >= 7 returns list with single value.

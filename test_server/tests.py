@@ -24,8 +24,8 @@ def tests():
 # 	for i in list:
 # 		print('循环：',i)
 # 		sql = "SELECT freight_id FROM tms_wl_freight WHERE first_order_id ='{}';".format(i)
-# 		data = mysqls.Data().query('tms_test', sql)
-# 		dict[i] = data[0]['freight_id']
+# 		table_s = mysqls.Data().query('tms_test', sql)
+# 		dict[i] = table_s[0]['freight_id']
 # 	return dict
 # # print(max('4','0','1'))
 #
@@ -41,11 +41,11 @@ def tests():
 # 为了方便，避免忘记close掉这个文件对象，可以用下面这种方式替代
 # def read():
 # 	print(123456789)
-# 	data = '123456789asdf'
+# 	table_s = '123456789asdf'
 # 	try:
 #
-# 		with open('data.txt', "a", encoding="utf-8") as f:  # 设置文件对象
-# 			f.write(str(data) + "\n")  # 可以是随便对文件的操作
+# 		with open('table_s.txt', "a", encoding="utf-8") as f:  # 设置文件对象
+# 			f.write(str(table_s) + "\n")  # 可以是随便对文件的操作
 # 			return True
 # 	except Exception as e:
 # 		return '异常：{}'.format(e)
@@ -87,7 +87,7 @@ def is_num_by_except(num):
 
 
 def update_base64():
-    # data = sql_select("SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile LIKE 'MT%';")
+    # table_s = sql_select("SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile LIKE 'MT%';")
     data = sql_select("SELECT id,recommend_mobile FROM biz_invite_code WHERE recommend_mobile != '' AND id > 7500;")
     for i in data:
         if not is_num_by_except(i[1]):

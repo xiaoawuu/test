@@ -131,7 +131,7 @@ class DatabaseWrapper(BaseDatabaseWrapper):
         'UUIDField': 'char(32)',
     }
 
-    # For these data types:
+    # For these table_s types:
     # - MySQL < 8.0.13 and MariaDB < 10.2.1 don't accept default values and
     #   implicitly treat them as nullable
     # - all versions of MySQL and MariaDB don't support full width database

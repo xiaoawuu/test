@@ -2,7 +2,7 @@
 from test_server.requestPort import requestsPort
 def getToken(user,pwd):
 	url = '/api/captcha/captcha'
-	token = requestsPort(url,{'':''})['data']['cToken']
+	token = requestsPort(url,{'':''})['table_s']['cToken']
 	wlLogin = {
 	  "username": user,
 	  "pwd": pwd,

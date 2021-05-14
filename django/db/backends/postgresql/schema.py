@@ -19,7 +19,7 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
     sql_delete_index = "DROP INDEX IF EXISTS %(name)s"
     sql_delete_index_concurrently = "DROP INDEX CONCURRENTLY IF EXISTS %(name)s"
 
-    # Setting the constraint to IMMEDIATE to allow changing data in the same
+    # Setting the constraint to IMMEDIATE to allow changing table_s in the same
     # transaction.
     sql_create_column_inline_fk = (
         'CONSTRAINT %(name)s REFERENCES %(to_table)s(%(to_column)s)%(deferrable)s'
@@ -76,7 +76,7 @@ class DatabaseSchemaEditor(BaseDatabaseSchemaEditor):
 
     def _alter_column_type_sql(self, model, old_field, new_field, new_type):
         self.sql_alter_column_type = 'ALTER COLUMN %(column)s TYPE %(type)s'
-        # Cast when data type changed.
+        # Cast when table_s type changed.
         if self._field_data_type(old_field) != self._field_data_type(new_field):
             self.sql_alter_column_type += ' USING %(column)s::%(type)s'
         # Make ALTER TYPE with SERIAL make sense.

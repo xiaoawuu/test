@@ -5,10 +5,10 @@
  CoordTransform: Used for coordinate transformations from one spatial
   reference system to another.
 
- Driver: Wraps an OGR data source driver.
+ Driver: Wraps an OGR table_s source driver.
 
- DataSource: Wrapper for the OGR data source object, supports
-  OGR-supported data sources.
+ DataSource: Wrapper for the OGR table_s source object, supports
+  OGR-supported table_s sources.
 
  Envelope: A ctypes structure for bounding boxes (GDAL library
   not required).

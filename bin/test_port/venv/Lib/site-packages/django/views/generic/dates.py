@@ -17,7 +17,7 @@ from django.views.generic.list import (
 
 
 class YearMixin:
-    """Mixin for views manipulating year-based data."""
+    """Mixin for views manipulating year-based table_s."""
     year_format = '%Y'
     year = None
 
@@ -29,7 +29,7 @@ class YearMixin:
         return self.year_format
 
     def get_year(self):
-        """Return the year for which this view should display data."""
+        """Return the year for which this view should display table_s."""
         year = self.year
         if year is None:
             try:
@@ -66,7 +66,7 @@ class YearMixin:
 
 
 class MonthMixin:
-    """Mixin for views manipulating month-based data."""
+    """Mixin for views manipulating month-based table_s."""
     month_format = '%b'
     month = None
 
@@ -78,7 +78,7 @@ class MonthMixin:
         return self.month_format
 
     def get_month(self):
-        """Return the month for which this view should display data."""
+        """Return the month for which this view should display table_s."""
         month = self.month
         if month is None:
             try:
@@ -118,7 +118,7 @@ class MonthMixin:
 
 
 class DayMixin:
-    """Mixin for views manipulating day-based data."""
+    """Mixin for views manipulating day-based table_s."""
     day_format = '%d'
     day = None
 
@@ -130,7 +130,7 @@ class DayMixin:
         return self.day_format
 
     def get_day(self):
-        """Return the day for which this view should display data."""
+        """Return the day for which this view should display table_s."""
         day = self.day
         if day is None:
             try:
@@ -164,7 +164,7 @@ class DayMixin:
 
 
 class WeekMixin:
-    """Mixin for views manipulating week-based data."""
+    """Mixin for views manipulating week-based table_s."""
     week_format = '%U'
     week = None
 
@@ -176,7 +176,7 @@ class WeekMixin:
         return self.week_format
 
     def get_week(self):
-        """Return the week for which this view should display data."""
+        """Return the week for which this view should display table_s."""
         week = self.week
         if week is None:
             try:
@@ -227,7 +227,7 @@ class WeekMixin:
 
 
 class DateMixin:
-    """Mixin class for views manipulating date-based data."""
+    """Mixin class for views manipulating date-based table_s."""
     date_field = None
     allow_future = False
 

@@ -31,13 +31,25 @@ class Data():
         finally:
             self.conn.close()
 
-# if __name__ == '__main__':
-#     sql_ = Data().query
-#     sql = '''
-#     DELETE FROM zyb_customer WHERE id = '54'; DELETE FROM zyb_driver_person_cert WHERE user_id = '54';
-#     '''
-#
-#     print(sql_('zyb_test', sql))
+if __name__ == '__main__':
+    sql_ = Data().query
+    sql = '''
+        SELECT
+        driver_mobile,
+        driver_number,
+        loading_date,
+        loading_x_y,
+        unload_x_y,
+        CONCAT(loading_province,loading_city,loading_district,loading_address) a,
+        CONCAT(unload_province,unload_city,unload_district,unload_address) b
+    FROM
+        tms_wl_freight A
+        JOIN tms_wl_order_particulars B ON A.first_order_id = B.first_order_id 
+    WHERE
+        freight_id = 'DO-202103003483';
+    '''
+
+    print(sql_('tms_test', sql))
 
 
 

@@ -79,7 +79,7 @@ class DatabaseOperations(BaseDatabaseOperations):
     def fetch_returned_insert_rows(self, cursor):
         """
         Given a cursor object that has just performed an INSERT...RETURNING
-        statement into a table, return the tuple of returned data.
+        statement into a table, return the tuple of returned table_s.
         """
         return cursor.fetchall()
 

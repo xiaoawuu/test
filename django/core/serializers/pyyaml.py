@@ -65,7 +65,7 @@ class Serializer(PythonSerializer):
 
 
 def Deserializer(stream_or_string, **options):
-    """Deserialize a stream or string of YAML data."""
+    """Deserialize a stream or string of YAML table_s."""
     if isinstance(stream_or_string, bytes):
         stream_or_string = stream_or_string.decode()
     if isinstance(stream_or_string, str):

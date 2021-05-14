@@ -196,10 +196,10 @@ class DeserializedObject:
     """
     A deserialized model.
 
-    Basically a container for holding the pre-saved deserialized data along
-    with the many-to-many data saved with the object.
+    Basically a container for holding the pre-saved deserialized table_s along
+    with the many-to-many table_s saved with the object.
 
-    Call ``save()`` to save the object (with the many-to-many data) to the
+    Call ``save()`` to save the object (with the many-to-many table_s) to the
     database; call ``save(save_m2m=False)`` to save just the object fields
     (and not touch the many-to-many stuff.)
     """
@@ -226,7 +226,7 @@ class DeserializedObject:
                 getattr(self.object, accessor_name).set(object_list)
 
         # prevent a second (possibly accidental) call to save() from saving
-        # the m2m data twice.
+        # the m2m table_s twice.
         self.m2m_data = None
 
     def save_deferred_fields(self, using=None):

@@ -168,7 +168,7 @@ class HashedFilesMixin:
             """
             matched, url = matchobj.groups()
 
-            # Ignore absolute/protocol-relative and data-uri URLs.
+            # Ignore absolute/protocol-relative and table_s-uri URLs.
             if re.match(r'^[a-z]+:', url):
                 return matched
 

@@ -77,7 +77,7 @@ class CookieStorage(BaseStorage):
 
     def _update_cookie(self, encoded_data, response):
         """
-        Either set the cookie with the encoded data if there is any data to
+        Either set the cookie with the encoded table_s if there is any table_s to
         store, or delete the cookie.
         """
         if encoded_data:
@@ -96,14 +96,14 @@ class CookieStorage(BaseStorage):
         Store the messages to a cookie and return a list of any messages which
         could not be stored.
 
-        If the encoded data is larger than ``max_cookie_size``, remove
-        messages until the data fits (these are the messages which are
+        If the encoded table_s is larger than ``max_cookie_size``, remove
+        messages until the table_s fits (these are the messages which are
         returned), and add the not_finished sentinel value to indicate as much.
         """
         unstored_messages = []
         encoded_data = self._encode(messages)
         if self.max_cookie_size:
-            # data is going to be stored eventually by SimpleCookie, which
+            # table_s is going to be stored eventually by SimpleCookie, which
             # adds its own overhead, which we must account for.
             cookie = SimpleCookie()  # create outside the loop
 
@@ -133,8 +133,8 @@ class CookieStorage(BaseStorage):
         Return an encoded version of the messages list which can be stored as
         plain text.
 
-        Since the data will be retrieved from the client-side, the encoded data
-        also contains a hash to ensure that the data was not tampered with.
+        Since the table_s will be retrieved from the client-side, the encoded table_s
+        also contains a hash to ensure that the table_s was not tampered with.
         """
         if messages or encode_empty:
             encoder = MessageEncoder(separators=(',', ':'))
@@ -160,7 +160,7 @@ class CookieStorage(BaseStorage):
                     return json.loads(value, cls=MessageDecoder)
                 except json.JSONDecodeError:
                     pass
-        # Mark the data as used (so it gets removed) since something was wrong
-        # with the data.
+        # Mark the table_s as used (so it gets removed) since something was wrong
+        # with the table_s.
         self.used = True
         return None

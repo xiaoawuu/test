@@ -23,8 +23,8 @@ def addMoney(mobile, money):
 		if float(money) == 0.1:
 			user_id = sql_select("SELECT id FROM biz_user WHERE mobile = {}".format(mobile))[0][0]
 			if status == 2:
-				user_id = vip_status['data'][0]
-				validTime = vip_status['data'][1]
+				user_id = vip_status['table_s'][0]
+				validTime = vip_status['table_s'][1]
 				timeArray = time.strptime(validTime, "%Y-%m-%d %H:%M:%S")
 				timeStamp = int(time.mktime(timeArray))
 				validTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(864000 * money + timeStamp))
@@ -40,8 +40,8 @@ def addMoney(mobile, money):
 
 		# 已开通
 		elif status == 2:
-			user_id = vip_status['data'][0]
-			validTime = vip_status['data'][1]
+			user_id = vip_status['table_s'][0]
+			validTime = vip_status['table_s'][1]
 			timeArray = time.strptime(validTime, "%Y-%m-%d %H:%M:%S")
 			timeStamp = int(time.mktime(timeArray))
 			validTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(2678400 * money + timeStamp))
@@ -49,7 +49,7 @@ def addMoney(mobile, money):
 
 		# 已过期
 		elif status == 3:
-			user_id = vip_status['data'][0]
+			user_id = vip_status['table_s'][0]
 			validTime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(2678400 * money + int(time.time())))
 			return setBizVipRecord(user_id, validTime, money)
 	else:
@@ -58,8 +58,8 @@ def addMoney(mobile, money):
 			return responseJSON_0('充值失败！', '充值金额范围10~4000')
 		sql_exec("exec GiveMeTheMoney %s,%d;" % (mobile, money))
 		bizWallet = getBizWallet(mobile)
-		insert(bizWallet['data'][0][1], 'setBizVipRecord', 'TEST:充值{}个聚源币'.format(money))
+		insert(bizWallet['table_s'][0][1], 'setBizVipRecord', 'TEST:充值{}个聚源币'.format(money))
 		if bizWallet['code'] == 0:
 			return bizWallet
-		return responseJSON_1('充值成功！', '当前余额为{}币'.format(bizWallet['data'][0][0]))
+		return responseJSON_1('充值成功！', '当前余额为{}币'.format(bizWallet['table_s'][0][0]))
 

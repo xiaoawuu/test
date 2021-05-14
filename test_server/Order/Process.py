@@ -12,7 +12,7 @@ class Process():
 		'''
 		：quantity:请求次数
 		：status:状态
-		：data:创单数据
+		：table_s:创单数据
 		:param request:
 		:return:
 		'''
@@ -31,7 +31,7 @@ class Process():
 			login = getToken(self.wlName, self.password)
 			if login['code'] == '1002':
 				return HttpResponse(json.dumps(login))
-			self.wlToken = login['data']['wlToken']
+			self.wlToken = login['table_s']['wlToken']
 			print('token:', self.wlToken)
 			data = Data().query('zyb_test',"SELECT id,bank,number FROM `zyb_pay_bankcard` WHERE bank_authid = {} AND bank_mobile = {} AND del != 1 ORDER BY id DESC LIMIT 1;".format(
 									self.driverData['idCard'], self.driverData['driverMobile']))
@@ -39,19 +39,19 @@ class Process():
 				'''
 				司机是否有银行卡信息
 				'''
-				return HttpResponse(json.dumps({"code": 0, "msg": "司机没有银行卡信息", "data": ""}))
+				return HttpResponse(json.dumps({"code": 0, "msg": "司机没有银行卡信息", "table_s": ""}))
 			count = Data().query('tms_test',"SELECT IFNULL((SELECT driver_day_count FROM tms_sys_order_limit WHERE c_id = (SELECT c_id FROM tms_wl_user WHERE user_name = '{}')),20) a;".format(self.wlName))
 			print('物流公司派单次数',count[0]['driver_day_count'])
 			if int(count[0]['driver_day_count']) < self.quantity:
-				return HttpResponse(json.dumps({'code':0,'msg':'当前单数大物流公司限制派单次数','data':''}))
+				return HttpResponse(json.dumps({'code':0,'msg':'当前单数大物流公司限制派单次数','table_s':''}))
 			while self.quantity:
 				self.quantity -= 1
 				# 调用接单
 				self.response = addOrder.Order().addOrder(self.orderData['tmsWLOrder'],self.wlToken)
 				if self.response['code'] == 1:
 					self.succeed += 1
-					print(True,self.response['data']['firstOrderId'])
-					self.orderList.append(self.response['data']['firstOrderId'])
+					print(True,self.response['table_s']['firstOrderId'])
+					self.orderList.append(self.response['table_s']['firstOrderId'])
 				else:
 					self.fail += 1
 					return HttpResponse(json.dumps(self.response))
@@ -116,7 +116,7 @@ class Process():
 				print(money)
 			return HttpResponse(json.dumps({"code":233,"msg":"批量创建:成功{}单"}))
 
-		else:return HttpResponse(json.dumps({"code":0,"msg":"请使用POST请求！","data":""}))
+		else:return HttpResponse(json.dumps({"code":0,"msg":"请使用POST请求！","table_s":""}))
 
 
 # print(Data().query('localhost','SELECT * FROM `my_tb` WHERE id = 1;'))

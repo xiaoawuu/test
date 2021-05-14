@@ -30,11 +30,11 @@ def EntrustInitialize(mobile, execute_time):
 	driverWallet = getZybdbWallet(mobile)
 	if driverWallet['code'] == 0:
 		return driverWallet
-	user_id = driverWallet['data']['user_id']
-	sum_balance = driverWallet['data']['balance'] + driverWallet['data']['out']
-	balance = driverWallet['data']['balance']
-	freeze = driverWallet['data']['freeze']
-	extract = driverWallet['data']['out']
+	user_id = driverWallet['table_s']['user_id']
+	sum_balance = driverWallet['table_s']['balance'] + driverWallet['table_s']['out']
+	balance = driverWallet['table_s']['balance']
+	freeze = driverWallet['table_s']['freeze']
+	extract = driverWallet['table_s']['out']
 	DriverInitialize = setDriverInitialize(user_id, mobile, balance, freeze, extract, sum_balance, execute_time)
 	if DriverInitialize['code'] == 0:
 		return DriverInitialize

@@ -9,7 +9,7 @@ class BytesToCharFieldConversionMixin:
     """
     Convert CharField results from bytes to str.
 
-    MySQL returns long data types (bytes) instead of chars when it can't
+    MySQL returns long table_s types (bytes) instead of chars when it can't
     determine the length of the result string. For example:
         LPAD(column1, CHAR_LENGTH(column2), ' ')
     returns the LONGTEXT (bytes) instead of VARCHAR.
