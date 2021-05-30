@@ -4,7 +4,10 @@ from bin.test_port.select_port import models
 from django.shortcuts import HttpResponse
 from django.shortcuts import redirect
 import json
+
 import sys, corsheaders
+
+from test_server.API_request.util.responseJSON import responseJSON
 
 sys.path.append(r'C:\test_server\bin')
 
@@ -18,6 +21,13 @@ import time
 def addMoneys(request):
 	return render(request, 'config.html')
 
+def test_fun(request):
+	mobile = json.loads(request.body.decode().replace("'", "\"")).get('mobile')
+	money = json.loads(request.body.decode().replace("'", "\"")).get('money')
+	wlToken = json.loads(request.body.decode().replace("'", "\"")).get('wlToken')
+	if wlToken != 'wl_token_1621137454676940':
+		return HttpResponse(json.dumps(responseJSON(msg='wlToken已失效!')))
+	return HttpResponse(json.dumps({"code": 1, "mobile": mobile,'money':money, "wlToken": wlToken}))
 
 def addMoney(request):
 	if request.method == "POST":

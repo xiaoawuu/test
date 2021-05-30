@@ -47,5 +47,3 @@ def sql_exec(data, type='jy_live_r'):
 	ms = ODBC(type)
 	sql = ms.ExecNonQuery(data)
 	return sql
-
-

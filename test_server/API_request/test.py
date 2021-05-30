@@ -1,5 +1,6 @@
+# coding=utf-8
 import json
-
+import re
 
 
 def is_json(myjson):
@@ -10,15 +11,30 @@ def is_json(myjson):
 	except ValueError as e:
 		return False
 
+
+
+dict_ = str({
+    'name':'ahua',
+    'age':'<age>',
+    'gender':'<gender>'
+})
+
+def test_(string):
+	index = 0
+	list_s = list()
+	for i in dict_:
+		if i == '<' or i == '>':
+			list_s.append(index)
+		index += 1
+	index = 0
+	for i in list_s:
+		if index != 0 and i%2:
+			print(dict_[list_s[index-1]+1:i])
+		index += 1
+
 import re
-a = 'hello word'
 
-print(a.replace('word', 'python'))
+str = "/api/captcha/captcha"
 
-strinfo = re.compile('word')
-b = strinfo.sub('python',a)
-print(b)
-
-
-
-
+regular = re.compile(r'[a-zA-Z]+://[^\s]*[.com|.cn]',str)
+print(regular)

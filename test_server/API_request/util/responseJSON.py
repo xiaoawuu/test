@@ -10,5 +10,3 @@ def responseJSON_0(msg='', data='', ):
 
 def responseJSON(msg='', data='', code=0):
 	return {'code': code, 'msg': msg, 'data': data}
-if __name__ == '__main__':
-	print(responseJSON_0(msg='dssssss'))
